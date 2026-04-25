@@ -16,7 +16,7 @@
 
     <nav class="nav">
 
-      <!-- PUBBLICO (sempre visibile) -->
+      <!-- PUBBLICO -->
       <a href="{{ url_for('home') }}">Home</a>
       <a href="{{ url_for('expert_advisor') }}">Expert Advisor</a>
       <a href="{{ url_for('strumenti') }}">Laboratorio</a>
@@ -25,21 +25,14 @@
       <a href="{{ url_for('faq') }}">FAQ</a>
       <a href="{{ url_for('contatti') }}">Contatti</a>
     
-      {% if current_user.is_authenticated %}
+      {% if current_user.is_authenticated == True %}
     
-        <!-- PRIVATO -->
         <a href="{{ url_for('dashboard') }}">Dashboard</a>
         <a href="{{ url_for('signals') }}">Segnali</a>
-    
-        {% if current_user.is_admin %}
-          <a href="{{ url_for('admin') }}">Admin</a>
-        {% endif %}
-    
-        <a class="btn" href="{{ url_for('logout') }}">Logout</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
     
       {% else %}
     
-        <!-- NON LOGGATO -->
         <a href="{{ url_for('login') }}">Login</a>
         <a href="{{ url_for('register') }}">Register</a>
     

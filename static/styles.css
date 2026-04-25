@@ -139,3 +139,21 @@ h2{font-size:18px; color:#d7deea}
 .actions{display:flex; gap:8px; align-items:center}
 .actions form{margin:0}
 .check{display:flex; align-items:center; gap:8px; font-weight:700; color:var(--muted)}
+
+/* ===== EXPERT ADVISOR HERO ===== */
+.hero-ea {
+  height: 100vh;
+  background: url("/static/images/expert-bg.jpg") no-repeat center center;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-ea .overlay {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 40px;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+}
