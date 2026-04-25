@@ -222,37 +222,31 @@ def signals():
     return render_template("signals.html", items=items, only_active=only_active)
 
 @app.route("/expert-advisor")
-@login_required
 def expert_advisor():
     return render_template("expert_advisor.html")
 
 
 @app.route("/strumenti")
-@login_required
 def strumenti():
     return render_template("strumenti.html")
 
 
 @app.route("/forum")
-@login_required
 def forum():
     return render_template("forum.html")
 
 
 @app.route("/news")
-@login_required
 def news():
     return render_template("news.html")
 
 
 @app.route("/faq")
-@login_required
 def faq():
     return render_template("faq.html")
 
 
 @app.route("/contatti")
-@login_required
 def contatti():
     return render_template("contatti.html")
 

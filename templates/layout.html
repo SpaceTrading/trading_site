@@ -16,7 +16,7 @@
 
     <nav class="nav">
 
-      <!-- SEMPRE VISIBILI -->
+      <!-- PUBBLICO (sempre visibile) -->
       <a href="{{ url_for('home') }}">Home</a>
       <a href="{{ url_for('expert_advisor') }}">Expert Advisor</a>
       <a href="{{ url_for('strumenti') }}">Laboratorio</a>
@@ -25,20 +25,24 @@
       <a href="{{ url_for('faq') }}">FAQ</a>
       <a href="{{ url_for('contatti') }}">Contatti</a>
     
-      <a href="{{ url_for('dashboard') }}">Dashboard</a>
-      <a href="{{ url_for('signals') }}">Segnali</a>
-    
-      <!-- SOLO SE ADMIN -->
-      {% if current_user.is_authenticated and current_user.is_admin %}
-        <a href="{{ url_for('admin') }}">Admin</a>
-      {% endif %}
-    
-      <!-- LOGIN / LOGOUT -->
       {% if current_user.is_authenticated %}
+    
+        <!-- PRIVATO -->
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('signals') }}">Segnali</a>
+    
+        {% if current_user.is_admin %}
+          <a href="{{ url_for('admin') }}">Admin</a>
+        {% endif %}
+    
         <a class="btn" href="{{ url_for('logout') }}">Logout</a>
+    
       {% else %}
+    
+        <!-- NON LOGGATO -->
         <a href="{{ url_for('login') }}">Login</a>
         <a href="{{ url_for('register') }}">Register</a>
+    
       {% endif %}
     
     </nav>
