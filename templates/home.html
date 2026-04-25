@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<!-- HERO (immagine ottimizzata per full screen) -->
+<div style="
+    height: 100vh;
+    background-image: url('{{ url_for('static', filename='images/hero.jpg') }}');
+    background-size: cover;
+    background-position: center 30%;
+    background-repeat: no-repeat;
+    position: relative;
+">
+
+    <!-- overlay scuro -->
+    <div style="
+        position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background: rgba(0,0,0,0.65);
+    "></div>
+
+    <!-- contenuto -->
+    <div style="
+        position:relative;
+        height:100%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        color:white;
+        transform: translateY(190px);
+    ">
+        <div style="
+            background: rgba(0,0,0,0.6);
+            padding:40px;
+            border-radius:12px;
+        ">
+            <h1 style="font-size:42px;">SPACE-T Trading System</h1>
+            <p>Automazione e segnali intelligenti per trader avanzati</p>
+
+            <br>
+
+            <a href="{{ url_for('register') }}">
+                <button>Inizia ora</button>
+            </a>
+
+            <a href="{{ url_for('login') }}">
+                <button>Login</button>
+            </a>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- SEZIONE SOTTO (immagine intera NON tagliata) -->
+<div style="
+    background:black;
+    padding:60px 20px;
+    text-align:center;
+">
+
+    <img src="{{ url_for('static', filename='images/hero.jpg') }}" 
+         style="
+            width:100%;
+            max-width:1200px;
+            border-radius:10px;
+         ">
+
+</div>
+
+{% endblock %}

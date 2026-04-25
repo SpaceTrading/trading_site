@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{{ title or "Trading Dashboard" }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <div class="brand">Space-T Dashboard</div>
+
+    <nav class="nav">
+      {% if current_user.is_authenticated %}
+
+        <!-- NUOVE VOCI -->
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('expert_advisor') }}">Expert Advisor</a>
+        <a href="{{ url_for('strumenti') }}">Laboratorio</a>
+        <a href="{{ url_for('forum') }}">Forum</a>
+        <a href="{{ url_for('news') }}">News</a>
+        <a href="{{ url_for('faq') }}">FAQ</a>
+        <a href="{{ url_for('contatti') }}">Contatti</a>
+
+        <!-- VECCHIE VOCI -->
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('signals') }}">Segnali</a>
+
+        {% if current_user.is_admin %}
+          <a href="{{ url_for('admin') }}">Admin</a>
+        {% endif %}
+
+        <a class="btn" href="{{ url_for('logout') }}">Logout</a>
+
+      {% else %}
+
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('register') }}">Register</a>
+
+      {% endif %}
+    </nav>
+  </header>
+
+  <main class="container">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-wrap">
+          {% for cat, msg in messages %}
+            <div class="flash {{ cat }}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+
+  </main>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+
+</body>
+</html>

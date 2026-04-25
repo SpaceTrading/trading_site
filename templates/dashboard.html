@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1>Dashboard</h1>
+
+<p>Benvenuto {{ current_user.email }}</p>
+
+<p>Totale segnali: {{ total }}</p>
+<p>Segnali attivi: {{ active }}</p>
+
+<h3>Ultimi segnali</h3>
+<ul>
+    {% for s in recent %}
+        <li>{{ s.symbol }} - {{ s.side }} ({{ s.timeframe }})</li>
+    {% endfor %}
+</ul>
+
+<a href="{{ url_for('logout') }}">Logout</a>
+{% endblock %}
