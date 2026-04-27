@@ -97,13 +97,8 @@
 
         <br>
 
-        <a href="{{ url_for('register') }}">
-            <button class="btn primary">Registrati</button>
-        </a>
-
-        <a href="{{ url_for('login') }}">
-            <button class="btn">Login</button>
-        </a>
+        <button class="btn primary" onclick="openRegister()">Registrati</button>
+        <button class="btn" onclick="openLogin()">Login</button>
     </div>
 
     {% endif %}
