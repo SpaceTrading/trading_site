@@ -284,13 +284,10 @@ h2{font-size:18px; color:#d7deea}
     border-bottom: 1px solid #1e2a3a;
   }
 
-  /* ===== DROPDOWN ===== */
+
+  /* ===== DROPDOWN MOBILE DISABLED ===== */
   .dropdown-content {
-    position: static !important;
-    display: block !important;
-    background: none;
-    border: none;
-    padding-left: 10px;
+    display: none !important;
   }
 
   /* ===== HERO FIX ===== */
@@ -325,6 +322,39 @@ h2{font-size:18px; color:#d7deea}
     width: 90% !important;
     max-width: none !important;
     padding: 20px !important;
+  }
+
+}
+
+/* =========================
+   HERO MOBILE FIX
+========================= */
+
+@media (max-width: 768px) {
+
+  .hero-ea,
+  .hero {
+    align-items: flex-start !important;
+    padding-top: 60px !important;
+  }
+
+  .hero-ea .overlay,
+  .hero .overlay {
+    padding: 20px !important;
+    margin: 0 10px;
+    width: 100%;
+    max-width: 320px;
+    border-radius: 12px;
+  }
+
+  .hero-ea h1,
+  .hero h1 {
+    font-size: 24px !important;
+  }
+
+  .hero-ea p,
+  .hero p {
+    font-size: 14px !important;
   }
 
 }
