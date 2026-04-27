@@ -38,13 +38,8 @@
 
             {% if not current_user.is_authenticated %}
 
-            <a href="{{ url_for('register') }}">
-                <button>Inizia ora</button>
-            </a>
-            
-            <a href="{{ url_for('login') }}">
-                <button>Login</button>
-            </a>
+            <button onclick="openRegister()">Inizia ora</button>
+            <button onclick="openLogin()">Login</button>
             
             {% endif %}
         </div>
