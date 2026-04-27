@@ -424,3 +424,36 @@ h2{font-size:18px; color:#d7deea}
   }
 
 }
+
+/* =========================
+   HERO BOX MOBILE FIX FINAL
+========================= */
+
+@media (max-width: 768px) {
+
+  .hero-box {
+    max-width: 260px !important;
+    padding: 16px !important;
+    border-radius: 10px;
+  }
+
+  /* sposta tutto più in alto */
+  .hero-box {
+    margin-top: -40px;
+  }
+
+  /* contenitore principale */
+  .hero-box {
+    background: rgba(0,0,0,0.55) !important;
+  }
+
+  /* testo più compatto */
+  .hero-box h1 {
+    font-size: 22px !important;
+  }
+
+  .hero-box p {
+    font-size: 13px !important;
+  }
+
+}
