@@ -7,7 +7,7 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
   
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
@@ -69,8 +69,8 @@
         <a href="{{ url_for('signals') }}">Segnali</a>
         <a class="btn" href="{{ url_for('logout') }}">Logout</a>
       {% else %}
-        <a href="#" onclick="openLogin()">Login</a>
-        <a href="#" onclick="openRegister()">Register</a>
+        <a href="javascript:void(0)" onclick="openLogin()">Login</a>
+        <a href="javascript:void(0)" onclick="openRegister()">Register</a>
       {% endif %}
 
     </nav>
@@ -136,6 +136,7 @@
         <form method="POST" action="{{ url_for('login') }}">
 
             <input type="email" name="email" placeholder="Email"
+                    autocomplete="email"
                 style="
                     width:100%;
                     padding:12px;
@@ -145,6 +146,7 @@
                 " required>
 
             <input type="password" name="password" placeholder="Password"
+                    autocomplete="current-password"
                 style="
                     width:100%;
                     padding:12px;
@@ -206,12 +208,15 @@
         <form method="POST" action="{{ url_for('register') }}">
         
             <input type="email" name="email" placeholder="Email"
+                    autocomplete="email"
                 style="width:100%; padding:12px; margin-bottom:15px; border-radius:8px; border:none;" required>
 
             <input type="password" name="password" placeholder="Password"
+                    autocomplete="new-password"
                 style="width:100%; padding:12px; margin-bottom:15px; border-radius:8px; border:none;" required>
 
             <input type="password" name="password2" placeholder="Conferma Password"
+                    autocomplete="new-password"
                 style="width:100%; padding:12px; margin-bottom:20px; border-radius:8px; border:none;" required>
                 
             <div class="cf-turnstile" data-sitekey="0x4AAAAAADEMHoEtR_tcg9s3" style="margin-bottom:15px;"></div>
