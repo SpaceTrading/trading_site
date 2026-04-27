@@ -2,3 +2,8 @@ Flask
 Flask-SQLAlchemy
 Flask-Login
 gunicorn
+requests
+resend
+yfinance
+pandas
+numpy
