@@ -254,7 +254,7 @@ h2{font-size:18px; color:#d7deea}
 
   /* stile testo laboratorio */
   .lab-text {
-    font-weight: 600;
+    font-weight: normal;
   }
 
   /* ===== NAVBAR ===== */
