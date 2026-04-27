@@ -30,7 +30,7 @@
       <div class="dropdown">
 
   <a href="{{ url_for('strumenti') }}" class="dropbtn">
-    Laboratorio ▾
+    <span class="lab-text">Laboratorio</span><span class="lab-arrow"> ▾</span>
   </a>
 
   {% if current_user.is_authenticated %}

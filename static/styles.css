@@ -247,6 +247,16 @@ h2{font-size:18px; color:#d7deea}
 
 @media (max-width: 768px) {
 
+  /* nasconde freccia laboratorio */
+  .lab-arrow {
+    display: none;
+  }
+
+  /* stile testo laboratorio */
+  .lab-text {
+    font-weight: 600;
+  }
+
   /* ===== NAVBAR ===== */
   .menu-toggle {
     display: block;
