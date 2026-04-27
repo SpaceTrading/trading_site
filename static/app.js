@@ -213,10 +213,10 @@ window.addEventListener("click", function(e) {
 
 
 function closeHero() {
-  const box = document.querySelector(".hero-box");
-  if (box) {
-    box.style.display = "none";
-  }
-}
+  const box = document.getElementById("heroBox");
+  const overlay = document.getElementById("heroOverlay");
 
+  if (box) box.style.display = "none";
+  if (overlay) overlay.style.display = "none";
+}
 
