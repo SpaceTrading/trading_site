@@ -210,3 +210,13 @@ window.addEventListener("click", function(e) {
     menu.classList.remove("active");
   }
 });
+
+
+function closeHero() {
+  const box = document.querySelector(".hero-box");
+  if (box) {
+    box.style.display = "none";
+  }
+}
+
+

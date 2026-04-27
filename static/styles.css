@@ -368,3 +368,30 @@ h2{font-size:18px; color:#d7deea}
   }
 
 }
+
+.hero-box {
+  background: rgba(0,0,0,0.6);
+  padding:25px 30px;
+  border-radius:12px;
+  max-width:400px;
+  position: relative;
+}
+
+/* SOLO MOBILE */
+@media (max-width: 768px) {
+
+  .hero-box {
+    padding: 18px;
+    max-width: 300px;
+  }
+
+  .hero-close {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    color: white;
+  }
+
+}
