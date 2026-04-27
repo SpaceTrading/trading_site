@@ -1,0 +1,113 @@
+{% extends "layout.html" %}
+
+{% block title %}Laboratorio{% endblock %}
+
+{% block content %}
+
+<!-- HERO LABORATORIO -->
+<div style="
+    height: 60vh;
+    background-image: url('{{ url_for('static', filename='images/expert-bg3.jpg') }}');
+    background-size: cover;
+    background-position: center 30%;
+    background-repeat: no-repeat;
+    position: relative;
+">
+
+    <!-- overlay -->
+    <div style="
+        position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background: rgba(0,0,0,0.65);
+        pointer-events: none;
+    "></div>
+
+    <!-- contenuto -->
+    <div style="
+        position:relative;
+        height:100%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        color:white;
+        padding-top:60px;
+    ">
+        <div style="
+            background: rgba(0,0,0,0.6);
+            padding:40px;
+            border-radius:12px;
+        ">
+            <h1 style="font-size:42px;">Laboratorio Trading</h1>
+            <p>Strumenti professionali per trader</p>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- SEZIONE LABORATORIO -->
+<div style="display:flex; min-height:100vh; position: relative; z-index: 10;">
+
+    {% if current_user.is_authenticated %}
+
+    <!-- SIDEBAR -->
+    <div style="
+        width:260px;
+        background:#121826;
+        border-right:1px solid #22304a;
+        padding:20px;
+    ">
+        <h3>Strumenti</h3>
+
+        <div style="
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+            margin-top:20px;
+        ">
+
+            <a href="{{ url_for('converter') }}" class="btn">Convertitore Forex</a>
+            <a href="{{ url_for('correlation') }}" class="btn">Calcolatore Correlazioni</a>
+            <a href="{{ url_for('risk_manager') }}" class="btn">Risk Manager</a>
+            <a href="/lab/montecarlo" class="btn">Simulatore Monte Carlo</a>
+
+        </div>
+    </div>
+
+    <!-- AREA CONTENUTO -->
+    <div style="flex:1; padding:40px;">
+        <h1>Laboratorio</h1>
+        <p>Seleziona uno strumento dal menu a sinistra</p>
+    </div>
+
+    {% else %}
+
+    <!-- NON LOGGATO -->
+    <div style="
+        width:100%;
+        text-align:center;
+        padding:100px 20px;
+    ">
+        <h1>Laboratorio Trading</h1>
+        <p>Accedi per utilizzare strumenti avanzati</p>
+
+        <br>
+
+        <a href="{{ url_for('register') }}">
+            <button class="btn primary">Registrati</button>
+        </a>
+
+        <a href="{{ url_for('login') }}">
+            <button class="btn">Login</button>
+        </a>
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

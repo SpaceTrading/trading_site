@@ -1,0 +1,43 @@
+def calculate_trade(balance, lot, entry, target, sl, trade_type):
+
+    pip_multiplier = 10000
+
+    if trade_type == "buy":
+        pips_profit = (target - entry) * pip_multiplier
+        pips_loss = (entry - sl) * pip_multiplier
+    else:
+        pips_profit = (entry - target) * pip_multiplier
+        pips_loss = (sl - entry) * pip_multiplier
+
+    if pips_loss <= 0:
+        return "Errore: Stop loss non valido"
+
+    pip_value = lot * 10
+
+    profit = pips_profit * pip_value
+    loss = pips_loss * pip_value
+
+    risk_percent = (loss / balance) * 100
+    return_percent = (profit / balance) * 100
+    rr = profit / loss
+
+    return {
+        "profit": round(profit, 2),
+        "loss": round(loss, 2),
+        "risk%": round(risk_percent, 2),
+        "return%": round(return_percent, 2),
+        "RR": round(rr, 2)
+    }
+
+
+#  TEST 1 (IL TUO)
+result = calculate_trade(
+    balance=1000,
+    lot=-0.10,
+    entry=1.1000,
+    target=1.1100,
+    sl=1.0950,
+    trade_type="buy"
+)
+
+print(result)

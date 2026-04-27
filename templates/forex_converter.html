@@ -1,0 +1,244 @@
+{% extends "layout.html" %}
+
+{% block title %}Convertitore Forex{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1>Convertitore Forex</h1>
+    <p>Conversione live valute</p>
+
+    <div class="card" style="display:flex; align-items:center; gap:20px; justify-content:center;">
+
+        <!-- FROM -->
+        <div>
+            <select id="from">
+                <option value="EUR">EUR</option>
+                <option value="USD">USD</option>
+                <option value="GBP">GBP</option>
+                <option value="JPY">JPY</option>
+                <option value="AUD">AUD</option>
+                <option value="CAD">CAD</option>
+                <option value="NZD">NZD</option>
+                <option value="CHF">CHF</option>
+                <option value="BTC">BTC</option>
+                <option value="ETH">ETH</option>
+                <option value="SOL">SOL</option>
+                <option value="XRP">XRP</option>
+                <option value="ADA">ADA</option>
+            </select>
+
+            <input type="number" id="amount" value="1" min="0">
+        </div>
+
+        <!-- SWITCH -->
+        <button onclick="swap()">⇄</button>
+
+        <!-- TO -->
+        <div>
+            <select id="to">
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="JPY">JPY</option>
+                <option value="AUD">AUD</option>
+                <option value="CAD">CAD</option>
+                <option value="NZD">NZD</option>
+                <option value="CHF">CHF</option>
+                <option value="BTC">BTC</option>
+                <option value="ETH">ETH</option>
+                <option value="SOL">SOL</option>
+                <option value="XRP">XRP</option>
+                <option value="ADA">ADA</option>
+            </select>
+
+            <input type="text" id="result" readonly>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+let currentRequest = 0;
+
+const cryptoList = ["BTC", "ETH", "SOL", "XRP", "ADA"];
+
+// ===== SAFE FETCH =====
+async function safeFetch(url) {
+    try {
+        let res = await fetch(url);
+
+        if (!res.ok) {
+            console.warn("HTTP error:", res.status);
+            return null;
+        }
+
+        let data = await res.json();
+
+        if (!data) return null;
+
+        if (data.result !== undefined) return Number(data.result);
+        if (data.price !== undefined) return Number(data.price);
+
+        return null;
+
+    } catch (err) {
+        console.warn("Fetch error:", err);
+        return null;
+    }
+}
+
+// ===== MAIN CONVERT =====
+async function convert() {
+
+    let requestId = ++currentRequest;
+
+    let from = document.getElementById("from").value.trim().toUpperCase();
+    let to = document.getElementById("to").value.trim().toUpperCase();
+    let amount = parseFloat(document.getElementById("amount").value);
+
+    if (!amount || amount <= 0) {
+        document.getElementById("result").value = "";
+        return;
+    }
+
+    // loading state
+    document.getElementById("result").value = "...";
+
+    try {
+
+        // ===== CRYPTO → CRYPTO =====
+        
+        if (cryptoList.includes(from) && cryptoList.includes(to)) {
+            await new Promise(r => setTimeout(r, 50));
+
+
+            async function getCryptoPrice(coin) {
+            
+                const maxAttempts = 6;        // ~6 tentativi
+                const delayMs = 300;         // 300ms tra tentativi
+            
+                for (let i = 0; i < maxAttempts; i++) {
+            
+                    let price = await safeFetch(`/api/crypto?coin=${coin}&vs=usd`);
+            
+                    if (requestId !== currentRequest) return null;
+            
+                    if (price !== null) return price;
+            
+                    // attesa prima del retry
+                    await new Promise(r => setTimeout(r, delayMs));
+                }
+            
+                return null; // fallito dopo tot tentativi
+            }
+            
+            let [priceFrom, priceTo] = await Promise.all([
+                getCryptoPrice(from),
+                getCryptoPrice(to)
+            ]);
+
+            if (requestId !== currentRequest) return;
+
+            if (priceFrom === null || priceTo === null) {
+                console.warn("Crypto fetch failed:", { priceFrom, priceTo });
+                document.getElementById("result").value = "Recupero prezzo...";
+                return;
+            }
+
+            let final = (amount * priceFrom) / priceTo;
+            document.getElementById("result").value = final.toFixed(6);
+        }
+
+        // ===== CRYPTO → FIAT =====
+        else if (cryptoList.includes(from)) {
+
+            let price = await safeFetch(`/api/crypto?coin=${from}&vs=${to.toLowerCase()}`);
+
+            if (requestId !== currentRequest) return;
+
+            if (price === null) {
+                document.getElementById("result").value = "Errore";
+                return;
+            }
+
+            document.getElementById("result").value = (amount * price).toFixed(5);
+        }
+
+        // ===== FIAT → CRYPTO =====
+        else if (cryptoList.includes(to)) {
+
+            let [forex, crypto] = await Promise.all([
+                safeFetch(`/api/convert?from=${from}&to=USD&amount=${amount}`),
+                safeFetch(`/api/crypto?coin=${to}&vs=usd`)
+            ]);
+
+            if (requestId !== currentRequest) return;
+
+            if (forex === null || crypto === null) {
+                document.getElementById("result").value = "Errore";
+                return;
+            }
+
+            let final = forex / crypto;
+            document.getElementById("result").value = final.toFixed(6);
+        }
+
+        // ===== FIAT → FIAT =====
+        else {
+
+            let result = await safeFetch(`/api/convert?from=${from}&to=${to}&amount=${amount}`);
+
+            if (requestId !== currentRequest) return;
+
+            if (result === null) {
+                document.getElementById("result").value = "Errore";
+                return;
+            }
+
+            document.getElementById("result").value = result.toFixed(5);
+        }
+
+    } catch (err) {
+        console.log("ERRORE:", err);
+        document.getElementById("result").value = "Errore";
+    }
+}
+
+// ===== DEBOUNCE =====
+function debounce(fn, delay = 300) {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), delay);
+    };
+}
+
+const convertDebounced = debounce(convert, 300);
+
+// ===== SWAP =====
+function swap() {
+    let from = document.getElementById("from");
+    let to = document.getElementById("to");
+
+    let temp = from.value;
+    from.value = to.value;
+    to.value = temp;
+
+    currentRequest++; // invalida richieste in corso
+    convert();
+}
+
+// ===== EVENT LISTENERS =====
+document.getElementById("amount").addEventListener("input", convertDebounced);
+document.getElementById("from").addEventListener("change", convert);
+document.getElementById("to").addEventListener("change", convert);
+
+window.onload = convert;
+
+</script>
+
+{% endblock %}

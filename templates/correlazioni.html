@@ -1,0 +1,156 @@
+{% extends "layout.html" %}
+
+{% block title %}Correlazioni Forex{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1>Calcolatore Correlazioni</h1>
+    <p>Analisi correlazione tra coppie Forex</p>
+
+    <div class="card" style="display:flex; flex-direction:column; gap:20px; max-width:600px; margin:auto;">
+
+        <!-- COPPIA -->
+        <div>
+            <label>Coppia principale:</label>
+            <select id="pair">
+                <option>EURUSD</option>
+                <option>GBPUSD</option>
+                <option>USDJPY</option>
+                <option>USDCHF</option>
+                <option>AUDUSD</option>
+                <option>USDCAD</option>
+                <option>NZDUSD</option>
+                <option>XAUUSD</option>
+                <option>XAGUSD</option>
+                <option>WTI</option>
+                <option>BRENT</option>
+                
+                <option>BTCUSD</option>
+                <option>ETHUSD</option>
+                <option>SOLUSD</option>
+                <option>XRPUSD</option>
+                <option>ADAUSD</option>
+            </select>
+        </div>
+
+        <!-- TIMEFRAME -->
+        <div>
+            <label>Timeframe:</label>
+            <select id="timeframe">
+                <option value="5m">5 Minuti</option>
+                <option value="15m">15 Minuti</option>
+                <option value="30m">30 Minuti</option>   
+
+                <option value="1h">1 Ora</option>
+                <option value="4h">4 Ore</option>
+                <option value="1d">Giornaliero</option>
+                <option value="1wk">Settimanale</option> 
+                <option value="1mo">Mensile</option>     
+            </select>
+        </div>
+
+        <!-- PERIODI -->
+        <div>
+            <label>Numero periodi:</label>
+            <input 
+                type="number" 
+                id="periods" 
+                value="50" 
+                min="1" 
+                max="500" 
+                step="1"
+                oninput="this.value = Math.max(1, Math.min(500, this.value))"
+                style="width: 80px;"
+            >
+        </div>
+
+        <!-- BUTTON -->
+        <button onclick="calculate()">Calcola</button>
+
+    </div>
+
+    <!-- RISULTATI -->
+    <div style="margin-top:40px; max-width:700px; margin-left:auto; margin-right:auto;">
+        <table id="results" style="width:100%; border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th style="text-align:left;">Coppia</th>
+                    <th style="text-align:right;">Correlazione</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+
+async function calculate() {
+
+    let pair = document.getElementById("pair").value;
+    let tf = document.getElementById("timeframe").value;
+    let periods = parseInt(document.getElementById("periods").value);
+
+    let tbody = document.querySelector("#results tbody");
+    tbody.innerHTML = "<tr><td colspan='2'>Caricamento...</td></tr>";
+
+    try {
+        let res = await fetch(`/api/correlations?pair=${pair}&tf=${tf}&periods=${periods}`);
+        let data = await res.json();
+
+        if (!data || data.error) {
+            tbody.innerHTML = "<tr><td colspan='2'>Errore</td></tr>";
+            return;
+        }
+
+        tbody.innerHTML = "";
+
+        data.forEach(row => {
+
+            let tr = document.createElement("tr");
+
+            let td1 = document.createElement("td");
+            td1.textContent = row.pair;
+
+            let td2 = document.createElement("td");
+            td2.textContent = row.value.toFixed(2);
+            td2.style.textAlign = "right";
+
+            // colore correlazione
+            if (row.value > 0.5) td2.style.color = "green";
+            else if (row.value < -0.5) td2.style.color = "red";
+
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+
+            tbody.appendChild(tr);
+        });
+
+    } catch {
+        tbody.innerHTML = "<tr><td colspan='2'>Errore</td></tr>";
+    }
+}
+
+</script>
+
+<div style="
+    position: fixed;
+    bottom: 10px;
+    right: 15px;
+    font-size: 11px;
+    color: #aaa;
+    text-align: right;
+    max-width: 220px;
+    line-height: 1.4;
+    opacity: 0.8;
+">
+    <div>* Correlazione calcolata con indice di Pearson sui rendimenti</div>
+    <div style="font-size: 12px; margin-top:4px;">
+        r = cov(X,Y) / (σ<sub>X</sub> · σ<sub>Y</sub>)
+    </div>
+</div>
+
+{% endblock %}

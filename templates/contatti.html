@@ -1,2 +1,124 @@
+{% extends "layout.html" %}
+
 {% block title %}Contatti{% endblock %}
-<h1>Contatti</h1>
+
+{% block content %}
+
+<!-- HERO CONTATTI -->
+<div style="
+    height: 60vh;
+    background-image: url('{{ url_for('static', filename='images/contatti-bg.jpg') }}');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+">
+
+    <!-- overlay -->
+    <div style="
+        position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background: rgba(0,0,0,0.65);
+    "></div>
+
+    <!-- contenuto -->
+    <div style="
+        position:absolute;
+        top:120px;
+        left:50%;
+        transform: translateX(-50%);
+        text-align:center;
+        color:white;
+    ">
+        <div style="
+            background: rgba(0,0,0,0.6);
+            padding:25px 30px;
+            border-radius:12px;
+        ">
+            <h1>Contatti</h1>
+            <p>Hai domande o richieste? Scrivici</p>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- SEZIONE CONTATTI -->
+<div style="
+    background:#0b0e14;
+    padding:80px 20px;
+    display:flex;
+    justify-content:center;
+">
+
+    <div style="
+        background:#121826;
+        border:1px solid #22304a;
+        border-radius:14px;
+        padding:40px;
+        width:100%;
+        max-width:500px;
+    ">
+
+        <h2 style="text-align:center; margin-bottom:30px;">
+            Invia un messaggio
+        </h2>
+        
+        {% if success %}
+            <div style="
+                background:#0f5132;
+                color:#d1e7dd;
+                padding:15px;
+                border-radius:8px;
+                margin-bottom:20px;
+                text-align:center;
+            ">
+                Grazie per averci contattato!  
+                Ti risponderemo entro 3-4 ore.  
+                Controlla anche la cartella spam.
+            </div>
+        {% endif %}
+        
+        <form method="POST">
+
+            <input type="email" name="email" placeholder="Email"
+                style="
+                    width:100%;
+                    padding:12px;
+                    margin-bottom:15px;
+                    border-radius:8px;
+                    border:none;
+                " required>
+        
+            <input type="text" name="oggetto" placeholder="Oggetto"
+                style="
+                    width:100%;
+                    padding:12px;
+                    margin-bottom:15px;
+                    border-radius:8px;
+                    border:none;
+                " required>
+        
+            <textarea name="messaggio" placeholder="Messaggio"
+                style="
+                    width:100%;
+                    padding:12px;
+                    height:120px;
+                    border-radius:8px;
+                    border:none;
+                    margin-bottom:20px;
+                " required></textarea>
+        
+            <button type="submit" class="btn primary" style="width:100%;">
+                Invia
+            </button>
+        
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

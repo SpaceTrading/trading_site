@@ -1,0 +1,302 @@
+{% extends "layout.html" %}
+
+{% block title %}Monte Carlo{% endblock %}
+
+{% block content %}
+
+<!-- PLOTLY -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<div style="display:flex; min-height:100vh; position: relative; z-index: 10;">
+
+    {% if current_user.is_authenticated %}
+
+    <!-- SIDEBAR -->
+    <div style="
+        width:260px;
+        background:#121826;
+        border-right:1px solid #22304a;
+        padding:20px;
+    ">
+        <h3>Strumenti</h3>
+
+        <div style="
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+            margin-top:20px;
+        ">
+            <a href="{{ url_for('converter') }}" class="btn">Convertitore Forex</a>
+            <a href="{{ url_for('correlation') }}" class="btn">Calcolatore Correlazioni</a>
+            <a href="{{ url_for('risk_manager') }}" class="btn">Risk Manager</a>
+            <a href="/lab/montecarlo" class="btn">Simulatore Monte Carlo</a>
+        </div>
+    </div>
+
+    <!-- CONTENUTO -->
+    <div style="flex:1; padding:40px;">
+
+        <h1>Simulatore Monte Carlo</h1>
+
+        <br>
+
+        <!-- UPLOAD -->
+        <input type="file" id="fileInput" accept=".html,.xlsx,.csv">
+        <button onclick="uploadFile()" class="btn">Carica Report</button>
+        <p id="uploadStatus"></p>
+
+        <hr>
+
+        <!-- SIM -->
+        <label>Simulazioni:</label>
+        <input type="number" id="sims" value="1000" min="10" max="10000" step="10">
+
+        <button id="runBtn" onclick="runMonteCarlo()" class="btn primary">
+            Avvia Simulazione
+        </button>
+
+        <hr>
+
+        <!-- GRAFICO -->
+        <div id="mc-chart" style="width:100%; height:600px;"></div>
+        
+        <!-- SPIEGAZIONE GRAFICO -->
+        <div style="
+            margin-top:20px;
+            background:#111827;
+            border:1px solid #22304a;
+            border-radius:12px;
+            padding:20px;
+            font-size:14px;
+            line-height:1.6;
+            color:#cbd5e1;
+        ">
+        
+            <h3 style="margin-top:0; color:#e5e7eb;">Come leggere il grafico Monte Carlo</h3>
+        
+            <p>
+                Il simulatore prende la lista dei trade del backtest e rimescola l’ordine delle operazioni
+                centinaia o migliaia di volte. Ogni linea mostra una possibile evoluzione alternativa
+                dell’equity curve.
+            </p>
+        
+            <p>
+                <span style="color:#3b82f6;">● Blu</span> → equity originale del backtest reale<br>
+                <span style="color:#10b981;">● Verde</span> → curva mediana delle simulazioni<br>
+                <span style="color:#ef4444;">● Rosso</span> → scenario peggiore tra il 5% finale delle simulazioni<br>
+                <span style="color:#f59e0b;">● Giallo</span> → scenario migliore tra il 5% finale delle simulazioni<br>
+                <span style="color:#94a3b8;">● Grigio</span> → campione di simulazioni casuali usate come nuvola statistica
+            </p>
+        
+            <p style="margin-bottom:0;">
+                Se la curva originale resta dentro la nuvola grigia, il backtest è coerente con gli scenari simulati.
+                Se invece è molto fuori dalla nuvola, può indicare instabilità, fortuna statistica o overfitting.
+            </p>
+        
+        </div>
+
+    </div>
+
+    {% else %}
+    <div style="width:100%; text-align:center; padding:100px 20px;">
+        <h1>Accesso richiesto</h1>
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+
+let trades = []
+
+// =========================
+// UPLOAD FILE
+// =========================
+function uploadFile() {
+
+    const file = document.getElementById("fileInput").files[0]
+
+    if (!file) {
+        alert("Seleziona un file")
+        return
+    }
+
+    const formData = new FormData()
+    formData.append("file", file)
+
+    fetch("/api/montecarlo/upload", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Errore upload")
+        return res.json()
+    })
+    .then(data => {
+
+        if (data.error) {
+            document.getElementById("uploadStatus").innerText = data.error
+            return
+        }
+
+        trades = data.trades
+
+        document.getElementById("uploadStatus").innerText =
+            "Trades caricati: " + trades.length
+    })
+    .catch(err => {
+        console.error(err)
+        alert("Errore upload file")
+    })
+}
+
+// =========================
+// RUN SIM
+// =========================
+function runMonteCarlo() {
+
+    if (trades.length === 0) {
+        alert("Carica prima un file e attendi il caricamento")
+        return
+    }
+
+    const btn = document.getElementById("runBtn")
+    const simsInput = document.getElementById("sims")
+    const sims = parseInt(simsInput.value)
+
+    if (isNaN(sims) || sims < 10 || sims > 10000) {
+        alert("Inserisci un numero valido (10 - 10.000)")
+        return
+    }
+
+    // UX: blocca bottone
+    btn.disabled = true
+    btn.innerText = "Simulazione in corso..."
+
+    fetch("/api/montecarlo/run", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            trades: trades,
+            simulations: sims
+        })
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Errore server")
+        return res.json()
+    })
+    .then(data => {
+
+        if (data.error) {
+            alert(data.error)
+            return
+        }
+
+        drawChart(data)
+    })
+    .catch(err => {
+        console.error(err)
+        alert("Errore di connessione server")
+    })
+    .finally(() => {
+        btn.disabled = false
+        btn.innerText = "Avvia Simulazione"
+    })
+}
+
+// =========================
+// GRAFICO
+// =========================
+function drawChart(data) {
+
+    const traces = []
+
+    // SAMPLE
+    data.samples.forEach(curve => {
+        traces.push({
+            y: curve,
+            type: "scatter",
+            mode: "lines",
+            line: {color: "rgba(150,150,150,0.15)", width: 1},
+            hoverinfo: "skip",
+            showlegend: false
+        })
+    })
+
+    // ORIGINAL
+    traces.push({
+        y: data.original_equity,
+        type: "scatter",
+        mode: "lines",
+        name: "Original",
+        line: {color: "#3b82f6", width: 3}
+    })
+
+    // MEDIAN
+    traces.push({
+        y: data.median_equity,
+        type: "scatter",
+        mode: "lines",
+        name: "Median",
+        line: {color: "#10b981", width: 3}
+    })
+
+    // WORST
+    traces.push({
+        y: data.worst_95_equity,
+        type: "scatter",
+        mode: "lines",
+        name: "Worst 5 final%",
+        line: {color: "#ef4444", width: 3}
+    })
+
+    // BEST
+    traces.push({
+        y: data.best_5_equity,
+        type: "scatter",
+        mode: "lines",
+        name: "Best 5%",
+        line: {color: "#f59e0b", width: 2, dash: "dot"}
+    })
+
+    const layout = {
+        title: "Monte Carlo Simulation",
+        paper_bgcolor: "#0f172a",
+        plot_bgcolor: "#0f172a",
+        font: {color: "#e5e7eb"},
+        xaxis: {
+            title: "Numero di Trade",
+            gridcolor: "#1e293b"
+        },
+        yaxis: {
+            title: "Equity",
+            gridcolor: "#1e293b"
+        },
+        margin: { t: 50, b: 50, l: 60, r: 30 },
+        hovermode: "x unified"
+    }
+
+    Plotly.newPlot("mc-chart", traces, layout, {
+        responsive: true,
+    
+        displaylogo: false, // rimuove logo plotly
+    
+        modeBarButtonsToRemove: [
+            "zoom2d",
+            "select2d",
+            "lasso2d",
+            "autoScale2d"
+        ],
+    
+        modeBarButtonsToAdd: [
+            "zoomIn2d",
+            "zoomOut2d",
+            "pan2d",
+            "resetScale2d"
+        ]
+    })
+}
+
+</script>
+
+{% endblock %}
