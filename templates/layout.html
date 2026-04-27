@@ -17,7 +17,14 @@
 
   <!-- NAVBAR -->
   <header class="topbar">
-    <div class="brand">Space-T Dashboard</div>
+    <div class="brand" style="display:flex; align-items:center; gap:10px;">
+  
+        <img src="{{ url_for('static', filename='images/logo.png') }}" 
+             style="width:32px; height:32px; border-radius:50%;">
+      
+        <span>Space-T</span>
+      
+      </div>
     <button class="menu-toggle" onclick="toggleMenu()">
     ☰
   </button>
