@@ -28,15 +28,7 @@
     "></canvas>
     
     <!-- overlay scuro -->
-    <div style="
-        position:absolute;
-        top:0;
-        left:0;
-        width:100%;
-        height:100%;
-        background: rgba(0,0,0,0.65);
-        z-index:1;
-    "></div>
+    <div class="hero-overlay" id="heroOverlay"></div>
 
     <!-- contenuto -->
     <div style="
@@ -47,12 +39,10 @@
         text-align:left;
         color:white;
     ">
-        <div style="
-            background: rgba(0,0,0,0.55);
-            padding:20px 24px;
-            border-radius:10px;
-            max-width:420px;
-        ">
+        <div class="hero-box" id="heroBox">
+
+            <span class="hero-close" onclick="closeHero()">✖</span>
+            
             <h1 style="font-size:34px;">SPACE-T Trading System</h1>
             <p>Automazione e segnali intelligenti per trader avanzati</p>
 
@@ -64,7 +54,6 @@
             
             <button onclick="openLogin()">Login</button>
 
-            </button>
         </div>
     </div>
 
