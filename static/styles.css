@@ -43,6 +43,11 @@ a:hover{
   align-items:center;
 }
 
+/* HAMBURGER NASCOSTO SU DESKTOP */
+.menu-toggle {
+  display: none;
+}
+
 .nav a{
   transition: 0.2s;
 }
@@ -234,4 +239,92 @@ h2{font-size:18px; color:#d7deea}
 .dropdown-content a:hover {
   background: #1e293b;
   color: white;
+}
+
+/* =========================
+   MOBILE RESPONSIVE FIX
+========================= */
+
+@media (max-width: 768px) {
+
+  /* ===== NAVBAR ===== */
+  .menu-toggle {
+    display: block;
+    font-size: 26px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    z-index: 1001;
+  }
+
+  .topbar {
+    position: relative;
+  }
+
+  .nav {
+    display: none !important;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 100%;
+    background: #0b1220;
+    padding: 20px;
+    z-index: 1000;
+  }
+
+  .nav.active {
+    display: flex !important;
+  }
+
+  .nav a {
+    padding: 12px 0;
+    font-size: 16px;
+    border-bottom: 1px solid #1e2a3a;
+  }
+
+  /* ===== DROPDOWN ===== */
+  .dropdown-content {
+    position: static !important;
+    display: block !important;
+    background: none;
+    border: none;
+    padding-left: 10px;
+  }
+
+  /* ===== HERO FIX ===== */
+  .hero {
+    padding: 20px !important;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 28px !important;
+  }
+
+  .hero p {
+    font-size: 14px !important;
+  }
+
+  /* ===== BOTTONI ===== */
+  .hero-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .hero-buttons a {
+    width: 100%;
+  }
+
+  /* ===== MODALI ===== */
+  #loginModal div,
+  #registerModal div,
+  #forgotModal div {
+    width: 90% !important;
+    max-width: none !important;
+    padding: 20px !important;
+  }
+
 }

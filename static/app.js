@@ -192,3 +192,21 @@ window.closeForgot = function() {
   const modal = document.getElementById("forgotModal");
   modal.style.display = "none";
 }
+
+// =========================
+// MOBILE MENU TOGGLE
+// =========================
+
+function toggleMenu() {
+  const menu = document.getElementById("navMenu");
+  menu.classList.toggle("active");
+}
+
+window.addEventListener("click", function(e) {
+  const menu = document.getElementById("navMenu");
+  const button = document.querySelector(".menu-toggle");
+
+  if (!menu.contains(e.target) && !button.contains(e.target)) {
+    menu.classList.remove("active");
+  }
+});

@@ -18,8 +18,11 @@
   <!-- NAVBAR -->
   <header class="topbar">
     <div class="brand">Space-T Dashboard</div>
+    <button class="menu-toggle" onclick="toggleMenu()">
+    ☰
+  </button>
 
-    <nav class="nav">
+    <nav class="nav" id="navMenu">
 
       <!-- PUBBLICO -->
       <a href="{{ url_for('home') }}">Home</a>
