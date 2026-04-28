@@ -840,18 +840,23 @@ def api_market_map():
         })
 
     # =========================
-    # LINKS (ownerships)
+    # LINKS DA DB (ownerships)
     # =========================
     cur.execute("SELECT source, target, percentage FROM ownerships")
     rows_links = cur.fetchall()
-
+    
+    # CREA SET NOMI AZIENDE VALIDE
+    valid_nodes = set([name for name, _, _ in rows])
+    
     links = []
+    
     for source, target, percentage in rows_links:
-        links.append({
-            "source": source,
-            "target": target,
-            "value": percentage
-        })
+        if source in valid_nodes and target in valid_nodes:
+            links.append({
+                "source": source,
+                "target": target,
+                "value": percentage
+            })
 
     conn.close()  
 
