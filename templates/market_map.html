@@ -328,10 +328,17 @@ function getAnalytics(nodeId) {
   };
 }
 
-</script>
+window.addEventListener("click", function(e) {
 
-window.addEventListener("click", function() {
+  const panel = document.getElementById("companyPanel");
+
+  // se clicco dentro il pannello → NON chiudere
+  if (panel.contains(e.target)) return;
+
   closePanel();
 });
+</script>
+
+
 
 {% endblock %}
