@@ -63,6 +63,8 @@ fetch("/static/data/market_map_data.json")
 
     const highlightNodes = new Set();
     const highlightLinks = new Set();
+    const focusedNodes = new Set();
+    const focusedLinks = new Set();
 
     const Graph = ForceGraph3D()
       (document.getElementById('3d-graph'))
@@ -74,21 +76,40 @@ fetch("/static/data/market_map_data.json")
         if (selectedNode && node.id === selectedNode.id) {
           return "#ffffff";
         }
-
+      
+        if (focusedNodes.size > 0) {
+          return focusedNodes.has(node)
+            ? (sectorColors[node.sector] || "#888")
+            : "rgba(255,255,255,0.05)";
+        }
+      
         return highlightNodes.has(node)
           ? "#ffffff"
           : (sectorColors[node.sector] || "#888");
-
+      
       })
 
       .linkWidth(link => {
-        if (highlightLinks.size === 0) return 1; // sempre visibili
-        return highlightLinks.has(link) ? 3 : 0.5;
+
+        if (focusedLinks.size > 0) {
+          return focusedLinks.has(link) ? 4 : 0;
+        }
+      
+        if (highlightLinks.size === 0) return 1.5;
+      
+        return highlightLinks.has(link) ? 4 : 0.8;
       })
       
       .linkColor(link => {
+      
+        if (focusedLinks.size > 0) {
+          return focusedLinks.has(link)
+            ? "#ffffff"
+            : "rgba(255,255,255,0.02)";
+        }
+      
         if (highlightLinks.size === 0) {
-          return "rgba(255,255,255,0.35)"; // visibili di default
+          return "rgba(120,180,255,0.55)";
         }
       
         return highlightLinks.has(link)
@@ -125,7 +146,32 @@ fetch("/static/data/market_map_data.json")
       })
 
       .onNodeClick(node => {
+
         selectedNode = node;
+      
+        focusedNodes.clear();
+        focusedLinks.clear();
+      
+        focusedNodes.add(node);
+      
+        graphData.links.forEach(link => {
+      
+          const source = typeof link.source === 'object' ? link.source.id : link.source;
+          const target = typeof link.target === 'object' ? link.target.id : link.target;
+      
+          if (source === node.id || target === node.id) {
+      
+            focusedLinks.add(link);
+      
+            const sourceNode = graphData.nodes.find(n => n.id === source);
+            const targetNode = graphData.nodes.find(n => n.id === target);
+      
+            if (sourceNode) focusedNodes.add(sourceNode);
+            if (targetNode) focusedNodes.add(targetNode);
+          }
+      
+        });
+      
         openPanel(node);
         Graph.refresh();
       })
@@ -217,6 +263,10 @@ function openPanel(node) {
 
 function closePanel() {
   selectedNode = null;
+
+  focusedNodes.clear();
+  focusedLinks.clear();
+
   document.getElementById("companyPanel").style.display = "none";
 }
 
