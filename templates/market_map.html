@@ -34,7 +34,7 @@
     font-size:18px;
     color:white;
   "
-       onclick="closePanel(event)">✖</div>
+       onclick="closePanel(); return false;">✖</div>
 
   <div id="panelContent"></div>
 
@@ -271,8 +271,7 @@ function openPanel(node) {
   panel.style.display = "block";
 }
 
-function closePanel(e) {
-  if (e) e.stopPropagation();
+function closePanel() {
 
   selectedNode = null;
 
@@ -282,7 +281,7 @@ function closePanel(e) {
   document.getElementById("companyPanel").style.display = "none";
 
   if (window.Graph) {
-    window.Graph.refresh(); // 
+    window.Graph.refresh();
   }
 }
 
@@ -330,5 +329,9 @@ function getAnalytics(nodeId) {
 }
 
 </script>
+
+window.addEventListener("click", function() {
+  closePanel();
+});
 
 {% endblock %}
