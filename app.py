@@ -1137,16 +1137,30 @@ def api_sectors():
 
 @app.route("/api/companies")
 def api_companies():
-
     sector = request.args.get("sector")
 
     if not sector:
         return jsonify({"error": "sector required"}), 400
 
-    companies = Company.query.filter_by(sector=sector).all()
+    sector_companies = Company.query.filter_by(sector=sector).all()
 
-    if not companies:
+    if not sector_companies:
         return jsonify({"nodes": [], "links": []})
+
+    sector_ids = set(c.id for c in sector_companies)
+
+    ownerships = Ownership.query.filter(
+        Ownership.source_id.in_(sector_ids) |
+        Ownership.target_id.in_(sector_ids)
+    ).all()
+
+    all_node_ids = set(sector_ids)
+
+    for o in ownerships:
+        all_node_ids.add(o.source_id)
+        all_node_ids.add(o.target_id)
+
+    companies = Company.query.filter(Company.id.in_(all_node_ids)).all()
 
     nodes = [
         {
@@ -1158,13 +1172,6 @@ def api_companies():
         for c in companies
     ]
 
-    valid_ids = set(c.id for c in companies)
-
-    ownerships = Ownership.query.filter(
-        Ownership.source_id.in_(valid_ids) |
-        Ownership.target_id.in_(valid_ids)
-    ).all()
-
     links = [
         {
             "source": o.source_id,
@@ -1172,7 +1179,6 @@ def api_companies():
             "value": o.percentage
         }
         for o in ownerships
-        if o.source_id in valid_ids and o.target_id in valid_ids
     ]
 
     return jsonify({

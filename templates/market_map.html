@@ -197,12 +197,14 @@ fetch("/api/sectors")
               highlightNodes.clear();
               highlightLinks.clear();
             
-              Graph.graphData(data);
-            
-              // FIX CRITICO → CENTRA CAMERA
+              // RESET HARD
+              Graph.graphData({ nodes: [], links: [] });
+              
+              // RELOAD
               setTimeout(() => {
+                Graph.graphData(data);
                 Graph.zoomToFit(800);
-              }, 100);
+              }, 50);
             
             });
       
