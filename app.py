@@ -1117,6 +1117,30 @@ def dashboard():
         recent=recent,
     )
 
+@app.route("/api/sectors")
+def api_sectors():
+
+    from sqlalchemy import func
+
+    data = (
+        db.session.query(
+            Company.sector,
+            func.count(Company.id),
+            func.sum(Company.market_cap)
+        )
+        .group_by(Company.sector)
+        .all()
+    )
+
+    return jsonify([
+        {
+            "id": sector,
+            "label": sector,
+            "count": count,
+            "market_cap": float(total_cap or 0)
+        }
+        for sector, count, total_cap in data
+    ])
 
 @app.route("/signals")
 @login_required

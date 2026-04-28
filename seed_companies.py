@@ -9,6 +9,7 @@ companies = [
     ("Amazon", "AMZN", "ConsumerDiscretionary"),
     ("Tesla", "TSLA", "ConsumerDiscretionary"),
     ("JPMorgan", "JPM", "Finance"),
+    ("Vanguard", "Vanguard", "Finance"),
     ("Goldman Sachs", "GS", "Finance"),
     ("BlackRock", "BLK", "Finance"),
     ("Pfizer", "PFE", "Healthcare"),
