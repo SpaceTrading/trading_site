@@ -7,10 +7,14 @@
     { "id": "JPMorgan", "sector": "Finance", "market_cap": 500 },
     { "id": "Bank of America", "sector": "Finance", "market_cap": 300 },
     { "id": "Goldman Sachs", "sector": "Finance", "market_cap": 120 },
+    { "id": "BlackRock", "sector": "Finance", "market_cap": 1000 },
+    { "id": "Vanguard", "sector": "Finance", "market_cap": 900 },
 
     { "id": "Pfizer", "sector": "Healthcare", "market_cap": 250 },
     { "id": "Johnson & Johnson", "sector": "Healthcare", "market_cap": 450 },
-    { "id": "Moderna", "sector": "Healthcare", "market_cap": 100 }
+    { "id": "Moderna", "sector": "Healthcare", "market_cap": 100 },
+
+    { "id": "OpenAI", "sector": "Tech", "market_cap": 200 }
   ],
 
   "links": [
