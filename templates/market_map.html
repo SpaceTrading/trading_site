@@ -205,9 +205,10 @@ fetch("/api/sectors")
               // RELOAD
               setTimeout(() => {
                 Graph.graphData(data);
-                Graph.zoomToFit(800);
+                Graph.d3ReheatSimulation();   // forza ricalcolo layout
+                Graph.zoomToFit(1000);        // centra tutto
               }, 50);
-            
+                          
             });
       
           return;
