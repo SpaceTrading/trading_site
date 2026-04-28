@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div style="height:100vh; background:black;">
+    <div id="3d-graph"></div>
+</div>
+
+<script src="https://unpkg.com/3d-force-graph"></script>
+
+<script>
+fetch("/static/data/market_map_data.json")
+  .then(res => res.json())
+  .then(data => {
+
+    const sectorColors = {
+      Tech: "#00d4ff",
+      Finance: "#a855f7",
+      Healthcare: "#3b82f6"
+    };
+    
+    const Graph = ForceGraph3D()
+      (document.getElementById('3d-graph'))
+
+      .graphData(data)
+
+      .nodeColor(node => sectorColors[node.sector])
+
+      .nodeLabel(node => `
+        <b>${node.id}</b><br>
+        Settore: ${node.sector}<br>
+        Market Cap: ${node.market_cap}B
+      `)
+
+      .nodeVal(node => node.market_cap / 200)
+
+      .linkWidth(link => link.value / 2)
+
+      .backgroundColor('#000');
+
+  });
+</script>
+
+{% endblock %}

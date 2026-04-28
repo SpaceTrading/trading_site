@@ -1,0 +1,26 @@
+{
+  "nodes": [
+    { "id": "Apple", "sector": "Tech", "market_cap": 3000 },
+    { "id": "Microsoft", "sector": "Tech", "market_cap": 2800 },
+    { "id": "Google", "sector": "Tech", "market_cap": 1800 },
+
+    { "id": "JPMorgan", "sector": "Finance", "market_cap": 500 },
+    { "id": "Bank of America", "sector": "Finance", "market_cap": 300 },
+    { "id": "Goldman Sachs", "sector": "Finance", "market_cap": 120 },
+
+    { "id": "Pfizer", "sector": "Healthcare", "market_cap": 250 },
+    { "id": "Johnson & Johnson", "sector": "Healthcare", "market_cap": 450 },
+    { "id": "Moderna", "sector": "Healthcare", "market_cap": 100 }
+  ],
+
+  "links": [
+    { "source": "BlackRock", "target": "Apple", "value": 8 },
+    { "source": "BlackRock", "target": "Microsoft", "value": 7 },
+    { "source": "Vanguard", "target": "Google", "value": 6 },
+
+    { "source": "JPMorgan", "target": "Pfizer", "value": 3 },
+    { "source": "Goldman Sachs", "target": "Moderna", "value": 2 },
+
+    { "source": "Microsoft", "target": "OpenAI", "value": 5 }
+  ]
+}

@@ -813,6 +813,11 @@ def correlation():
 def montecarlo_page():
     return render_template("montecarlo.html")
 
+
+@app.route("/market-map")
+def market_map():
+    return render_template("market_map.html")
+
 # =========================================================
 # ROUTES (PUBLIC)
 # =========================================================
