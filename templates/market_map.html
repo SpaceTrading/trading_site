@@ -7,7 +7,6 @@
 </div>
 
 <script src="https://unpkg.com/3d-force-graph"></script>
-
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <script>
@@ -20,26 +19,81 @@ fetch("/static/data/market_map_data.json")
       Finance: "#a855f7",
       Healthcare: "#3b82f6"
     };
-    
+
+    // HIGHLIGHT SYSTEM
+    const highlightNodes = new Set();
+    const highlightLinks = new Set();
+    let hoverNode = null;
+
     const Graph = ForceGraph3D()
       (document.getElementById('3d-graph'))
 
       .graphData(data)
 
-      .nodeColor(node => sectorColors[node.sector])
+      // COLORI DINAMICI
+      .nodeColor(node =>
+        highlightNodes.has(node)
+          ? "#ffffff"
+          : sectorColors[node.sector]
+      )
 
+      // LINK STYLE DINAMICO
+      .linkWidth(link =>
+        highlightLinks.has(link) ? 3 : 0.5
+      )
+
+      .linkColor(link =>
+        highlightLinks.has(link)
+          ? "#ffffff"
+          : "rgba(255,255,255,0.08)"
+      )
+
+      // HOVER LOGIC (EFFETTO WOW)
+      .onNodeHover(node => {
+
+        highlightNodes.clear();
+        highlightLinks.clear();
+
+        if (node) {
+          highlightNodes.add(node);
+
+          data.links.forEach(link => {
+
+            const source = typeof link.source === 'object' ? link.source.id : link.source;
+            const target = typeof link.target === 'object' ? link.target.id : link.target;
+
+            if (source === node.id || target === node.id) {
+
+              highlightLinks.add(link);
+
+              const sourceNode = data.nodes.find(n => n.id === source);
+              const targetNode = data.nodes.find(n => n.id === target);
+
+              if (sourceNode) highlightNodes.add(sourceNode);
+              if (targetNode) highlightNodes.add(targetNode);
+            }
+
+          });
+        }
+
+        hoverNode = node;
+        Graph.refresh();
+      })
+
+      // TOOLTIP
       .nodeLabel(node => `
         <b>${node.id}</b><br>
         Settore: ${node.sector}<br>
         Market Cap: ${node.market_cap}B
       `)
 
+      // DIMENSIONE NODI (SCALA PRO)
       .nodeVal(node => Math.sqrt(node.market_cap))
 
-      .linkWidth(link => link.value / 2)
-
+      // BACKGROUND
       .backgroundColor('#000')
-      
+
+      // FISICA GRAFO
       .d3Force('charge').strength(-120)
       .d3Force('link').distance(120)
       .d3Force('center').strength(0.05)
