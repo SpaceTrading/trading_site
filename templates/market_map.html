@@ -77,7 +77,7 @@ fetch("/static/data/market_map_data.json")
         }
 
         hoverNode = node;
-        Graph.refresh();
+        // niente refresh forzato
       })
 
       // TOOLTIP
@@ -96,7 +96,6 @@ fetch("/static/data/market_map_data.json")
       // FISICA GRAFO
       .d3Force('charge').strength(-120)
       .d3Force('link').distance(120)
-      .d3Force('center').strength(0.05)
       .d3Force('collision', d3.forceCollide(node => Math.sqrt(node.market_cap) * 2));
 
   });
