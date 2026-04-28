@@ -181,7 +181,7 @@ fetch("/api/sectors")
       
           console.log("Entering sector:", node.id);
       
-          fetch(`/api/companies?sector=${node.id}`)
+          fetch(`/api/companies?sector=${encodeURIComponent(node.id)}`)
             .then(res => res.json())
             .then(data => {
           
