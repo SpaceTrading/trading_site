@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://unpkg.com/3d-force-graph"></script>
+</head>
+<body style="margin:0;">
+
+<div id="graph"></div>
+
+<script>
+const Graph = ForceGraph3D()(document.getElementById('graph'))
+
+fetch("/api/sectors")
+  .then(res => res.json())
+  .then(data => {
+
+    const graphData = {
+      nodes: data.map(s => ({
+        id: s.id
+      })),
+      links: []
+    };
+
+    Graph.graphData(graphData);
+
+    Graph.onNodeClick(node => {
+      alert("CLICK FUNZIONA: " + node.id);
+    });
+
+  });
+</script>
+
+</body>
+</html>

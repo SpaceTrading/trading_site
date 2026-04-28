@@ -1186,6 +1186,10 @@ def api_companies():
         "links": links
     })
 
+@app.route("/debug-click")
+def debug_click():
+    return render_template("debug_click.html")
+
 @app.route("/signals")
 @login_required
 def signals():
