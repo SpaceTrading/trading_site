@@ -45,6 +45,7 @@
 
 <script>
 let selectedNode = null;
+let mode = "overview"; // overview | company
 let graphData = null;
 
 // QUESTE DEVONO ESSERE GLOBALI
@@ -53,9 +54,21 @@ let focusedLinks = new Set();
 let highlightNodes = new Set();
 let highlightLinks = new Set();
 
-fetch("/api/market-map")
+fetch("/api/sectors")
   .then(res => res.json())
   .then(data => {
+  
+  if (mode === "overview") {
+    data = {
+      nodes: data.map(s => ({
+        id: s.id,
+        label: s.label,
+        sector: s.id,
+        market_cap: s.market_cap
+      })),
+      links: []
+    };
+  }
   
     graphData = data;
 
@@ -158,6 +171,10 @@ fetch("/api/market-map")
       })
 
       .onNodeClick(node => {
+      if (mode === "overview") {
+        console.log("Clicked sector:", node.id);
+        return;
+      }
 
         selectedNode = node;
       

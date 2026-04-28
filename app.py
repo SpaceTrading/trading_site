@@ -1142,6 +1142,46 @@ def api_sectors():
         for sector, count, total_cap in data
     ])
 
+@app.route("/api/companies")
+def api_companies():
+
+    sector = request.args.get("sector")
+
+    if not sector:
+        return jsonify({"error": "sector required"}), 400
+
+    companies = Company.query.filter_by(sector=sector).all()
+
+    nodes = [
+        {
+            "id": c.id,
+            "label": c.name,
+            "sector": c.sector,
+            "market_cap": c.market_cap or 0
+        }
+        for c in companies
+    ]
+
+    ownerships = Ownership.query.all()
+
+    # filtra solo relazioni interne al settore
+    valid_ids = set(c.id for c in companies)
+
+    links = [
+        {
+            "source": o.source_id,
+            "target": o.target_id,
+            "value": o.percentage
+        }
+        for o in ownerships
+        if o.source_id in valid_ids and o.target_id in valid_ids
+    ]
+
+    return jsonify({
+        "nodes": nodes,
+        "links": links
+    })
+
 @app.route("/signals")
 @login_required
 def signals():
