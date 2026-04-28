@@ -125,6 +125,29 @@ class Signal(db.Model):
     note = db.Column(db.Text, nullable=True)
     is_active = db.Column(db.Boolean, default=True, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    
+class Company(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(180), unique=True, nullable=False, index=True)
+    ticker = db.Column(db.String(32), unique=True, nullable=True, index=True)
+    sector = db.Column(db.String(80), index=True)
+    market_cap = db.Column(db.Float)
+    last_updated = db.Column(db.DateTime)
+    
+class MarketCapHistory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    company_id = db.Column(db.Integer, db.ForeignKey("company.id"), nullable=False, index=True)
+    market_cap = db.Column(db.Float, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    
+class Ownership(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    source_id = db.Column(db.Integer, db.ForeignKey("company.id"), nullable=False, index=True)
+    target_id = db.Column(db.Integer, db.ForeignKey("company.id"), nullable=False, index=True)
+    percentage = db.Column(db.Float, nullable=False)
+
+    source = db.relationship("Company", foreign_keys=[source_id])
+    target = db.relationship("Company", foreign_keys=[target_id])
 
     def to_dict(self):
         return {
@@ -812,6 +835,26 @@ def correlation():
 @login_required
 def montecarlo_page():
     return render_template("montecarlo.html")
+
+@app.route("/api/market-history/<int:company_id>")
+def market_history(company_id):
+
+    rows = (
+        MarketCapHistory.query
+        .filter_by(company_id=company_id)
+        .order_by(MarketCapHistory.timestamp.asc())
+        .all()
+    )
+
+    data = [
+        {
+            "timestamp": r.timestamp.isoformat(),
+            "market_cap": r.market_cap
+        }
+        for r in rows
+    ]
+
+    return jsonify(data)
 
 
 @app.route("/market-map")

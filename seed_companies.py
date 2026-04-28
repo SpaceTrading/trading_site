@@ -1,8 +1,6 @@
-import sqlite3
+from app import app, db
+from app import Company
 from datetime import datetime
-
-conn = sqlite3.connect("market.db")
-cur = conn.cursor()
 
 companies = [
     ("Apple", "AAPL", "Tech"),
@@ -17,11 +15,29 @@ companies = [
     ("Johnson & Johnson", "JNJ", "Healthcare")
 ]
 
-for name, ticker, sector in companies:
-    cur.execute("""
-        INSERT OR IGNORE INTO companies (name, ticker, sector, last_updated)
-        VALUES (?, ?, ?, ?)
-    """, (name, ticker, sector, datetime.now()))
+with app.app_context():
+    for name, ticker, sector in companies:
 
-conn.commit()
-conn.close()
+        ticker = ticker.upper().strip()
+        name = name.strip()
+
+        company = Company.query.filter_by(ticker=ticker).first()
+
+        if company:
+            company.name = name
+            company.sector = sector
+            company.last_updated = datetime.utcnow()
+        else:
+            db.session.add(
+                Company(
+                    name=name,
+                    ticker=ticker,
+                    sector=sector,
+                    market_cap=1,
+                    last_updated=datetime.utcnow()
+                )
+            )
+
+    db.session.commit()
+
+print("Seed companies aggiornato")
