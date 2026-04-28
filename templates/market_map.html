@@ -2,9 +2,6 @@
 
 {% block content %}
 
-<h1 style="color:red; position:fixed; top:0; left:0; z-index:999999;">
-VERSIONE DEBUG 123
-</h1>
 
 <div style="height:100vh; background:black;">
     <div id="3d-graph"></div>
@@ -63,6 +60,7 @@ fetch("/api/sectors")
   .then(data => {
   
   if (mode === "overview") {
+  alert("ENTRO IN OVERVIEW");
     data = {
       nodes: data.map(s => ({
         id: s.id,
@@ -175,6 +173,8 @@ fetch("/api/sectors")
       })
 
       .onNodeClick(node => {
+      alert("CLICK OK");
+      alert("MODE: " + mode);
       console.log("CLICK NODE:", node);
       console.log("CURRENT MODE:", mode);
 
@@ -182,12 +182,16 @@ fetch("/api/sectors")
         // OVERVIEW → DRILL DOWN
         // =========================
         if (mode === "overview") {
+        alert("ENTRO IN OVERVIEW");
       
           console.log("Entering sector:", node.id);
       
           fetch(`/api/companies?sector=${encodeURIComponent(node.id)}`)
+          alert("FETCH PARTITO PER: " + node.id);
             .then(res => res.json())
             .then(data => {
+            alert("FETCH RISPOSTA ARRIVATA");
+            alert("NODI: " + data.nodes.length);
 
               console.log("DATA:", data);
               console.log("DATA RICEVUTA:", data.nodes.length);
@@ -203,9 +207,11 @@ fetch("/api/sectors")
             
               // RESET HARD
               Graph.graphData({ nodes: [], links: [] });
+              alert("RESET GRAFO");
               
               // RELOAD
               setTimeout(() => {
+              alert("RICARICO GRAFO");
                 Graph.graphData(data);
                 Graph.zoomToFit(800);
               }, 50);
