@@ -186,6 +186,7 @@ fetch("/api/sectors")
             .then(data => {
 
               console.log("DATA:", data);
+              console.log("DATA RICEVUTA:", data.nodes.length);
             
               mode = "company";
               graphData = data;
