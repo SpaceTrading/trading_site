@@ -184,25 +184,25 @@ fetch("/api/sectors")
           fetch(`/api/companies?sector=${encodeURIComponent(node.id)}`)
             .then(res => res.json())
             .then(data => {
-          
+
+              console.log("DATA:", data);
+            
               mode = "company";
-          
               graphData = data;
-          
+            
               selectedNode = null;
               focusedNodes.clear();
               focusedLinks.clear();
               highlightNodes.clear();
               highlightLinks.clear();
-          
-              // RESET COMPLETO GRAFO (fix vero)
-              Graph.graphData({ nodes: [], links: [] });
-          
+            
+              Graph.graphData(data);
+            
+              // FIX CRITICO → CENTRA CAMERA
               setTimeout(() => {
-                Graph.graphData(graphData);
-                Graph.refresh();
-              }, 50);
-          
+                Graph.zoomToFit(800);
+              }, 100);
+            
             });
       
           return;
@@ -258,7 +258,7 @@ fetch("/api/sectors")
       })
 
       .nodeLabel(node => `
-        <b>${node.id}</b><br>
+        <b>${node.label || node.id}</b><br>
         Settore: ${node.sector}<br>
         Market Cap: ${formatCap(node.market_cap)}
       `)
