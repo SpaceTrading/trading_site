@@ -171,10 +171,37 @@ fetch("/api/sectors")
       })
 
       .onNodeClick(node => {
-      if (mode === "overview") {
-        console.log("Clicked sector:", node.id);
-        return;
-      }
+
+        // =========================
+        // OVERVIEW → DRILL DOWN
+        // =========================
+        if (mode === "overview") {
+      
+          console.log("Entering sector:", node.id);
+      
+          fetch(`/api/companies?sector=${node.id}`)
+            .then(res => res.json())
+            .then(data => {
+      
+              mode = "company";
+      
+              graphData = data;
+      
+              // reset stati
+              selectedNode = null;
+              focusedNodes.clear();
+              focusedLinks.clear();
+              highlightNodes.clear();
+              highlightLinks.clear();
+      
+              Graph.graphData(data);
+              Graph.refresh();
+      
+            });
+      
+          return;
+        }
+      
 
         selectedNode = node;
       

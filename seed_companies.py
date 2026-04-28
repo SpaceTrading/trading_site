@@ -1,6 +1,6 @@
 from app import app, db
 from app import Company
-from datetime import datetime
+from datetime import datetime, UTC
 
 companies = [
     ("Apple", "AAPL", "Tech"),
@@ -9,25 +9,25 @@ companies = [
     ("Amazon", "AMZN", "ConsumerDiscretionary"),
     ("Tesla", "TSLA", "ConsumerDiscretionary"),
     ("JPMorgan", "JPM", "Finance"),
-    ("Vanguard", "Vanguard", "Finance"),
+    ("Vanguard", "VANGUARD", "Finance"),
     ("Goldman Sachs", "GS", "Finance"),
     ("BlackRock", "BLK", "Finance"),
     ("Pfizer", "PFE", "Healthcare"),
-    ("Johnson & Johnson", "JNJ", "Healthcare")
+    ("Johnson & Johnson", "JNJ", "Healthcare"),
 ]
 
 with app.app_context():
     for name, ticker, sector in companies:
-
-        ticker = ticker.upper().strip()
         name = name.strip()
+        ticker = ticker.upper().strip()
+        sector = sector.strip()
 
         company = Company.query.filter_by(ticker=ticker).first()
 
         if company:
             company.name = name
             company.sector = sector
-            company.last_updated = datetime.utcnow()
+            company.last_updated = datetime.now(UTC)
         else:
             db.session.add(
                 Company(
@@ -35,7 +35,7 @@ with app.app_context():
                     ticker=ticker,
                     sector=sector,
                     market_cap=1,
-                    last_updated=datetime.utcnow()
+                    last_updated=datetime.now(UTC),
                 )
             )
 
