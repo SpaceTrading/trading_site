@@ -81,15 +81,20 @@ fetch("/static/data/market_map_data.json")
 
       })
 
-      .linkWidth(link =>
-        highlightLinks.has(link) ? 3 : 0.5
-      )
-
-      .linkColor(link =>
-        highlightLinks.size
-          ? (highlightLinks.has(link) ? "#ffffff" : "rgba(255,255,255,0.05)")
-          : "rgba(255,255,255,0.25)"
-      )
+      .linkWidth(link => {
+        if (highlightLinks.size === 0) return 1; // sempre visibili
+        return highlightLinks.has(link) ? 3 : 0.5;
+      })
+      
+      .linkColor(link => {
+        if (highlightLinks.size === 0) {
+          return "rgba(255,255,255,0.35)"; // visibili di default
+        }
+      
+        return highlightLinks.has(link)
+          ? "#ffffff"
+          : "rgba(255,255,255,0.08)";
+      })
 
       .onNodeHover(node => {
 
