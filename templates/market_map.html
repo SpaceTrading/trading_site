@@ -289,11 +289,14 @@ fetch("/api/sectors")
         return base;
       })
 
-      .backgroundColor('#000')
+      .backgroundColor('#000');
 
-      .d3Force('charge').strength(-120)
-      .d3Force('link').distance(120)
-      .d3Force('collision', d3.forceCollide(node => Math.sqrt(node.market_cap || 1) * 2));
+      window.Graph.d3Force('charge').strength(-120);
+      window.Graph.d3Force('link').distance(120);
+      window.Graph.d3Force(
+        'collision',
+        d3.forceCollide(node => Math.sqrt(node.market_cap || 1) * 2)
+      );
 
   });
 
