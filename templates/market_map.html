@@ -204,30 +204,49 @@ fetch("/api/sectors")
       
 
         selectedNode = node;
-      
-        focusedNodes.clear();
-        focusedLinks.clear();
-      
-        focusedNodes.add(node);
-      
+
+        // =========================
+        // CREA SUBGRAFO (NEIGHBORHOOD)
+        // =========================
+        
+        const neighbors = new Set();
+        const newLinks = [];
+        
+        // trova link collegati
         graphData.links.forEach(link => {
-      
+        
           const source = typeof link.source === 'object' ? link.source.id : link.source;
           const target = typeof link.target === 'object' ? link.target.id : link.target;
-      
+        
           if (source === node.id || target === node.id) {
-      
-            focusedLinks.add(link);
-      
-            const sourceNode = graphData.nodes.find(n => n.id === source);
-            const targetNode = graphData.nodes.find(n => n.id === target);
-      
-            if (sourceNode) focusedNodes.add(sourceNode);
-            if (targetNode) focusedNodes.add(targetNode);
+            newLinks.push(link);
+            neighbors.add(source);
+            neighbors.add(target);
           }
-      
+        
         });
-      
+        
+        // aggiungi nodo selezionato
+        neighbors.add(node.id);
+        
+        // filtra nodi
+        const newNodes = graphData.nodes.filter(n => neighbors.has(n.id));
+        
+        // nuovo dataset
+        const newGraph = {
+          nodes: newNodes,
+          links: newLinks
+        };
+        
+        // aggiorna grafo
+        Graph.graphData(newGraph);
+        
+        // reset stati
+        focusedNodes.clear();
+        focusedLinks.clear();
+        highlightNodes.clear();
+        highlightLinks.clear();
+        
         openPanel(node);
         Graph.refresh();
       })
