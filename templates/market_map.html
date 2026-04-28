@@ -75,9 +75,11 @@ fetch("/api/sectors")
         sector: s.id,
         market_cap: s.market_cap
       })),
-      links: []
-    };
-  }
+      links: data.length > 1
+        ? [{ source: data[0].id, target: data[1].id }]
+        : []
+          };
+        }
   
     graphData = data;
 
