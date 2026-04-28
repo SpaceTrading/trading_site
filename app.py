@@ -825,10 +825,11 @@ def api_market_map():
     conn = sqlite3.connect("market.db")
     cur = conn.cursor()
 
+    # =========================
+    # NODES (companies)
+    # =========================
     cur.execute("SELECT name, sector, market_cap FROM companies")
     rows = cur.fetchall()
-
-    conn.close()
 
     nodes = []
     for name, sector, market_cap in rows:
@@ -838,20 +839,26 @@ def api_market_map():
             "market_cap": market_cap or 100
         })
 
-    # PER ORA links statici (li sistemiamo dopo)
-    links = [
-        {"source": "BlackRock", "target": "Apple", "value": 8},
-        {"source": "BlackRock", "target": "Microsoft", "value": 7},
-        {"source": "Vanguard", "target": "Google", "value": 6},
-        {"source": "JPMorgan", "target": "Pfizer", "value": 3},
-        {"source": "Goldman Sachs", "target": "Moderna", "value": 2}
-    ]
+    # =========================
+    # LINKS (ownerships)
+    # =========================
+    cur.execute("SELECT source, target, percentage FROM ownerships")
+    rows_links = cur.fetchall()
+
+    links = []
+    for source, target, percentage in rows_links:
+        links.append({
+            "source": source,
+            "target": target,
+            "value": percentage
+        })
+
+    conn.close()  
 
     return jsonify({
         "nodes": nodes,
         "links": links
     })
-
 # =========================================================
 # ROUTES (PUBLIC)
 # =========================================================

@@ -15,6 +15,18 @@ CREATE TABLE IF NOT EXISTS companies (
 )
 """)
 
+# =========================
+# OWNERSHIPS TABLE
+# =========================
+cur.execute("""
+CREATE TABLE IF NOT EXISTS ownerships (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    source TEXT,
+    target TEXT,
+    percentage REAL
+)
+""")
+
 # TABELLA STORICO
 cur.execute("""
 CREATE TABLE IF NOT EXISTS market_cap_history (
@@ -29,4 +41,4 @@ CREATE TABLE IF NOT EXISTS market_cap_history (
 conn.commit()
 conn.close()
 
-print("Database creato ✅")
+print("Database creato")

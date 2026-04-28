@@ -47,7 +47,7 @@
 let selectedNode = null;
 let graphData = null;
 
-fetch("/static/data/market_map_data.json")
+fetch("/api/market-map")
   .then(res => res.json())
   .then(data => {
   
