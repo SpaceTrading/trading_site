@@ -94,7 +94,7 @@ fetch("/api/sectors")
     window.Graph = ForceGraph3D()
       (document.getElementById('3d-graph'))
 
-      .graphData(data)
+      .graphData(graphData)
 
       .nodeColor(node => {
 
@@ -159,8 +159,8 @@ fetch("/api/sectors")
 
               highlightLinks.add(link);
 
-              const sourceNode = data.nodes.find(n => n.id === source);
-              const targetNode = data.nodes.find(n => n.id === target);
+              const sourceNode = graphData.nodes.find(n => n.id === source);
+              const targetNode = graphData.nodes.find(n => n.id === target);
 
               if (sourceNode) highlightNodes.add(sourceNode);
               if (targetNode) highlightNodes.add(targetNode);
@@ -182,27 +182,27 @@ fetch("/api/sectors")
           console.log("Entering sector:", node.id);
       
           fetch(`/api/companies?sector=${node.id}`)
-            .then(res => {
-              console.log("STATUS:", res.status);
-              return res.json();
-            })
+            .then(res => res.json())
             .then(data => {
-              console.log("DATA:", data);
-      
+          
               mode = "company";
-      
+          
               graphData = data;
-      
-              // reset stati
+          
               selectedNode = null;
               focusedNodes.clear();
               focusedLinks.clear();
               highlightNodes.clear();
               highlightLinks.clear();
-      
-              Graph.graphData(data);
-              Graph.refresh();
-      
+          
+              // RESET COMPLETO GRAFO (fix vero)
+              Graph.graphData({ nodes: [], links: [] });
+          
+              setTimeout(() => {
+                Graph.graphData(graphData);
+                Graph.refresh();
+              }, 50);
+          
             });
       
           return;
