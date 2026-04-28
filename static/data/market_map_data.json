@@ -14,6 +14,33 @@
     { "id": "Johnson & Johnson", "sector": "Healthcare", "market_cap": 450 },
     { "id": "Moderna", "sector": "Healthcare", "market_cap": 100 },
 
+    { "id": "ExxonMobil", "sector": "Energy", "market_cap": 400 },
+    { "id": "Chevron", "sector": "Energy", "market_cap": 300 },
+
+    { "id": "Boeing", "sector": "Industrials", "market_cap": 120 },
+    { "id": "Lockheed Martin", "sector": "Defense", "market_cap": 110 },
+
+    { "id": "Nestle", "sector": "ConsumerStaples", "market_cap": 350 },
+    { "id": "Coca-Cola", "sector": "ConsumerStaples", "market_cap": 280 },
+
+    { "id": "Amazon", "sector": "ConsumerDiscretionary", "market_cap": 1700 },
+    { "id": "Tesla", "sector": "ConsumerDiscretionary", "market_cap": 800 },
+
+    { "id": "Meta", "sector": "Communication", "market_cap": 900 },
+    { "id": "Netflix", "sector": "Communication", "market_cap": 250 },
+
+    { "id": "NextEra Energy", "sector": "Utilities", "market_cap": 150 },
+
+    { "id": "Prologis", "sector": "RealEstate", "market_cap": 120 },
+
+    { "id": "Nvidia", "sector": "AI", "market_cap": 2200 },
+
+    { "id": "Palantir", "sector": "Defense", "market_cap": 60 },
+
+    { "id": "Amgen", "sector": "Biotech", "market_cap": 140 },
+
+    { "id": "Stripe", "sector": "Fintech", "market_cap": 50 },
+
     { "id": "OpenAI", "sector": "Tech", "market_cap": 200 }
   ],
 
@@ -25,6 +52,16 @@
     { "source": "JPMorgan", "target": "Pfizer", "value": 3 },
     { "source": "Goldman Sachs", "target": "Moderna", "value": 2 },
 
-    { "source": "Microsoft", "target": "OpenAI", "value": 5 }
+    { "source": "Microsoft", "target": "OpenAI", "value": 5 },
+
+    { "source": "BlackRock", "target": "ExxonMobil", "value": 5 },
+    { "source": "BlackRock", "target": "Amazon", "value": 6 },
+    { "source": "Vanguard", "target": "Tesla", "value": 4 },
+
+    { "source": "JPMorgan", "target": "Boeing", "value": 3 },
+    { "source": "Goldman Sachs", "target": "Meta", "value": 3 },
+
+    { "source": "Microsoft", "target": "Nvidia", "value": 6 },
+    { "source": "Google", "target": "Stripe", "value": 4 }
   ]
 }

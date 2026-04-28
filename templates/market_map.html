@@ -15,10 +15,23 @@ fetch("/static/data/market_map_data.json")
   .then(data => {
 
     const sectorColors = {
-      Tech: "#00d4ff",
-      Finance: "#a855f7",
-      Healthcare: "#3b82f6"
-    };
+      const sectorColors = {
+        Tech: "#00d4ff",
+        Finance: "#a855f7",
+        Healthcare: "#3b82f6",
+        Industrials: "#f59e0b",
+        Energy: "#ef4444",
+        Materials: "#84cc16",
+        ConsumerDiscretionary: "#f97316",
+        ConsumerStaples: "#22c55e",
+        Communication: "#e879f9",
+        RealEstate: "#64748b",
+        Utilities: "#0ea5e9",
+        AI: "#00ffa6",
+        Defense: "#ff0033",
+        Biotech: "#8b5cf6",
+        Fintech: "#14b8a6"
+      };
 
     // HIGHLIGHT SYSTEM
     const highlightNodes = new Set();
@@ -43,9 +56,9 @@ fetch("/static/data/market_map_data.json")
       )
 
       .linkColor(link =>
-        highlightLinks.has(link)
-          ? "#ffffff"
-          : "rgba(255,255,255,0.08)"
+        highlightLinks.size
+          ? (highlightLinks.has(link) ? "#ffffff" : "rgba(255,255,255,0.05)")
+          : "rgba(255,255,255,0.25)"
       )
 
       // HOVER LOGIC (EFFETTO WOW)
