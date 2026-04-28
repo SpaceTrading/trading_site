@@ -209,13 +209,12 @@ fetch("/api/sectors")
               highlightLinks.clear();
             
               // RESET HARD
-              Graph.graphData({ nodes: [], links: [] });
-              
-              // RELOAD
+              window.Graph.graphData({ nodes: [], links: [] });
+
               setTimeout(() => {
-                Graph.graphData(data);
-                Graph.d3ReheatSimulation();   // forza ricalcolo layout
-                Graph.zoomToFit(1000);        // centra tutto
+                window.Graph.graphData(data);
+                window.Graph.d3ReheatSimulation();
+                window.Graph.zoomToFit(1000);
               }, 50);
                           
             });
@@ -260,7 +259,8 @@ fetch("/api/sectors")
         };
         
         // aggiorna grafo
-        Graph.graphData(newGraph);
+        window.Graph.graphData(newGraph);
+        window.Graph.refresh();
         
         // reset stati
         focusedNodes.clear();
@@ -269,7 +269,7 @@ fetch("/api/sectors")
         highlightLinks.clear();
         
         openPanel(node);
-        Graph.refresh();
+        window.Graph.refresh();
       })
 
       .nodeLabel(node => `
