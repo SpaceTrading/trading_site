@@ -1164,7 +1164,7 @@ def api_companies():
 
     nodes = [
         {
-            "id": str(c.id),
+            "id": c.id,
             "label": c.name,
             "sector": c.sector,
             "market_cap": c.market_cap or 0
@@ -1174,8 +1174,8 @@ def api_companies():
 
     links = [
         {
-            "source": str(o.source_id),
-            "target": str(o.target_id),
+            "source": o.source_id,
+            "target": o.target_id,
             "value": o.percentage
         }
         for o in ownerships
