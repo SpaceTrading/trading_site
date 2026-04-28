@@ -47,7 +47,7 @@
 let selectedNode = null;
 let graphData = null;
 
-fetch("/static/data/market_map_data.json")
+fetch("/api/market-map")
   .then(res => res.json())
   .then(data => {
   
@@ -76,7 +76,7 @@ fetch("/static/data/market_map_data.json")
     const focusedNodes = new Set();
     const focusedLinks = new Set();
 
-    const Graph = ForceGraph3D()
+    window.Graph = ForceGraph3D()
       (document.getElementById('3d-graph'))
 
       .graphData(data)
@@ -272,7 +272,7 @@ function openPanel(node) {
 }
 
 function closePanel(e) {
-  if (e) e.stopPropagation(); // blocca click sul canvas
+  if (e) e.stopPropagation();
 
   selectedNode = null;
 
@@ -280,6 +280,10 @@ function closePanel(e) {
   focusedLinks.clear();
 
   document.getElementById("companyPanel").style.display = "none";
+
+  if (window.Graph) {
+    window.Graph.refresh(); // 
+  }
 }
 
 function formatCap(value) {
