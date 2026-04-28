@@ -151,16 +151,9 @@ class Ownership(db.Model):
 
     def to_dict(self):
         return {
-            "id": self.id,
-            "symbol": self.symbol,
-            "side": self.side,
-            "timeframe": self.timeframe,
-            "entry": self.entry,
-            "sl": self.sl,
-            "tp": self.tp,
-            "note": self.note,
-            "is_active": self.is_active,
-            "created_at": self.created_at.isoformat(),
+            "source": self.source_id,
+            "target": self.target_id,
+            "value": self.percentage
         }
 
 
@@ -1152,6 +1145,9 @@ def api_companies():
 
     companies = Company.query.filter_by(sector=sector).all()
 
+    if not companies:
+        return jsonify({"nodes": [], "links": []})
+
     nodes = [
         {
             "id": c.id,
@@ -1162,10 +1158,12 @@ def api_companies():
         for c in companies
     ]
 
-    ownerships = Ownership.query.all()
-
-    # filtra solo relazioni interne al settore
     valid_ids = set(c.id for c in companies)
+
+    ownerships = Ownership.query.filter(
+        Ownership.source_id.in_(valid_ids) |
+        Ownership.target_id.in_(valid_ids)
+    ).all()
 
     links = [
         {
