@@ -2,7 +2,6 @@
 
 {% block content %}
 
-
 <style>
 #3d-graph {
   position: relative;
@@ -11,9 +10,8 @@
 </style>
 
 <div style="height:100vh; background:black;">
-    <div id="3d-graph"></div>
+  <div id="3d-graph"></div>
 </div>
-
 
 <!-- PANNELLO DATI -->
 <div id="companyPanel" onclick="event.stopPropagation()" style="
@@ -22,7 +20,6 @@
   right:20px;
   width:320px;
   max-height:80vh;
-  pointer-events: auto;
   overflow-y:auto;
   background:rgba(10,15,30,0.95);
   border:1px solid rgba(0,200,255,0.3);
@@ -30,7 +27,7 @@
   padding:20px;
   color:white;
   display:none;
-  z-index: 99999;
+  z-index:99999;
 ">
 
   <div style="
@@ -38,12 +35,8 @@
     top:10px;
     right:15px;
     cursor:pointer;
-    z-index:100000;
-    pointer-events:auto;
     font-size:18px;
-    color:white;
-  "
-       onclick="closePanel(); return false;">✖</div>
+  " onclick="closePanel()">✖</div>
 
   <div id="panelContent"></div>
 
@@ -54,33 +47,12 @@
 
 <script>
 let selectedNode = null;
-let mode = "overview"; // overview | company
 let graphData = null;
 
-// QUESTE DEVONO ESSERE GLOBALI
-let focusedNodes = new Set();
-let focusedLinks = new Set();
-let highlightNodes = new Set();
-let highlightLinks = new Set();
-
-fetch("/api/sectors")
+fetch("/api/companies?sector=Tech")
   .then(res => res.json())
   .then(data => {
-  
-  if (mode === "overview") {
-    data = {
-      nodes: data.map(s => ({
-        id: s.id,
-        label: s.label,
-        sector: s.id,
-        market_cap: s.market_cap
-      })),
-      links: data.length > 1
-        ? [{ source: data[0].id, target: data[1].id }]
-        : []
-          };
-        }
-  
+
     graphData = data;
 
     const sectorColors = {
@@ -94,182 +66,15 @@ fetch("/api/sectors")
       ConsumerStaples: "#22c55e",
       Communication: "#e879f9",
       RealEstate: "#64748b",
-      Utilities: "#0ea5e9",
-      AI: "#00ffa6",
-      Defense: "#ff0033",
-      Biotech: "#8b5cf6",
-      Fintech: "#14b8a6"
+      Utilities: "#0ea5e9"
     };
 
-
-    window.Graph = ForceGraph3D()
-      (document.getElementById('3d-graph'))
-
+    window.Graph = ForceGraph3D()(document.getElementById('3d-graph'))
       .graphData(graphData)
 
       .nodeColor(node => {
-
-        if (selectedNode && node.id === selectedNode.id) {
-          return "#ffffff";
-        }
-      
-        if (focusedNodes.size > 0) {
-          return focusedNodes.has(node)
-            ? (sectorColors[node.sector] || "#888")
-            : "rgba(255,255,255,0.05)";
-        }
-      
-        return highlightNodes.has(node)
-          ? "#ffffff"
-          : (sectorColors[node.sector] || "#888");
-      
-      })
-
-      .linkWidth(link => {
-
-        if (focusedLinks.size > 0) {
-          return focusedLinks.has(link) ? 4 : 0;
-        }
-      
-        if (highlightLinks.size === 0) return 1.5;
-      
-        return highlightLinks.has(link) ? 4 : 0.8;
-      })
-      
-      .linkColor(link => {
-      
-        if (focusedLinks.size > 0) {
-          return focusedLinks.has(link)
-            ? "#ffffff"
-            : "rgba(255,255,255,0.02)";
-        }
-      
-        if (highlightLinks.size === 0) {
-          return "rgba(120,180,255,0.55)";
-        }
-      
-        return highlightLinks.has(link)
-          ? "#ffffff"
-          : "rgba(255,255,255,0.08)";
-      })
-
-      .onNodeHover(node => {
-
-        highlightNodes.clear();
-        highlightLinks.clear();
-
-        if (node) {
-          highlightNodes.add(node);
-
-          graphData.links.forEach(link => {
-
-            const source = typeof link.source === 'object' ? link.source.id : link.source;
-            const target = typeof link.target === 'object' ? link.target.id : link.target;
-
-            if (source === node.id || target === node.id) {
-
-              highlightLinks.add(link);
-
-              const sourceNode = graphData.nodes.find(n => n.id === source);
-              const targetNode = graphData.nodes.find(n => n.id === target);
-
-              if (sourceNode) highlightNodes.add(sourceNode);
-              if (targetNode) highlightNodes.add(targetNode);
-            }
-
-          });
-        }
-      })
-
-      .onNodeClick(node => {
-      console.log("CLICK NODE:", node);
-      console.log("CURRENT MODE:", mode);
-
-        // =========================
-        // OVERVIEW → DRILL DOWN
-        // =========================
-        if (mode === "overview") {
-      
-          console.log("Entering sector:", node.id);
-      
-          fetch(`/api/companies?sector=${encodeURIComponent(node.id)}`)
-            .then(res => res.json())
-            .then(data => {
-
-              console.log("DATA:", data);
-              console.log("DATA RICEVUTA:", data.nodes.length);
-            
-              mode = "company";
-              graphData = data;
-            
-              selectedNode = null;
-              focusedNodes.clear();
-              focusedLinks.clear();
-              highlightNodes.clear();
-              highlightLinks.clear();
-            
-              // RESET HARD
-              window.Graph.graphData({ nodes: [], links: [] });
-
-              setTimeout(() => {
-                window.Graph.graphData(data);
-                window.Graph.d3ReheatSimulation();
-                window.Graph.zoomToFit(1000);
-              }, 50);
-                          
-            });
-      
-          return;
-        }
-      
-
-        selectedNode = node;
-
-        // =========================
-        // CREA SUBGRAFO (NEIGHBORHOOD)
-        // =========================
-        
-        const neighbors = new Set();
-        const newLinks = [];
-        
-        // trova link collegati
-        graphData.links.forEach(link => {
-        
-          const source = typeof link.source === 'object' ? link.source.id : link.source;
-          const target = typeof link.target === 'object' ? link.target.id : link.target;
-        
-          if (source === node.id || target === node.id) {
-            newLinks.push(link);
-            neighbors.add(source);
-            neighbors.add(target);
-          }
-        
-        });
-        
-        // aggiungi nodo selezionato
-        neighbors.add(node.id);
-        
-        // filtra nodi
-        const newNodes = graphData.nodes.filter(n => neighbors.has(n.id));
-        
-        // nuovo dataset
-        const newGraph = {
-          nodes: newNodes,
-          links: newLinks
-        };
-        
-        // aggiorna grafo
-        window.Graph.graphData(newGraph);
-        window.Graph.refresh();
-        
-        // reset stati
-        focusedNodes.clear();
-        focusedLinks.clear();
-        highlightNodes.clear();
-        highlightLinks.clear();
-        
-        openPanel(node);
-        window.Graph.refresh();
+        if (selectedNode && node.id === selectedNode.id) return "#ffffff";
+        return sectorColors[node.sector] || "#888";
       })
 
       .nodeLabel(node => `
@@ -278,26 +83,25 @@ fetch("/api/sectors")
         Market Cap: ${formatCap(node.market_cap)}
       `)
 
-      .nodeVal(node => {
+      .nodeVal(node => Math.sqrt(node.market_cap || 1))
 
-        const base = Math.sqrt(node.market_cap || 1);
-
-        if (selectedNode && node.id === selectedNode.id) {
-          return base * 1.6;
-        }
-
-        return base;
+      .onNodeClick(node => {
+        selectedNode = node;
+        console.log("CLICK:", node);
+        openPanel(node);
+        window.Graph.refresh();
       })
 
       .backgroundColor('#000');
 
-      window.Graph.d3Force('charge').strength(-120);
-      window.Graph.d3Force('link').distance(120);
-      window.Graph.d3Force(
-        'collision',
-        d3.forceCollide(node => Math.sqrt(node.market_cap || 1) * 2)
-      );
+    window.Graph.d3Force('charge').strength(-120);
+    window.Graph.d3Force('link').distance(120);
+    window.Graph.d3Force(
+      'collision',
+      d3.forceCollide(node => Math.sqrt(node.market_cap || 1) * 2)
+    );
 
+    window.Graph.zoomToFit(1000);
   });
 
 /* =========================
@@ -305,9 +109,9 @@ fetch("/api/sectors")
 ========================= */
 
 function openPanel(node) {
-
   const panel = document.getElementById("companyPanel");
   const content = document.getElementById("panelContent");
+
   const analytics = getAnalytics(node.id);
 
   const incoming = graphData.links.filter(l => {
@@ -321,113 +125,80 @@ function openPanel(node) {
   });
 
   content.innerHTML = `
-    <h2 style="margin-bottom:5px;">${node.id}</h2>
-    <div style="color:#00d4ff; margin-bottom:15px;">
-      ${node.sector}
-    </div>
+    <h2>${node.label || node.id}</h2>
+    <div style="color:#00d4ff;">${node.sector}</div>
 
-    <div style="margin-bottom:15px;">
-      <b>Market Cap:</b><br>
-      ${formatCap(node.market_cap)}
-    </div>
-    
-    <div style="margin-bottom:15px;">
-      <b>Influence Score:</b><br>
-      ${analytics.influenceScore}
-    </div>
+    <br>
+    <b>Market Cap:</b> ${formatCap(node.market_cap)}<br>
+    <b>Influence:</b> ${analytics.influenceScore}<br>
+    <b>Connessioni:</b> ${analytics.connectedCount}
 
-    <div style="margin-bottom:15px;">
-      <b>Connessioni:</b> ${analytics.connectedCount}
-    </div>
+    <hr>
 
-    <div style="margin-top:20px;">
-      <b>Chi investe in ${node.id}</b>
-      ${incoming.length ? incoming.map(l => {
-        const source = typeof l.source === "object" ? l.source.id : l.source;
-        return `<div>${source} → ${l.value}%</div>`;
-      }).join("") : "<div>Nessuno</div>"}
-    </div>
+    <b>Chi investe:</b>
+    ${incoming.length ? incoming.map(l => {
+      const s = typeof l.source === "object" ? l.source.id : l.source;
+      return `<div>${s} → ${l.value}%</div>`;
+    }).join("") : "<div>Nessuno</div>"}
 
-    <div style="margin-top:20px;">
-      <b>Dove investe ${node.id}</b>
-      ${outgoing.length ? outgoing.map(l => {
-        const target = typeof l.target === "object" ? l.target.id : l.target;
-        return `<div>${target} ← ${l.value}%</div>`;
-      }).join("") : "<div>Nessuno</div>"}
-    </div>
+    <hr>
+
+    <b>Dove investe:</b>
+    ${outgoing.length ? outgoing.map(l => {
+      const t = typeof l.target === "object" ? l.target.id : l.target;
+      return `<div>${t} ← ${l.value}%</div>`;
+    }).join("") : "<div>Nessuno</div>"}
   `;
 
   panel.style.display = "block";
 }
 
 function closePanel() {
-
   selectedNode = null;
-
-  focusedNodes.clear();
-  focusedLinks.clear();
-
   document.getElementById("companyPanel").style.display = "none";
-
-  if (window.Graph) {
-    window.Graph.refresh();
-  }
+  if (window.Graph) window.Graph.refresh();
 }
 
 function formatCap(value) {
   if (!value) return "N/D";
   if (value >= 1000) return (value / 1000).toFixed(2) + "T";
-  return value + "B";
+  return value.toFixed(2) + "B";
 }
 
 function getAnalytics(nodeId) {
-
   const incoming = graphData.links.filter(l => {
-    const target = typeof l.target === "object" ? l.target.id : l.target;
-    return target === nodeId;
+    const t = typeof l.target === "object" ? l.target.id : l.target;
+    return t === nodeId;
   });
 
   const outgoing = graphData.links.filter(l => {
-    const source = typeof l.source === "object" ? l.source.id : l.source;
-    return source === nodeId;
+    const s = typeof l.source === "object" ? l.source.id : l.source;
+    return s === nodeId;
   });
 
   const connected = new Set();
 
   incoming.forEach(l => {
-    const source = typeof l.source === "object" ? l.source.id : l.source;
-    connected.add(source);
+    const s = typeof l.source === "object" ? l.source.id : l.source;
+    connected.add(s);
   });
 
   outgoing.forEach(l => {
-    const target = typeof l.target === "object" ? l.target.id : l.target;
-    connected.add(target);
+    const t = typeof l.target === "object" ? l.target.id : l.target;
+    connected.add(t);
   });
 
-  const influenceScore =
-    (outgoing.length * 2) +
-    incoming.length +
-    connected.size * 0.5;
-
   return {
-    incoming,
-    outgoing,
     connectedCount: connected.size,
-    influenceScore: influenceScore.toFixed(2)
+    influenceScore: (outgoing.length * 2 + incoming.length + connected.size * 0.5).toFixed(2)
   };
 }
 
 window.addEventListener("click", function(e) {
-
   const panel = document.getElementById("companyPanel");
-
-  // se clicco dentro il pannello → NON chiudere
   if (panel.contains(e.target)) return;
-
   closePanel();
 });
 </script>
-
-
 
 {% endblock %}
