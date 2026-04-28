@@ -6,13 +6,42 @@
     <div id="3d-graph"></div>
 </div>
 
+<!-- PANNELLO DATI -->
+<div id="companyPanel" style="
+  position:fixed;
+  top:80px;
+  right:20px;
+  width:320px;
+  max-height:80vh;
+  overflow-y:auto;
+  background:rgba(10,15,30,0.95);
+  border:1px solid rgba(0,200,255,0.3);
+  border-radius:12px;
+  padding:20px;
+  color:white;
+  display:none;
+  z-index:9999;
+">
+
+  <div style="position:absolute; top:10px; right:15px; cursor:pointer;"
+       onclick="closePanel()">✖</div>
+
+  <div id="panelContent"></div>
+
+</div>
+
 <script src="https://unpkg.com/3d-force-graph"></script>
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <script>
+let selectedNode = null;
+let graphData = null;
+
 fetch("/static/data/market_map_data.json")
   .then(res => res.json())
   .then(data => {
+  
+    graphData = data;
 
     const sectorColors = {
       Tech: "#00d4ff",
@@ -32,24 +61,26 @@ fetch("/static/data/market_map_data.json")
       Fintech: "#14b8a6"
     };
 
-    // HIGHLIGHT SYSTEM
     const highlightNodes = new Set();
     const highlightLinks = new Set();
-    let hoverNode = null;
 
     const Graph = ForceGraph3D()
       (document.getElementById('3d-graph'))
 
       .graphData(data)
 
-      // COLORI DINAMICI
-      .nodeColor(node =>
-        highlightNodes.has(node)
-          ? "#ffffff"
-          : sectorColors[node.sector]
-      )
+      .nodeColor(node => {
 
-      // LINK STYLE DINAMICO
+        if (selectedNode && node.id === selectedNode.id) {
+          return "#ffffff";
+        }
+
+        return highlightNodes.has(node)
+          ? "#ffffff"
+          : (sectorColors[node.sector] || "#888");
+
+      })
+
       .linkWidth(link =>
         highlightLinks.has(link) ? 3 : 0.5
       )
@@ -60,7 +91,6 @@ fetch("/static/data/market_map_data.json")
           : "rgba(255,255,255,0.25)"
       )
 
-      // HOVER LOGIC (EFFETTO WOW)
       .onNodeHover(node => {
 
         highlightNodes.clear();
@@ -87,30 +117,104 @@ fetch("/static/data/market_map_data.json")
 
           });
         }
-
-        hoverNode = node;
-        // niente refresh forzato
       })
 
-      // TOOLTIP
+      .onNodeClick(node => {
+        selectedNode = node;
+        openPanel(node);
+        Graph.refresh();
+      })
+
       .nodeLabel(node => `
         <b>${node.id}</b><br>
         Settore: ${node.sector}<br>
-        Market Cap: ${node.market_cap}B
+        Market Cap: ${formatCap(node.market_cap)}
       `)
 
-      // DIMENSIONE NODI (SCALA PRO)
-      .nodeVal(node => Math.sqrt(node.market_cap))
+      .nodeVal(node => {
 
-      // BACKGROUND
+        const base = Math.sqrt(node.market_cap || 1);
+
+        if (selectedNode && node.id === selectedNode.id) {
+          return base * 1.6;
+        }
+
+        return base;
+      })
+
       .backgroundColor('#000')
 
-      // FISICA GRAFO
       .d3Force('charge').strength(-120)
       .d3Force('link').distance(120)
-      .d3Force('collision', d3.forceCollide(node => Math.sqrt(node.market_cap) * 2));
+      .d3Force('collision', d3.forceCollide(node => Math.sqrt(node.market_cap || 1) * 2));
 
   });
+
+/* =========================
+   PANEL FUNCTIONS
+========================= */
+
+function openPanel(node) {
+
+  const panel = document.getElementById("companyPanel");
+  const content = document.getElementById("panelContent");
+
+  const incoming = graphData.links.filter(l => {
+    const target = typeof l.target === "object" ? l.target.id : l.target;
+    return target === node.id;
+  });
+
+  const outgoing = graphData.links.filter(l => {
+    const source = typeof l.source === "object" ? l.source.id : l.source;
+    return source === node.id;
+  });
+
+  content.innerHTML = `
+    <h2 style="margin-bottom:5px;">${node.id}</h2>
+    <div style="color:#00d4ff; margin-bottom:15px;">
+      ${node.sector}
+    </div>
+
+    <div style="margin-bottom:15px;">
+      <b>Market Cap:</b><br>
+      ${formatCap(node.market_cap)}
+    </div>
+
+    <div style="margin-bottom:15px;">
+      <b>Connessioni:</b> ${incoming.length + outgoing.length}
+    </div>
+
+    <div style="margin-top:20px;">
+      <b>Chi investe in ${node.id}</b>
+      ${incoming.length ? incoming.map(l => {
+        const source = typeof l.source === "object" ? l.source.id : l.source;
+        return `<div>${source} → ${l.value}%</div>`;
+      }).join("") : "<div>Nessuno</div>"}
+    </div>
+
+    <div style="margin-top:20px;">
+      <b>Dove investe ${node.id}</b>
+      ${outgoing.length ? outgoing.map(l => {
+        const target = typeof l.target === "object" ? l.target.id : l.target;
+        return `<div>${target} ← ${l.value}%</div>`;
+      }).join("") : "<div>Nessuno</div>"}
+    </div>
+  `;
+
+  panel.style.display = "block";
+}
+
+function closePanel() {
+  selectedNode = null;
+  document.getElementById("companyPanel").style.display = "none";
+}
+
+function formatCap(value) {
+  if (!value) return "N/D";
+  if (value >= 1000) return (value / 1000).toFixed(2) + "T";
+  return value + "B";
+}
+
 </script>
 
 {% endblock %}
