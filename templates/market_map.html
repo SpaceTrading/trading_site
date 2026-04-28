@@ -47,6 +47,12 @@
 let selectedNode = null;
 let graphData = null;
 
+// QUESTE DEVONO ESSERE GLOBALI
+let focusedNodes = new Set();
+let focusedLinks = new Set();
+let highlightNodes = new Set();
+let highlightLinks = new Set();
+
 fetch("/api/market-map")
   .then(res => res.json())
   .then(data => {
@@ -71,10 +77,6 @@ fetch("/api/market-map")
       Fintech: "#14b8a6"
     };
 
-    const highlightNodes = new Set();
-    const highlightLinks = new Set();
-    const focusedNodes = new Set();
-    const focusedLinks = new Set();
 
     window.Graph = ForceGraph3D()
       (document.getElementById('3d-graph'))
