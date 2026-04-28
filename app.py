@@ -818,6 +818,40 @@ def montecarlo_page():
 def market_map():
     return render_template("market_map.html")
 
+@app.route("/api/market-map")
+def api_market_map():
+    import sqlite3
+
+    conn = sqlite3.connect("market.db")
+    cur = conn.cursor()
+
+    cur.execute("SELECT name, sector, market_cap FROM companies")
+    rows = cur.fetchall()
+
+    conn.close()
+
+    nodes = []
+    for name, sector, market_cap in rows:
+        nodes.append({
+            "id": name,
+            "sector": sector,
+            "market_cap": market_cap or 100
+        })
+
+    # PER ORA links statici (li sistemiamo dopo)
+    links = [
+        {"source": "BlackRock", "target": "Apple", "value": 8},
+        {"source": "BlackRock", "target": "Microsoft", "value": 7},
+        {"source": "Vanguard", "target": "Google", "value": 6},
+        {"source": "JPMorgan", "target": "Pfizer", "value": 3},
+        {"source": "Goldman Sachs", "target": "Moderna", "value": 2}
+    ]
+
+    return jsonify({
+        "nodes": nodes,
+        "links": links
+    })
+
 # =========================================================
 # ROUTES (PUBLIC)
 # =========================================================
