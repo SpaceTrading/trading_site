@@ -171,6 +171,8 @@ fetch("/api/sectors")
       })
 
       .onNodeClick(node => {
+      console.log("CLICK NODE:", node);
+      console.log("CURRENT MODE:", mode);
 
         // =========================
         // OVERVIEW → DRILL DOWN
@@ -180,8 +182,12 @@ fetch("/api/sectors")
           console.log("Entering sector:", node.id);
       
           fetch(`/api/companies?sector=${node.id}`)
-            .then(res => res.json())
+            .then(res => {
+              console.log("STATUS:", res.status);
+              return res.json();
+            })
             .then(data => {
+              console.log("DATA:", data);
       
               mode = "company";
       
