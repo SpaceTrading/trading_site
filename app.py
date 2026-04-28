@@ -856,45 +856,33 @@ def market_map():
 
 @app.route("/api/market-map")
 def api_market_map():
-    import sqlite3
-
-    conn = sqlite3.connect("market.db")
-    cur = conn.cursor()
 
     # =========================
     # NODES (companies)
     # =========================
-    cur.execute("SELECT name, sector, market_cap FROM companies")
-    rows = cur.fetchall()
+    companies = Company.query.all()
 
     nodes = []
-    for name, sector, market_cap in rows:
+    for c in companies:
         nodes.append({
-            "id": name,
-            "sector": sector,
-            "market_cap": market_cap or 100
+            "id": c.id,
+            "label": c.name,
+            "sector": c.sector,
+            "market_cap": c.market_cap or 1
         })
 
     # =========================
-    # LINKS DA DB (ownerships)
+    # LINKS (ownerships)
     # =========================
-    cur.execute("SELECT source, target, percentage FROM ownerships")
-    rows_links = cur.fetchall()
-    
-    # CREA SET NOMI AZIENDE VALIDE
-    valid_nodes = set([name for name, _, _ in rows])
-    
-    links = []
-    
-    for source, target, percentage in rows_links:
-        if source in valid_nodes and target in valid_nodes:
-            links.append({
-                "source": source,
-                "target": target,
-                "value": percentage
-            })
+    ownerships = Ownership.query.all()
 
-    conn.close()  
+    links = []
+    for o in ownerships:
+        links.append({
+            "source": o.source_id,
+            "target": o.target_id,
+            "value": o.percentage
+        })
 
     return jsonify({
         "nodes": nodes,
