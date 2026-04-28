@@ -158,6 +158,7 @@ function openPanel(node) {
 
   const panel = document.getElementById("companyPanel");
   const content = document.getElementById("panelContent");
+  const analytics = getAnalytics(node.id);
 
   const incoming = graphData.links.filter(l => {
     const target = typeof l.target === "object" ? l.target.id : l.target;
@@ -179,9 +180,14 @@ function openPanel(node) {
       <b>Market Cap:</b><br>
       ${formatCap(node.market_cap)}
     </div>
+    
+    <div style="margin-bottom:15px;">
+      <b>Influence Score:</b><br>
+      ${analytics.influenceScore}
+    </div>
 
     <div style="margin-bottom:15px;">
-      <b>Connessioni:</b> ${incoming.length + outgoing.length}
+      <b>Connessioni:</b> ${analytics.connectedCount}
     </div>
 
     <div style="margin-top:20px;">
@@ -213,6 +219,43 @@ function formatCap(value) {
   if (!value) return "N/D";
   if (value >= 1000) return (value / 1000).toFixed(2) + "T";
   return value + "B";
+}
+
+function getAnalytics(nodeId) {
+
+  const incoming = graphData.links.filter(l => {
+    const target = typeof l.target === "object" ? l.target.id : l.target;
+    return target === nodeId;
+  });
+
+  const outgoing = graphData.links.filter(l => {
+    const source = typeof l.source === "object" ? l.source.id : l.source;
+    return source === nodeId;
+  });
+
+  const connected = new Set();
+
+  incoming.forEach(l => {
+    const source = typeof l.source === "object" ? l.source.id : l.source;
+    connected.add(source);
+  });
+
+  outgoing.forEach(l => {
+    const target = typeof l.target === "object" ? l.target.id : l.target;
+    connected.add(target);
+  });
+
+  const influenceScore =
+    (outgoing.length * 2) +
+    incoming.length +
+    connected.size * 0.5;
+
+  return {
+    incoming,
+    outgoing,
+    connectedCount: connected.size,
+    influenceScore: influenceScore.toFixed(2)
+  };
 }
 
 </script>
