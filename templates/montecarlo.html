@@ -116,7 +116,7 @@ let uploading = false;
 
 function uploadFile() {
 
-    if (uploading) return; // blocca doppia chiamata
+    console.log("UPLOAD CALLED"); // AGGIUNGI QUESTO
 
     const file = document.getElementById("fileInput").files[0];
 
@@ -124,8 +124,6 @@ function uploadFile() {
         alert("Seleziona un file");
         return;
     }
-
-    uploading = true;
 
     const formData = new FormData();
     formData.append("file", file);
@@ -136,8 +134,7 @@ function uploadFile() {
     })
     .then(res => res.json())
     .then(data => {
-
-        console.log("UPLOAD RESPONSE:", data); // debug
+        console.log("RESPONSE:", data); // QUESTO
 
         if (data.error) {
             document.getElementById("uploadStatus").innerText = data.error;
@@ -148,13 +145,6 @@ function uploadFile() {
 
         document.getElementById("uploadStatus").innerText =
             "Trades caricati: " + trades.length;
-    })
-    .catch(err => {
-        console.error(err);
-        alert("Errore upload file");
-    })
-    .finally(() => {
-        uploading = false;
     });
 }
 
