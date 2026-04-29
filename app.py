@@ -414,18 +414,20 @@ def extract_trades_from_file(file):
         # HTML MT5 (FIX DEFINITIVO)
         # =========================
         if filename.endswith(".html"):
-
+        
             file.seek(0)
         
-            try:
-                tables = pd.read_html(file, encoding="utf-16le")
-                print("DEBUG: letto come UTF-16LE")
+            content = file.read()
         
+            try:
+                html = content.decode("utf-16le")
+                print("DEBUG: letto come UTF-16LE")
             except Exception as e:
                 print("DEBUG UTF-16 fallito:", e)
-                file.seek(0)
-                tables = pd.read_html(file, encoding="utf-8")
+                html = content.decode("utf-8", errors="ignore")
                 print("DEBUG: letto come UTF-8")
+        
+            tables = pd.read_html(html)
         
             print("DEBUG: tabelle trovate =", len(tables))
         
@@ -435,7 +437,6 @@ def extract_trades_from_file(file):
         
                 print(f"DEBUG tabella {i} RAW shape:", df.shape)
         
-                
                 trades = extract_from_df(df)
         
                 if trades:
