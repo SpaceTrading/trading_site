@@ -39,22 +39,24 @@
         text-align:left;
         color:white;
     ">
+        {% if not current_user.is_authenticated %}
         <div class="hero-box" id="heroBox">
-
+        
             <span class="hero-close" onclick="closeHero()">✖</span>
             
             <h1 style="font-size:34px;">SPACE-T Trading System</h1>
             <p>Automazione e segnali intelligenti per trader avanzati</p>
-
+        
             <br>
-
+        
             <a href="#">
                 <button onclick="openRegister()">Inizia ora</button>
             </a>
             
             <button onclick="openLogin()">Login</button>
-
+        
         </div>
+        {% endif %}
     </div>
 
 </div>
