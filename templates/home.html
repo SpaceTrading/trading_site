@@ -28,7 +28,9 @@
     "></canvas>
     
     <!-- overlay scuro -->
+    {% if not current_user.is_authenticated %}
     <div class="hero-overlay" id="heroOverlay"></div>
+    {% endif %}
 
     <!-- contenuto -->
     <div style="
