@@ -461,8 +461,27 @@ def extract_trades_from_file(file):
         # XLSX
         # =========================
         elif filename.endswith(".xlsx"):
-            df = pd.read_excel(file, header=None)
-            return extract_from_df(df)
+            df = pd.read_excel(file)
+        
+            print("DEBUG XLSX columns:", df.columns)
+        
+            # trova colonna profit dinamicamente
+            profit_col = None
+            for c in df.columns:
+                c_norm = str(c).lower()
+                if "profit" in c_norm or "p/l" in c_norm or "risultato" in c_norm:
+                    profit_col = c
+                    break
+        
+            if not profit_col:
+                print("DEBUG: profit column not found in XLSX")
+                return []
+        
+            profits = pd.to_numeric(df[profit_col], errors="coerce").dropna()
+        
+            print("DEBUG XLSX trades trovati:", len(profits))
+        
+            return profits.tolist()
 
         # =========================
         # CSV
