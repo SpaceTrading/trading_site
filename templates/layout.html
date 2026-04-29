@@ -208,10 +208,14 @@
         <input type="email" name="email" placeholder="Email" required>
         <input type="password" name="password" placeholder="Password" required>
   
-        <div class="cf-turnstile" data-sitekey="YOUR_SITE_KEY"></div>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAADEMHoEtR_tcg9s3"></div>
   
         <button type="submit">Accedi</button>
       </form>
+      
+      <p style="margin-top:10px; text-align:center;">
+        <a href="{{ url_for('forgot_password') }}">Hai dimenticato la password?</a>
+      </p>
     </div>
   </div>
   
@@ -226,7 +230,7 @@
         <input type="password" name="password" placeholder="Password" required>
         <input type="password" name="password2" placeholder="Ripeti Password" required>
   
-        <div class="cf-turnstile" data-sitekey="YOUR_SITE_KEY"></div>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAADEMHoEtR_tcg9s3"></div>
   
         <button type="submit">Registrati</button>
       </form>
@@ -238,14 +242,22 @@
   <script>
   function openLogin() {
     document.getElementById("loginModal").style.display = "block";
-  }
   
+    if (window.turnstile && !document.querySelector('#loginModal iframe')) {
+      turnstile.render('#loginModal .cf-turnstile');
+    }
+  }
+
   function closeLogin() {
     document.getElementById("loginModal").style.display = "none";
   }
   
   function openRegister() {
     document.getElementById("registerModal").style.display = "block";
+  
+    if (window.turnstile && !document.querySelector('#registerModal iframe')) {
+      turnstile.render('#registerModal .cf-turnstile');
+    }
   }
   
   function closeRegister() {
@@ -258,6 +270,7 @@
       e.target.style.display = "none";
     }
   }
+  
   </script>
 
 </body>

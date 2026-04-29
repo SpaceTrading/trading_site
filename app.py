@@ -932,7 +932,7 @@ def register():
         password = request.form.get("password", "")
         password2 = request.form.get("password2", "")
 
-        if not email or not password:
+        if "@" not in email:
             register_failure(ip)
             flash("Email e password obbligatori.", "error")
             return redirect(url_for("home"))
@@ -1026,6 +1026,15 @@ def reset_password(token):
         return redirect(url_for("home"))
 
     user = reset.user
+    
+    ip = request.remote_addr
+    
+    token = request.form.get("cf-turnstile-response")
+    
+    if not token or not verify_turnstile(token, ip):
+        register_failure(ip)
+        flash("Verifica anti-bot fallita.", "error")
+        return render_template("login.html")    
 
     # ===== POST (CAMBIO PASSWORD) =====
     if request.method == "POST":
