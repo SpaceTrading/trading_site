@@ -118,8 +118,54 @@ with app.app_context():
                 )
             )    
 
+    
+    # =========================
+    # INTRA-SECTOR CONNECTIONS
+    # =========================
+    
+    from collections import defaultdict
+    import random
+    
+    sector_map = defaultdict(list)
+    
+    # raggruppa aziende per settore
+    for c in companies:
+        sector_map[c.sector].append(c)
+    
+    for sector, comps in sector_map.items():
+    
+        if len(comps) < 2:
+            continue
+    
+        for c in comps:
+    
+            others = [x for x in comps if x.id != c.id]
+    
+            if not others:
+                continue
+    
+            targets = random.sample(others, k=min(2, len(others)))
+    
+            for t in targets:
+    
+                existing = Ownership.query.filter_by(
+                    source_id=c.id,
+                    target_id=t.id
+                    ).first()
+    
+                if existing:
+                    continue
+    
+                db.session.add(
+                    Ownership(
+                        source_id=c.id,
+                        target_id=t.id,
+                        percentage=random.randint(1, 5)
+                    )
+                )    
+    
     db.session.commit()
-
+    
     print("Ownership seed completato")
     print(f"creati: {created}")
     print(f"aggiornati: {updated}")
