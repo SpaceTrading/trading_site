@@ -208,10 +208,6 @@ def montecarlo_upload():
         if not file:
             return jsonify({"error": "no file"})
 
-        file = request.files.get("file")
-
-        if not file:
-            return jsonify({"error": "no file"})
         
         file.seek(0)  # fondamentale
         trades = extract_trades_from_file(file)
@@ -391,7 +387,15 @@ def extract_trades_from_file(file):
                     break
             
             if not direction_col:
-                print("DEBUG: direzione non trovata")
+                print("DEBUG: direzione non trovata → provo senza filtro direzione")
+            
+                # fallback: usa direttamente profit se esiste
+                for c in data.columns:
+                    if "profit" in str(c).lower():
+                        profits = pd.to_numeric(data[c], errors="coerce").dropna()
+                        print("DEBUG fallback profit:", len(profits))
+                        return profits.tolist()
+            
                 return []
 
             # trova colonna profit
@@ -546,27 +550,13 @@ def extract_trades_from_file(file):
         # XLSX
         # =========================
         elif filename.endswith(".xlsx"):
-            df = pd.read_excel(file)
+
+            df = pd.read_excel(file, header=None)
         
-            print("DEBUG XLSX columns:", df.columns)
+            print("DEBUG XLSX RAW shape:", df.shape)
         
-            # trova colonna profit dinamicamente
-            profit_col = None
-            for c in df.columns:
-                c_norm = str(c).lower()
-                if "profit" in c_norm or "p/l" in c_norm or "risultato" in c_norm:
-                    profit_col = c
-                    break
-        
-            if not profit_col:
-                print("DEBUG: profit column not found in XLSX")
-                return []
-        
-            profits = pd.to_numeric(df[profit_col], errors="coerce").dropna()
-        
-            print("DEBUG XLSX trades trovati:", len(profits))
-        
-            return profits.tolist()
+            # usa stesso parser HTML
+            return extract_from_df(df)
 
         # =========================
         # CSV
