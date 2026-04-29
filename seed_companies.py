@@ -10,7 +10,7 @@ companies = [
     ("Apple", "AAPL", "Tech"),
     ("Microsoft", "MSFT", "Tech"),
     ("Google", "GOOGL", "Tech"),
-    ("Amazon", "AMZN", "Tech"),
+    ("Amazon", "AMZN", "ConsumerDiscretionary"),
     ("NVIDIA", "NVDA", "Tech"),
     ("Meta", "META", "Tech"),
     ("Oracle", "ORCL", "Tech"),
@@ -47,6 +47,57 @@ companies = [
     ("Johnson & Johnson", "JNJ", "Healthcare"),
     ("Moderna", "MRNA", "Healthcare"),
     ("Merck", "MRK", "Healthcare"),
+    
+    # =========================
+    # ENERGY
+    # =========================
+    ("Exxon Mobil", "XOM", "Energy"),
+    ("Chevron", "CVX", "Energy"),
+    ("Shell", "SHEL", "Energy"),
+    ("BP", "BP", "Energy"),
+    ("TotalEnergies", "TTE", "Energy"),
+    
+    # =========================
+    # INDUSTRIALS
+    # =========================
+    ("Boeing", "BA", "Industrials"),
+    ("Lockheed Martin", "LMT", "Industrials"),
+    ("Raytheon", "RTX", "Industrials"),
+    ("Caterpillar", "CAT", "Industrials"),
+    ("General Electric", "GE", "Industrials"),
+    
+    # =========================
+    # CONSUMER STAPLES
+    # =========================
+    ("Coca-Cola", "KO", "ConsumerStaples"),
+    ("PepsiCo", "PEP", "ConsumerStaples"),
+    ("Procter & Gamble", "PG", "ConsumerStaples"),
+    ("Walmart", "WMT", "ConsumerStaples"),
+    ("Costco", "COST", "ConsumerStaples"),
+    
+    # =========================
+    # COMMUNICATION
+    # =========================
+    ("Netflix", "NFLX", "Communication"),
+    ("Disney", "DIS", "Communication"),
+    ("Comcast", "CMCSA", "Communication"),
+    ("AT&T", "T", "Communication"),
+    ("Verizon", "VZ", "Communication"),
+    
+    # =========================
+    # MATERIALS
+    # =========================
+    ("Dow", "DOW", "Materials"),
+    ("DuPont", "DD", "Materials"),
+    ("Rio Tinto", "RIO", "Materials"),
+    ("BHP", "BHP", "Materials"),
+    
+    # =========================
+    # UTILITIES
+    # =========================
+    ("NextEra Energy", "NEE", "Utilities"),
+    ("Duke Energy", "DUK", "Utilities"),
+    ("Southern Company", "SO", "Utilities"),    
 
 ]
 
