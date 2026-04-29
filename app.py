@@ -219,6 +219,7 @@ def montecarlo_upload():
         if not trades:
             return jsonify({"error": "no trades found"})
 
+        print("RETURNING TRADES:", len(trades))
         return jsonify({"trades": trades})
 
     except Exception as e:
