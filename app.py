@@ -200,16 +200,17 @@ def api_convert():
 # =========================================================
 
 @app.route("/api/montecarlo/upload", methods=["POST"])
-@login_required
 def montecarlo_upload():
+    if not current_user.is_authenticated:
+        return jsonify({"error": "not authenticated"}), 401
+
     try:
         file = request.files.get("file")
 
         if not file:
             return jsonify({"error": "no file"})
 
-        
-        file.seek(0)  # fondamentale
+        file.seek(0)
         trades = extract_trades_from_file(file)
 
         if not trades:
@@ -220,11 +221,14 @@ def montecarlo_upload():
 
     except Exception as e:
         print("UPLOAD ERROR:", e)
-        return jsonify({"error": "upload error"}) 
+        return jsonify({"error": "upload error"})
+    
     
 @app.route("/api/montecarlo/run", methods=["POST"])
-@login_required
+#@login_required
 def montecarlo_run():
+    if not current_user.is_authenticated:
+        return jsonify({"error": "not authenticated"}), 401    
 
     try:
         data = request.json
@@ -491,26 +495,9 @@ def extract_trades_from_file(file):
             
             return profits
 
-            # filtra trade chiusi
-            data[direction_col] = data[direction_col].astype(str).str.lower().str.strip()
-
-            # accetta sia trade chiusi che standard MT5
-            valid_values = ["out", "close", "closed", "exit", "buy", "sell"]
-            
-            data = data[data[direction_col].isin(valid_values)]
-
-            profits = pd.to_numeric(data[profit_col], errors="coerce").dropna()
-
-            print("DEBUG trades trovati:", len(profits))
-
-            return profits.tolist()
 
         # =========================
-        # HTML MT5 (TEXT PARSER)
-        # =========================
-
-        # =========================
-        # HTML MT5 (FIX DEFINITIVO)
+        # HTML MT5 (FIX PARSER DEFINITIVO)
         # =========================
         if filename.endswith(".html"):
         
