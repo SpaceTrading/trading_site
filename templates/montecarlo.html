@@ -112,7 +112,11 @@ let trades = []
 // =========================
 // UPLOAD FILE
 // =========================
+let uploading = false;
+
 function uploadFile() {
+
+    if (uploading) return; // blocco doppio click
 
     const file = document.getElementById("fileInput").files[0]
 
@@ -120,6 +124,8 @@ function uploadFile() {
         alert("Seleziona un file")
         return
     }
+
+    uploading = true; // stato attivo
 
     const formData = new FormData()
     formData.append("file", file)
@@ -147,6 +153,9 @@ function uploadFile() {
     .catch(err => {
         console.error(err)
         alert("Errore upload file")
+    })
+    .finally(() => {
+        uploading = false; // reset
     })
 }
 
