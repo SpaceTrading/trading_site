@@ -392,15 +392,41 @@ def extract_trades_from_file(file):
                 return []
 
             # trova colonna profit
+            # =========================
+            # FIX: se non esiste profit → usa fallback MT5 ORDINI
+            # =========================
+            
             profit_col = None
             for c in data.columns:
                 if "profit" in c or "profitto" in c:
                     profit_col = c
                     break
-
-            if not profit_col:
-                print("DEBUG: profit non trovato")
-                return []
+            
+            if profit_col:
+                profits = pd.to_numeric(data[profit_col], errors="coerce").dropna()
+                print("DEBUG trades trovati:", len(profits))
+                return profits.tolist()
+            
+            # =========================
+            # FALLBACK: ricostruzione PnL da BUY/SELL
+            # =========================
+            
+            print("DEBUG: profit non trovato → uso fallback trades")
+            
+            prices = pd.to_numeric(data.get("prezzo", 0), errors="coerce")
+            types = data[direction_col].values
+            
+            profits = []
+            
+            for i in range(len(types)-1):
+                if types[i] == "buy" and types[i+1] == "sell":
+                    profits.append(prices.iloc[i+1] - prices.iloc[i])
+                elif types[i] == "sell" and types[i+1] == "buy":
+                    profits.append(prices.iloc[i] - prices.iloc[i+1])
+            
+            print("DEBUG fallback trades trovati:", len(profits))
+            
+            return profits
 
             # filtra trade chiusi
             data[direction_col] = data[direction_col].astype(str).str.lower().str.strip()
