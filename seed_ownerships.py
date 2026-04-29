@@ -77,6 +77,46 @@ with app.app_context():
                 )
             )
             created += 1
+            
+    # =========================
+    # AUTO-GENERATE OWNERSHIPS
+    # =========================
+    
+    import random
+    
+    big_players = ["BlackRock", "Vanguard", "JPMorgan"]
+    
+    for company in companies:
+    
+        # skip se è già un big player
+        if company.name in big_players:
+            continue
+    
+        # assegna 1-2 investitori casuali
+        investors = random.sample(big_players, k=random.randint(1, 2))
+    
+        for investor_name in investors:
+            investor = name_map.get(investor_name)
+    
+            if not investor:
+                continue
+    
+            # evita duplicati
+            existing = Ownership.query.filter_by(
+                source_id=investor.id,
+                target_id=company.id
+            ).first()
+    
+            if existing:
+                continue
+    
+            db.session.add(
+                Ownership(
+                    source_id=investor.id,
+                    target_id=company.id,
+                    percentage=random.randint(1, 10)
+                )
+            )    
 
     db.session.commit()
 

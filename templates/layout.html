@@ -59,22 +59,58 @@
 
   <!-- LOADER SCRIPT -->
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
+    window.addEventListener("load", () => {
       const loader = document.getElementById("appLoader");
-
-      window.addEventListener("load", () => {
+      
+      const messages = [
+        "Sapevi che durante l'iperinflazione in Zimbabwe,\nil governo ha stampato una banconota da\n100.000.000.000.000 di dollari?.",
+      
+        "Il prezzo delle azioni di Classe A di Berkshire Hathaway ($BRK.A$)\nè diventato così alto (superando i 400.000 dollari per azione)\nche nel 2021 il NASDAQ ha dovuto aggiornare i propri sistemi.\nI computer non riuscivano a gestire numeri così grandi\nperché il prezzo stava superando il limite massimo\ndi un numero intero a 32 bit",
+      
+        "John Bogle (fondatore di Vanguard)\nha lasciato un'eredità quasi religiosa.\nAi nuovi dipendenti viene spesso consegnata\nuna copia del suo libro 'Enough'.",
+      
+        "Nel trading ad alta frequenza (HFT),\nla velocità della luce è un limite fisico fastidioso.\nNel 2010, una società chiamata Spread Networks\nha speso 300 milioni di dollari\nper scavare un tunnel quasi perfettamente dritto\nattraverso le montagne tra Chicago e New York.\nLo scopo?\nRidurre il tempo di trasmissione dei dati\ndi soli 3 millisecondi..",
+      
+        "Persino l'uomo che ha codificato la gravità\nè stato 'fregato' dai mercati.\nNewton perse una fortuna\n(circa 3 milioni di dollari odierni)\nnella bolla della South Sea Company.\nLa sua citazione famosa dopo il crash:\n'Posso calcolare i movimenti dei corpi celesti,\nma non la follia delle persone.'",
+      
+        "Sapevi che Renaissance Technologies\n dal 1988 al 2018,\n non ha quasi mai registrato\n un trimestre in perdita?",
+      
+        "Most traders lose by overtrading.",
+        "Capital preservation is everything.",
+        "Follow data, not emotions.",
+        "The market is always right."
+      ];
+      
+      let i = 0;
+      
+      const textEl = document.getElementById("loadingText");
+      
+      const interval = setInterval(() => {
+        if (!textEl) return;
+      
+        textEl.style.opacity = 0;
+      
         setTimeout(() => {
-          if (!loader) return;
+          textEl.innerText = messages[i % messages.length];
+          textEl.style.opacity = 1;
+          i++;
+        }, 300);
+      
+      }, 2000);
 
-          loader.style.opacity = "0";
-          loader.style.transition = "opacity 0.6s ease";
-
-          setTimeout(() => {
-            loader.style.display = "none";
-          }, 600);
-
-        }, 800);
-      });
+      setTimeout(() => {
+        if (!loader) return;
+      
+        clearInterval(interval); // IMPORTANTISSIMO
+      
+        loader.style.opacity = "0";
+        loader.style.transition = "opacity 0.6s ease";
+      
+        setTimeout(() => {
+          loader.style.display = "none";
+        }, 600);
+      
+      }, 800);
     });
   </script>
 
@@ -86,7 +122,9 @@
   <div id="appLoader">
     <div class="loader-content">
       <h1 class="logo">SPACE-T</h1>
-      <p class="status">Initializing neural systems...</p>
+      <p class="status" id="loadingText">
+        Initializing neural systems...
+      </p>
     </div>
   </div>
 
