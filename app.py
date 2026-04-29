@@ -362,7 +362,10 @@ def extract_trades_from_file(file):
                 values = [normalize(v) for v in row.values]
                 row_text = " ".join(values)
 
-                if "direzione" in row_text and ("profitto" in row_text or "profit" in row_text):
+                if (
+                    ("direzione" in row_text or "type" in row_text or "operazione" in row_text)
+                    and ("profit" in row_text)
+                ):
                     header_row = i
                     break
 
@@ -377,14 +380,21 @@ def extract_trades_from_file(file):
 
             print("DEBUG colonne reali:", data.columns)
 
-            if "direzione" not in data.columns:
+            direction_col = None
+
+            for c in data.columns:
+                if "direzione" in c or "type" in c or "operazione" in c:
+                    direction_col = c
+                    break
+            
+            if not direction_col:
                 print("DEBUG: direzione non trovata")
                 return []
 
             # trova colonna profit
             profit_col = None
             for c in data.columns:
-                if "profit" in c:
+                if "profit" in c or "profitto" in c:
                     profit_col = c
                     break
 
@@ -393,12 +403,12 @@ def extract_trades_from_file(file):
                 return []
 
             # filtra trade chiusi
-            data["direzione"] = data["direzione"].astype(str).str.lower().str.strip()
+            data[direction_col] = data[direction_col].astype(str).str.lower().str.strip()
 
             # accetta sia trade chiusi che standard MT5
             valid_values = ["out", "close", "closed", "exit", "buy", "sell"]
             
-            data = data[data["direzione"].isin(valid_values)]
+            data = data[data[direction_col].isin(valid_values)]
 
             profits = pd.to_numeric(data[profit_col], errors="coerce").dropna()
 
