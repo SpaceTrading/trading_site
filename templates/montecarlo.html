@@ -116,50 +116,46 @@ let uploading = false;
 
 function uploadFile() {
 
-    if (uploading) {
-        console.log("Upload già in corso");
-        return; // STOP vero
-    }
+    if (uploading) return; // blocca doppia chiamata
 
-    const file = document.getElementById("fileInput").files[0]
+    const file = document.getElementById("fileInput").files[0];
 
     if (!file) {
-        alert("Seleziona un file")
-        return
+        alert("Seleziona un file");
+        return;
     }
 
     uploading = true;
 
-    const formData = new FormData()
-    formData.append("file", file)
+    const formData = new FormData();
+    formData.append("file", file);
 
     fetch("/api/montecarlo/upload", {
         method: "POST",
         body: formData
     })
-    .then(res => {
-        if (!res.ok) throw new Error("Errore upload")
-        return res.json()
-    })
+    .then(res => res.json())
     .then(data => {
 
+        console.log("UPLOAD RESPONSE:", data); // debug
+
         if (data.error) {
-            document.getElementById("uploadStatus").innerText = data.error
-            return
+            document.getElementById("uploadStatus").innerText = data.error;
+            return;
         }
 
-        trades = data.trades
+        trades = data.trades;
 
         document.getElementById("uploadStatus").innerText =
-            "Trades caricati: " + trades.length
+            "Trades caricati: " + trades.length;
     })
     .catch(err => {
-        console.error(err)
-        alert("Errore upload file")
+        console.error(err);
+        alert("Errore upload file");
     })
     .finally(() => {
-        uploading = false; // reset corretto
-    })
+        uploading = false;
+    });
 }
 
 // =========================
