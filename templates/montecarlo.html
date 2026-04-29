@@ -116,7 +116,10 @@ let uploading = false;
 
 function uploadFile() {
 
-    if (uploading) return; // blocco doppio click
+    if (uploading) {
+        console.log("Upload già in corso");
+        return; // STOP vero
+    }
 
     const file = document.getElementById("fileInput").files[0]
 
@@ -125,7 +128,7 @@ function uploadFile() {
         return
     }
 
-    uploading = true; // stato attivo
+    uploading = true;
 
     const formData = new FormData()
     formData.append("file", file)
@@ -155,7 +158,7 @@ function uploadFile() {
         alert("Errore upload file")
     })
     .finally(() => {
-        uploading = false; // reset
+        uploading = false; // reset corretto
     })
 }
 
