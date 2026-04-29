@@ -197,8 +197,68 @@
     {% block content %}{% endblock %}
 
   </main>
+  
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeLogin()">&times;</span>
+  
+      <h2>Login</h2>
+  
+      <form method="POST" action="{{ url_for('login') }}">
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+  
+        <div class="cf-turnstile" data-sitekey="YOUR_SITE_KEY"></div>
+  
+        <button type="submit">Accedi</button>
+      </form>
+    </div>
+  </div>
+  
+  <div id="registerModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeRegister()">&times;</span>
+  
+      <h2>Register</h2>
+  
+      <form method="POST" action="{{ url_for('register') }}">
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="password" name="password2" placeholder="Ripeti Password" required>
+  
+        <div class="cf-turnstile" data-sitekey="YOUR_SITE_KEY"></div>
+  
+        <button type="submit">Registrati</button>
+      </form>
+    </div>
+  </div>
 
   <script src="{{ url_for('static', filename='app.js') }}"></script>
+  
+  <script>
+  function openLogin() {
+    document.getElementById("loginModal").style.display = "block";
+  }
+  
+  function closeLogin() {
+    document.getElementById("loginModal").style.display = "none";
+  }
+  
+  function openRegister() {
+    document.getElementById("registerModal").style.display = "block";
+  }
+  
+  function closeRegister() {
+    document.getElementById("registerModal").style.display = "none";
+  }
+  
+  // chiudi cliccando fuori
+  window.onclick = function(e) {
+    if (e.target.classList.contains("modal")) {
+      e.target.style.display = "none";
+    }
+  }
+  </script>
 
 </body>
 </html>
