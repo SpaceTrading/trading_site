@@ -392,10 +392,9 @@ def extract_trades_from_file(file):
                 row_text = " ".join(values)
 
                 if (
-                    "affare" in row_text
-                    and "direzione" in row_text
+                    "direzione" in row_text
                     and ("profitto" in row_text or "profit" in row_text)
-                    ):
+                ):
                     header_row = i
                     break
 
