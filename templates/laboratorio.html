@@ -36,11 +36,23 @@
         color:white;
         padding-top:60px;
     ">
-        <div style="
+        <div id="labHeroBox" style="
             background: rgba(0,0,0,0.6);
             padding:40px;
             border-radius:12px;
+            position: relative;
         ">
+        
+            <!-- ✖ QUI -->
+            <span onclick="closeLabHero()" style="
+                position:absolute;
+                top:10px;
+                right:15px;
+                cursor:pointer;
+                font-size:20px;
+                color:white;
+            ">✖</span>
+        
             <h1 style="font-size:42px;">Laboratorio Trading</h1>
             <p>Strumenti professionali per trader</p>
         </div>
@@ -105,5 +117,19 @@
     {% endif %}
 
 </div>
+
+<script>
+function closeLabHero() {
+    const box = document.getElementById("labHeroBox");
+    if (!box) return;
+
+    box.style.opacity = "0";
+    box.style.transition = "0.3s";
+
+    setTimeout(() => {
+        box.style.display = "none";
+    }, 300);
+}
+</script>
 
 {% endblock %}
