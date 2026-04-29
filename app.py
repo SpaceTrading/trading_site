@@ -245,44 +245,29 @@ def montecarlo_upload():
 
     
     
-
-    
 @app.route("/api/montecarlo/run", methods=["POST"])
+#@login_required
 def montecarlo_run():
-
-    print("AUTH RUN:", current_user.is_authenticated)
-
     if not current_user.is_authenticated:
-        return jsonify({"error": "not authenticated"}), 401
+        return jsonify({"error": "not authenticated"}), 401    
 
     try:
-        # =========================
-        # INPUT CHECK
-        # =========================
-        data = request.get_json(silent=True)
-
-        if not data:
-            print("DEBUG: no JSON received")
-            return jsonify({"error": "no data"}), 400
-
+        data = request.json
         trades = data.get("trades", [])
 
         if not isinstance(trades, list):
-            return jsonify({"error": "invalid trades"}), 400
-
+            return jsonify({"error": "invalid trades"})
+        
         try:
             trades = [float(x) for x in trades]
-        except Exception as e:
-            print("DEBUG: conversion error:", e)
-            return jsonify({"error": "trades must be numbers"}), 400
-
+        except:
+            return jsonify({"error": "trades must be numbers"})
+        
         if len(trades) < 2:
-            return jsonify({"error": "not enough trades"}), 400
+            return jsonify({"error": "not enough trades"})
 
         sims = int(data.get("simulations", 1000))
         sims = max(10, min(sims, 10000))
-
-        print("DEBUG trades:", len(trades), "sims:", sims)
 
         # =========================
         # ORIGINAL EQUITY
@@ -305,11 +290,12 @@ def montecarlo_run():
             final_profits.append(equity[-1])
 
         # =========================
-        # SORT
+        # ORDINA PER PROFITTO
         # =========================
         sorted_indices = np.argsort(final_profits)
         sorted_equities = [all_equities[i] for i in sorted_indices]
 
+        # percentili
         p5_index = int(sims * 0.95)
         p50_index = int(sims * 0.5)
         p95_index = int(sims * 0.05)
@@ -319,19 +305,21 @@ def montecarlo_run():
         worst_95_equity = sorted_equities[p95_index].tolist()
 
         # =========================
-        # SAMPLE
+        # SAMPLE CURVES (50)
         # =========================
         sample_size = min(50, sims)
         sample_indices = np.random.choice(range(sims), size=sample_size, replace=False)
         samples = [all_equities[i].tolist() for i in sample_indices]
 
         # =========================
-        # METRICS
+        # METRICHE BASE
         # =========================
         median_profit = float(np.median(final_profits))
         avg_profit = float(np.mean(final_profits))
         worst_profit = float(np.min(final_profits))
         best_profit = float(np.max(final_profits))
+
+        # drawdown su curva mediana
         median_dd = float(max_drawdown(median_equity))
 
         # =========================
@@ -339,11 +327,14 @@ def montecarlo_run():
         # =========================
         return jsonify({
             "status": "success",
+
             "original_equity": original_equity,
             "median_equity": median_equity,
             "worst_95_equity": worst_95_equity,
             "best_5_equity": best_5_equity,
+
             "samples": samples,
+
             "metrics": {
                 "avg_profit": avg_profit,
                 "median_profit": median_profit,
@@ -351,11 +342,158 @@ def montecarlo_run():
                 "worst_profit": worst_profit,
                 "median_dd": median_dd
             }
-        }), 200
+        })
 
     except Exception as e:
-        print("MC ERROR:", str(e))
-        return jsonify({"error": "simulation error"}), 500
+        print("MC ERROR:", e)
+        return jsonify({"error": "simulation error"})
+    
+    
+
+def max_drawdown(equity):
+    peak = equity[0]
+    max_dd = 0
+
+    for x in equity:
+        if x > peak:
+            peak = x
+
+        dd = peak - x
+        if dd > max_dd:
+            max_dd = dd
+
+    return max_dd
+
+def extract_trades_from_file(file):
+    file.seek(0)
+    filename = file.filename.lower()
+
+    try:
+        import pandas as pd
+        from io import StringIO
+
+        def normalize(x):
+            return str(x).strip().lower()
+
+        def clean_number(x):
+            if x is None:
+                return None
+            s = str(x).strip()
+            s = s.replace("\xa0", " ")
+            s = s.replace(" ", "")
+            s = s.replace(",", ".")
+            return pd.to_numeric(s, errors="coerce")
+
+        def extract_affari_from_df(df):
+            header_row = None
+
+            for i, row in df.iterrows():
+                values = [normalize(v) for v in row.values]
+                row_text = " ".join(values)
+
+                if (
+                    "affare" in row_text
+                    and "direzione" in row_text
+                    and ("profitto" in row_text or "profit" in row_text)
+                    ):
+                    header_row = i
+                    break
+
+            if header_row is None:
+                return []
+
+            columns = [normalize(v) for v in df.iloc[header_row].values]
+            data = df.iloc[header_row + 1:].copy()
+            data.columns = columns
+
+            print("DEBUG AFFARI columns:", data.columns)
+
+            direction_col = None
+            profit_col = None
+
+            for c in data.columns:
+                c_norm = normalize(c)
+
+                if "direzione" in c_norm:
+                    direction_col = c
+
+                if "profitto" in c_norm or "profit" in c_norm:
+                    profit_col = c
+
+            if not direction_col or not profit_col:
+                print("DEBUG: colonne affari insufficienti")
+                return []
+
+            data[direction_col] = data[direction_col].astype(str).str.lower().str.strip()
+
+            # Prendiamo SOLO i deal chiusi: direction = out
+            closed = data[data[direction_col] == "out"].copy()
+
+            profits = closed[profit_col].apply(clean_number).dropna()
+
+            print("DEBUG AFFARI trades OUT trovati:", len(profits))
+
+            return profits.tolist()
+
+        # =========================
+        # HTML MT5
+        # =========================
+        if filename.endswith(".html"):
+            file.seek(0)
+            content = file.read()
+
+            try:
+                html = content.decode("utf-16le")
+                print("DEBUG: letto come UTF-16LE")
+            except Exception as e:
+                print("DEBUG UTF-16 fallito:", e)
+                html = content.decode("utf-8", errors="ignore")
+                print("DEBUG: letto come UTF-8")
+
+            tables = pd.read_html(StringIO(html))
+            print("DEBUG: tabelle trovate =", len(tables))
+
+            for i, df in enumerate(tables):
+                print(f"DEBUG tabella {i} RAW shape:", df.shape)
+
+                try:
+                    trades = extract_affari_from_df(df)
+
+                    if trades:
+                        print(f"DEBUG tabella {i} AFFARI trades trovati:", len(trades))
+                        return trades
+
+                except Exception as e:
+                    print(f"DEBUG tabella {i} skip:", e)
+                    continue
+
+            print("DEBUG: nessuna tabella AFFARI valida trovata")
+            return []
+
+        # =========================
+        # XLSX
+        # =========================
+        elif filename.endswith(".xlsx"):
+            file.seek(0)
+            df = pd.read_excel(file, header=None)
+            print("DEBUG XLSX RAW shape:", df.shape)
+            return extract_affari_from_df(df)
+
+        # =========================
+        # CSV
+        # =========================
+        elif filename.endswith(".csv"):
+            file.seek(0)
+            df = pd.read_csv(file, header=None)
+            print("DEBUG CSV RAW shape:", df.shape)
+            return extract_affari_from_df(df)
+
+        else:
+            return []
+
+    except Exception as e:
+        print("PARSING ERROR:", e)
+        return []
     
 @app.route("/api/correlations")
 @login_required
