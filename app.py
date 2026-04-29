@@ -201,52 +201,88 @@ def api_convert():
 
 @app.route("/api/montecarlo/upload", methods=["POST"])
 def montecarlo_upload():
+
+    print("AUTH:", current_user.is_authenticated)
+
+    try:
+        # =========================
+        # FILE CHECK
+        # =========================
+        if "file" not in request.files:
+            print("DEBUG: no file in request")
+            return jsonify({"error": "no file"}), 400
+
+        file = request.files["file"]
+
+        if file.filename == "":
+            print("DEBUG: empty filename")
+            return jsonify({"error": "empty filename"}), 400
+
+        print("DEBUG filename:", file.filename)
+
+        # =========================
+        # PARSING
+        # =========================
+        file.seek(0)
+        trades = extract_trades_from_file(file)
+
+        print("DEBUG extracted trades:", len(trades) if trades else 0)
+
+        if not trades or len(trades) == 0:
+            return jsonify({"error": "no trades found"}), 200
+
+        # =========================
+        # SUCCESS
+        # =========================
+        return jsonify({
+            "status": "success",
+            "trades": trades
+        }), 200
+
+    except Exception as e:
+        print("UPLOAD ERROR:", str(e))
+        return jsonify({"error": "upload error"}), 500
+
+    
+    
+
+    
+@app.route("/api/montecarlo/run", methods=["POST"])
+def montecarlo_run():
+
+    print("AUTH RUN:", current_user.is_authenticated)
+
     if not current_user.is_authenticated:
         return jsonify({"error": "not authenticated"}), 401
 
     try:
-        file = request.files.get("file")
+        # =========================
+        # INPUT CHECK
+        # =========================
+        data = request.get_json(silent=True)
 
-        if not file:
-            return jsonify({"error": "no file"})
+        if not data:
+            print("DEBUG: no JSON received")
+            return jsonify({"error": "no data"}), 400
 
-        file.seek(0)
-        trades = extract_trades_from_file(file)
-
-        if not trades:
-            return jsonify({"error": "no trades found"})
-
-        print("RETURNING TRADES:", len(trades))
-        return jsonify({"trades": trades})
-
-    except Exception as e:
-        print("UPLOAD ERROR:", e)
-        return jsonify({"error": "upload error"})
-    
-    
-@app.route("/api/montecarlo/run", methods=["POST"])
-#@login_required
-def montecarlo_run():
-    if not current_user.is_authenticated:
-        return jsonify({"error": "not authenticated"}), 401    
-
-    try:
-        data = request.json
         trades = data.get("trades", [])
 
         if not isinstance(trades, list):
-            return jsonify({"error": "invalid trades"})
-        
+            return jsonify({"error": "invalid trades"}), 400
+
         try:
             trades = [float(x) for x in trades]
-        except:
-            return jsonify({"error": "trades must be numbers"})
-        
+        except Exception as e:
+            print("DEBUG: conversion error:", e)
+            return jsonify({"error": "trades must be numbers"}), 400
+
         if len(trades) < 2:
-            return jsonify({"error": "not enough trades"})
+            return jsonify({"error": "not enough trades"}), 400
 
         sims = int(data.get("simulations", 1000))
         sims = max(10, min(sims, 10000))
+
+        print("DEBUG trades:", len(trades), "sims:", sims)
 
         # =========================
         # ORIGINAL EQUITY
@@ -269,12 +305,11 @@ def montecarlo_run():
             final_profits.append(equity[-1])
 
         # =========================
-        # ORDINA PER PROFITTO
+        # SORT
         # =========================
         sorted_indices = np.argsort(final_profits)
         sorted_equities = [all_equities[i] for i in sorted_indices]
 
-        # percentili
         p5_index = int(sims * 0.95)
         p50_index = int(sims * 0.5)
         p95_index = int(sims * 0.05)
@@ -284,21 +319,19 @@ def montecarlo_run():
         worst_95_equity = sorted_equities[p95_index].tolist()
 
         # =========================
-        # SAMPLE CURVES (50)
+        # SAMPLE
         # =========================
         sample_size = min(50, sims)
         sample_indices = np.random.choice(range(sims), size=sample_size, replace=False)
         samples = [all_equities[i].tolist() for i in sample_indices]
 
         # =========================
-        # METRICHE BASE
+        # METRICS
         # =========================
         median_profit = float(np.median(final_profits))
         avg_profit = float(np.mean(final_profits))
         worst_profit = float(np.min(final_profits))
         best_profit = float(np.max(final_profits))
-
-        # drawdown su curva mediana
         median_dd = float(max_drawdown(median_equity))
 
         # =========================
@@ -306,14 +339,11 @@ def montecarlo_run():
         # =========================
         return jsonify({
             "status": "success",
-
             "original_equity": original_equity,
             "median_equity": median_equity,
             "worst_95_equity": worst_95_equity,
             "best_5_equity": best_5_equity,
-
             "samples": samples,
-
             "metrics": {
                 "avg_profit": avg_profit,
                 "median_profit": median_profit,
@@ -321,243 +351,11 @@ def montecarlo_run():
                 "worst_profit": worst_profit,
                 "median_dd": median_dd
             }
-        })
+        }), 200
 
     except Exception as e:
-        print("MC ERROR:", e)
-        return jsonify({"error": "simulation error"})
-    
-    
-
-def max_drawdown(equity):
-    peak = equity[0]
-    max_dd = 0
-
-    for x in equity:
-        if x > peak:
-            peak = x
-
-        dd = peak - x
-        if dd > max_dd:
-            max_dd = dd
-
-    return max_dd
-
-def extract_trades_from_file(file):
-    file.seek(0)
-    filename = file.filename.lower()
-
-    try:
-        import pandas as pd
-        from io import StringIO
-
-        def normalize(x):
-            return str(x).strip().lower()
-
-        def extract_from_df(df):
-            header_row = None
-
-            # cerca la riga header reale MT5
-            for i, row in df.iterrows():
-                values = [normalize(v) for v in row.values]
-                row_text = " ".join(values)
-
-                if (
-                    ("direzione" in row_text or "type" in row_text or "operazione" in row_text)
-                    and ("profit" in row_text)
-                ):
-                    header_row = i
-                    break
-
-            if header_row is None:
-                print("DEBUG: header non trovato → uso raw table")
-            
-                data = df.copy()
-                data.columns = [normalize(c) for c in data.columns]
-            else:
-                columns = [normalize(v) for v in df.iloc[header_row].values]
-            
-                data = df.iloc[header_row + 1:].copy()
-                data.columns = columns
-
-
-            print("DEBUG colonne reali:", data.columns)
-
-            direction_col = None
-
-            for c in data.columns:
-                if "direzione" in c or "type" in c or "operazione" in c:
-                    direction_col = c
-                    break
-            
-            if not direction_col:
-                print("DEBUG: direzione non trovata → provo senza filtro direzione")
-            
-                # fallback: usa direttamente profit se esiste
-                for c in data.columns:
-                    if "profit" in str(c).lower():
-                        profits = pd.to_numeric(data[c], errors="coerce").dropna()
-                        print("DEBUG fallback profit:", len(profits))
-                        return profits.tolist()
-            
-                return []
-
-            # trova colonna profit
-            # =========================
-            # FIX: se non esiste profit → usa fallback MT5 ORDINI
-            # =========================
-            
-            profit_col = None
-            for c in data.columns:
-                c_norm = str(c).lower()
-                if "profit" in c_norm or "profitto" in c_norm:
-                    profit_col = c
-                    break
-            
-            # =========================
-            # CASO 1: PROFIT ESISTE
-            # =========================
-            if profit_col:
-            
-                profits = pd.to_numeric(data[profit_col], errors="coerce").dropna()
-                print("DEBUG trades trovati (profit):", len(profits))
-                return profits.tolist()
-            
-            # =========================
-            # CASO 2: ORDINI (NO PROFIT)
-            # =========================
-            print("DEBUG: profit non trovato → provo ricostruzione da ordini")
-            
-            try:
-                tipo_col = None
-                prezzo_col = None
-                volume_col = None
-            
-                for c in data.columns:
-                    c_norm = str(c).lower()
-            
-                    if "tipo" in c_norm:
-                        tipo_col = c
-                    if "prezzo" in c_norm:
-                        prezzo_col = c
-                    if "volume" in c_norm:
-                        volume_col = c
-            
-                if not tipo_col or not prezzo_col:
-                    print("DEBUG: colonne insufficienti per ricostruzione")
-                    return []
-            
-                data[tipo_col] = data[tipo_col].astype(str).str.lower()
-            
-                trades = []
-                stack = []
-            
-                for _, row in data.iterrows():
-                    tipo = row[tipo_col]
-                    prezzo = pd.to_numeric(row[prezzo_col], errors="coerce")
-            
-                    if pd.isna(prezzo):
-                        continue
-            
-                    if tipo == "buy":
-                        stack.append(prezzo)
-            
-                    elif tipo == "sell" and stack:
-                        entry = stack.pop(0)
-                        profit = prezzo - entry
-                        trades.append(profit)
-            
-                print("DEBUG trades ricostruiti:", len(trades))
-                return trades
-            
-            except Exception as e:
-                print("DEBUG ricostruzione fallita:", e)
-                return []
-                        
-            # =========================
-            # FALLBACK: ricostruzione PnL da BUY/SELL
-            # =========================
-            
-            print("DEBUG: profit non trovato → uso fallback trades")
-            
-            prices = pd.to_numeric(data.get("prezzo", 0), errors="coerce")
-            types = data[direction_col].values
-            
-            profits = []
-            
-            for i in range(len(types)-1):
-                if types[i] == "buy" and types[i+1] == "sell":
-                    profits.append(prices.iloc[i+1] - prices.iloc[i])
-                elif types[i] == "sell" and types[i+1] == "buy":
-                    profits.append(prices.iloc[i] - prices.iloc[i+1])
-            
-            print("DEBUG fallback trades trovati:", len(profits))
-            
-            return profits
-
-
-        # =========================
-        # HTML MT5 (FIX PARSER DEFINITIVO)
-        # =========================
-        if filename.endswith(".html"):
-        
-            file.seek(0)
-        
-            content = file.read()
-        
-            try:
-                html = content.decode("utf-16le")
-                print("DEBUG: letto come UTF-16LE")
-            except Exception as e:
-                print("DEBUG UTF-16 fallito:", e)
-                html = content.decode("utf-8", errors="ignore")
-                print("DEBUG: letto come UTF-8")
-        
-            tables = pd.read_html(html)
-        
-            print("DEBUG: tabelle trovate =", len(tables))
-        
-            trades_totali = []
-        
-            for i, df in enumerate(tables):
-        
-                print(f"DEBUG tabella {i} RAW shape:", df.shape)
-        
-                trades = extract_from_df(df)
-        
-                if trades:
-                    print(f"DEBUG tabella {i} trades trovati:", len(trades))
-                    trades_totali.extend(trades)
-        
-            print("DEBUG HTML trades TOTALI:", len(trades_totali))
-        
-            return trades_totali
-        
-        # =========================
-        # XLSX
-        # =========================
-        elif filename.endswith(".xlsx"):
-
-            df = pd.read_excel(file, header=None)
-        
-            print("DEBUG XLSX RAW shape:", df.shape)
-        
-            # usa stesso parser HTML
-            return extract_from_df(df)
-
-        # =========================
-        # CSV
-        # =========================
-        elif filename.endswith(".csv"):
-            df = pd.read_csv(file, header=None)
-            return extract_from_df(df)
-
-        else:
-            return []
-
-    except Exception as e:
-        print("PARSING ERROR:", e)
-        return []
+        print("MC ERROR:", str(e))
+        return jsonify({"error": "simulation error"}), 500
     
 @app.route("/api/correlations")
 @login_required
