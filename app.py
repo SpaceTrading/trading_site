@@ -370,13 +370,16 @@ def extract_trades_from_file(file):
                     break
 
             if header_row is None:
-                print("DEBUG: header non trovato")
-                return []
+                print("DEBUG: header non trovato → uso raw table")
+            
+                data = df.copy()
+                data.columns = [normalize(c) for c in data.columns]
+            else:
+                columns = [normalize(v) for v in df.iloc[header_row].values]
+            
+                data = df.iloc[header_row + 1:].copy()
+                data.columns = columns
 
-            columns = [normalize(v) for v in df.iloc[header_row].values]
-
-            data = df.iloc[header_row + 1:].copy()
-            data.columns = columns
 
             print("DEBUG colonne reali:", data.columns)
 
@@ -398,15 +401,71 @@ def extract_trades_from_file(file):
             
             profit_col = None
             for c in data.columns:
-                if "profit" in c or "profitto" in c:
+                c_norm = str(c).lower()
+                if "profit" in c_norm or "profitto" in c_norm:
                     profit_col = c
                     break
             
+            # =========================
+            # CASO 1: PROFIT ESISTE
+            # =========================
             if profit_col:
+            
                 profits = pd.to_numeric(data[profit_col], errors="coerce").dropna()
-                print("DEBUG trades trovati:", len(profits))
+                print("DEBUG trades trovati (profit):", len(profits))
                 return profits.tolist()
             
+            # =========================
+            # CASO 2: ORDINI (NO PROFIT)
+            # =========================
+            print("DEBUG: profit non trovato → provo ricostruzione da ordini")
+            
+            try:
+                tipo_col = None
+                prezzo_col = None
+                volume_col = None
+            
+                for c in data.columns:
+                    c_norm = str(c).lower()
+            
+                    if "tipo" in c_norm:
+                        tipo_col = c
+                    if "prezzo" in c_norm:
+                        prezzo_col = c
+                    if "volume" in c_norm:
+                        volume_col = c
+            
+                if not tipo_col or not prezzo_col:
+                    print("DEBUG: colonne insufficienti per ricostruzione")
+                    return []
+            
+                data[tipo_col] = data[tipo_col].astype(str).str.lower()
+            
+                trades = []
+                stack = []
+            
+                for _, row in data.iterrows():
+                    tipo = row[tipo_col]
+                    prezzo = pd.to_numeric(row[prezzo_col], errors="coerce")
+            
+                    if pd.isna(prezzo):
+                        continue
+            
+                    if tipo == "buy":
+                        stack.append(prezzo)
+            
+                    elif tipo == "sell" and stack:
+                        entry = stack.pop(0)
+                        profit = prezzo - entry
+                        trades.append(profit)
+            
+                print("DEBUG trades ricostruiti:", len(trades))
+                return trades
+            
+            except Exception as e:
+                print("DEBUG ricostruzione fallita:", e)
+                return []
+                        
             # =========================
             # FALLBACK: ricostruzione PnL da BUY/SELL
             # =========================
