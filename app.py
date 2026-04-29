@@ -394,7 +394,11 @@ def extract_trades_from_file(file):
 
             # filtra trade chiusi
             data["direzione"] = data["direzione"].astype(str).str.lower().str.strip()
-            data = data[data["direzione"].isin(["out", "close", "closed", "exit"])]
+
+            # accetta sia trade chiusi che standard MT5
+            valid_values = ["out", "close", "closed", "exit", "buy", "sell"]
+            
+            data = data[data["direzione"].isin(valid_values)]
 
             profits = pd.to_numeric(data[profit_col], errors="coerce").dropna()
 
