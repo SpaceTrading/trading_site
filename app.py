@@ -202,6 +202,8 @@ def api_convert():
 @app.route("/api/montecarlo/upload", methods=["POST"])
 @login_required
 def montecarlo_upload():
+    print("==== UPLOAD CALLED ====")
+    print("FILES:", request.files)    
     try:
         file = request.files.get("file")
 
@@ -209,6 +211,10 @@ def montecarlo_upload():
             return jsonify({"error": "no file"})
 
         file = request.files.get("file")
+        if file:
+            print("FILENAME:", file.filename)
+        else:
+            print("FILE IS NONE")        
 
         if not file:
             return jsonify({"error": "no file"})
