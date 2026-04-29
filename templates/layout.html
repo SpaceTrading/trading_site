@@ -240,37 +240,27 @@
   <script src="{{ url_for('static', filename='app.js') }}"></script>
   
   <script>
-  function openLogin() {
-    document.getElementById("loginModal").style.display = "block";
-  
-    if (window.turnstile && !document.querySelector('#loginModal iframe')) {
-      turnstile.render('#loginModal .cf-turnstile');
+    function openLogin() {
+      document.getElementById("loginModal").style.display = "block";
     }
-  }
-
-  function closeLogin() {
-    document.getElementById("loginModal").style.display = "none";
-  }
   
-  function openRegister() {
-    document.getElementById("registerModal").style.display = "block";
-  
-    if (window.turnstile && !document.querySelector('#registerModal iframe')) {
-      turnstile.render('#registerModal .cf-turnstile');
+    function closeLogin() {
+      document.getElementById("loginModal").style.display = "none";
     }
-  }
-  
-  function closeRegister() {
-    document.getElementById("registerModal").style.display = "none";
-  }
-  
-  // chiudi cliccando fuori
-  window.onclick = function(e) {
-    if (e.target.classList.contains("modal")) {
-      e.target.style.display = "none";
+    
+    function openRegister() {
+      document.getElementById("registerModal").style.display = "block";
     }
-  }
-  
+    
+    function closeRegister() {
+      document.getElementById("registerModal").style.display = "none";
+    }
+    
+    window.addEventListener("click", function(e) {
+      if (e.target.classList.contains("modal")) {
+        e.target.style.display = "none";
+      }
+    });
   </script>
 
 </body>
