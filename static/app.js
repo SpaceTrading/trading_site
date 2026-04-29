@@ -206,6 +206,8 @@ window.addEventListener("click", function(e) {
   const menu = document.getElementById("navMenu");
   const button = document.querySelector(".menu-toggle");
 
+  if (!menu || !button) return;
+
   if (!menu.contains(e.target) && !button.contains(e.target)) {
     menu.classList.remove("active");
   }
