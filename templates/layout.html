@@ -8,60 +8,124 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
   <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
-  
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+  <!-- LOADER STYLE -->
+  <style>
+    #appLoader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      color: #00d4ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999999;
+      font-family: monospace;
+    }
+
+    .loader-content {
+      text-align: center;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    .logo {
+      font-size: 40px;
+      margin-bottom: 20px;
+      letter-spacing: 4px;
+    }
+
+    .status {
+      font-size: 14px;
+      opacity: 0.7;
+      animation: blink 1.5s infinite;
+    }
+
+    @keyframes blink {
+      0% { opacity: 0.2; }
+      50% { opacity: 1; }
+      100% { opacity: 0.2; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0 }
+      to { opacity: 1 }
+    }
+  </style>
+
+  <!-- LOADER SCRIPT -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const loader = document.getElementById("appLoader");
+
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          if (!loader) return;
+
+          loader.style.opacity = "0";
+          loader.style.transition = "opacity 0.6s ease";
+
+          setTimeout(() => {
+            loader.style.display = "none";
+          }, 600);
+
+        }, 800);
+      });
+    });
+  </script>
 
 </head>
 
 <body>
 
+  <!-- LOADER -->
+  <div id="appLoader">
+    <div class="loader-content">
+      <h1 class="logo">SPACE-T</h1>
+      <p class="status">Initializing neural systems...</p>
+    </div>
+  </div>
+
   <!-- NAVBAR -->
   <header class="topbar">
     <a href="{{ url_for('home') }}" class="brand" style="display:flex; align-items:center; gap:10px;">
-  
-        <img src="{{ url_for('static', filename='images/logo.png') }}" 
-             style="width:32px; height:32px; border-radius:50%;">
-      
-        <span>Space-T</span>
-      
+      <img src="{{ url_for('static', filename='images/logo.png') }}" 
+           style="width:32px; height:32px; border-radius:50%;">
+      <span>Space-T</span>
     </a>
-    <button class="menu-toggle" onclick="toggleMenu()">
-    ☰
-  </button>
+
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
 
     <nav class="nav" id="navMenu">
 
-      <!-- PUBBLICO -->
       <a href="{{ url_for('home') }}">Home</a>
       <a href="{{ url_for('expert_advisor') }}">Expert Advisor</a>
+
       <div class="dropdown">
+        <a href="{{ url_for('strumenti') }}" class="dropbtn">
+          <span class="lab-text">Laboratorio</span><span class="lab-arrow"> ▾</span>
+        </a>
 
-  <a href="{{ url_for('strumenti') }}" class="dropbtn">
-    <span class="lab-text">Laboratorio</span><span class="lab-arrow"> ▾</span>
-  </a>
+        {% if current_user.is_authenticated %}
+        <div class="dropdown-content">
+          <div class="dropdown-section">
+            <span class="dropdown-title">Trading Tools</span>
+            <a href="{{ url_for('risk_manager') }}">Risk Manager</a>
+            <a href="{{ url_for('montecarlo_page') }}">Monte Carlo</a>
+          </div>
 
-  {% if current_user.is_authenticated %}
-  <div class="dropdown-content">
-
-      <div class="dropdown-section">
-        <span class="dropdown-title">Trading Tools</span>
-        <a href="{{ url_for('risk_manager') }}">Risk Manager</a>
-        <a href="{{ url_for('montecarlo_page') }}">Monte Carlo</a>
+          <div class="dropdown-section">
+            <span class="dropdown-title">Market Tools</span>
+            <a href="{{ url_for('correlation') }}">Correlazioni</a>
+            <a href="{{ url_for('converter') }}">Forex Converter</a>
+          </div>
+        </div>
+        {% endif %}
       </div>
-  
-      <div class="dropdown-section">
-        <span class="dropdown-title">Market Tools</span>
-        <a href="{{ url_for('correlation') }}">Correlazioni</a>
-        <a href="{{ url_for('converter') }}">Forex Converter</a>
-      </div>
-  
-    </div>
-    {% endif %}
-  
-  </div>
-      {# <a href="{{ url_for('forum') }}">Forum</a> #}
-        {# <a href="{{ url_for('news') }}">News</a> #}
-      {# <a href="{{ url_for('faq') }}">FAQ</a> #}
+
       <a href="{{ url_for('contatti') }}">Contatti</a>
 
       {% if current_user.is_authenticated %}
@@ -76,10 +140,8 @@
     </nav>
   </header>
 
-  <!-- HERO FULL WIDTH (FUORI DAL CONTAINER) -->
   {% block hero %}{% endblock %}
 
-  <!-- CONTENUTO STANDARD -->
   <main class="container" style="padding:0; margin:0; max-width:100%;">
 
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -95,199 +157,6 @@
     {% block content %}{% endblock %}
 
   </main>
-  
-  <!-- LOGIN MODAL -->
-<div id="loginModal" style="
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background: rgba(0,0,0,0.7);
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
-">
-
-    <div style="
-        background:#121826;
-        padding:30px;
-        border-radius:12px;
-        width:100%;
-        max-width:400px;
-        border:1px solid #22304a;
-        position:relative;
-    ">
-
-        <!-- X chiudi -->
-        <span onclick="closeLogin()" style="
-            position:absolute;
-            top:10px;
-            right:15px;
-            cursor:pointer;
-            font-size:20px;
-        ">✖</span>
-
-        <h2 style="text-align:center; margin-bottom:20px;">
-            Login
-        </h2>
-
-        <form method="POST" action="{{ url_for('login') }}">
-
-            <input type="email" name="email" placeholder="Email"
-                    autocomplete="email"
-                style="
-                    width:100%;
-                    padding:12px;
-                    margin-bottom:15px;
-                    border-radius:8px;
-                    border:none;
-                " required>
-
-            <input type="password" name="password" placeholder="Password"
-                    autocomplete="current-password"
-                style="
-                    width:100%;
-                    padding:12px;
-                    margin-bottom:20px;
-                    border-radius:8px;
-                    border:none;
-                " required>
-
-            <button type="submit" class="btn primary" style="width:100%;">
-                Accedi
-            </button>
-            
-            <p style="text-align:center; margin-top:10px;">
-                <a href="#" onclick="openForgot()">Password dimenticata?</a>
-            </p>
-
-        </form>
-
-    </div>
-</div>
-
-<!-- REGISTER MODAL -->
-<div id="registerModal" style="
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background: rgba(0,0,0,0.7);
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
-">
-
-    <div style="
-        background:#121826;
-        padding:30px;
-        border-radius:12px;
-        width:100%;
-        max-width:400px;
-        border:1px solid #22304a;
-        position:relative;
-    ">
-
-        <!-- X chiudi -->
-        <span onclick="closeRegister()" style="
-            position:absolute;
-            top:10px;
-            right:15px;
-            cursor:pointer;
-            font-size:20px;
-        ">✖</span>
-
-        <h2 style="text-align:center; margin-bottom:20px;">
-            Registrati
-        </h2>
-
-        <form method="POST" action="{{ url_for('register') }}">
-        
-            <input type="email" name="email" placeholder="Email"
-                    autocomplete="email"
-                style="width:100%; padding:12px; margin-bottom:15px; border-radius:8px; border:none;" required>
-
-            <input type="password" name="password" placeholder="Password"
-                    autocomplete="new-password"
-                style="width:100%; padding:12px; margin-bottom:15px; border-radius:8px; border:none;" required>
-
-            <input type="password" name="password2" placeholder="Conferma Password"
-                    autocomplete="new-password"
-                style="width:100%; padding:12px; margin-bottom:20px; border-radius:8px; border:none;" required>
-                
-            <div class="cf-turnstile" data-sitekey="0x4AAAAAADEMHoEtR_tcg9s3" style="margin-bottom:15px;"></div>
-
-            <button type="submit" class="btn primary" style="width:100%;">
-                Registrati
-            </button>
-
-        </form>
-
-    </div>
-</div>
-
-<!-- FORGOT PASSWORD MODAL -->
-<div id="forgotModal" style="
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background: rgba(0,0,0,0.7);
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
-">
-
-    <div style="
-        background:#121826;
-        padding:30px;
-        border-radius:12px;
-        width:100%;
-        max-width:400px;
-        border:1px solid #22304a;
-        position:relative;
-    ">
-
-        <!-- X chiudi -->
-        <span onclick="closeForgot()" style="
-            position:absolute;
-            top:10px;
-            right:15px;
-            cursor:pointer;
-            font-size:20px;
-        ">✖</span>
-
-        <h2 style="text-align:center; margin-bottom:20px;">
-            Reset Password
-        </h2>
-
-        <form method="POST" action="{{ url_for('forgot_password') }}">
-
-            <input type="email" name="email" placeholder="Inserisci la tua email"
-                style="
-                    width:100%;
-                    padding:12px;
-                    margin-bottom:20px;
-                    border-radius:8px;
-                    border:none;
-                " required>
-
-            <button type="submit" class="btn primary" style="width:100%;">
-                Invia link reset
-            </button>
-
-        </form>
-
-    </div>
-</div>
-
-
 
   <script src="{{ url_for('static', filename='app.js') }}"></script>
 
