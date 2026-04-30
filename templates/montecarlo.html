@@ -131,7 +131,10 @@ function uploadFile() {
     fetch("/api/montecarlo/upload", {
         method: "POST",
         body: formData,
-        credentials: "include"   // 
+        credentials: "include",
+        headers: {
+            "Accept": "application/json"
+        }
     })
     .then(res => res.json())
     .then(data => {

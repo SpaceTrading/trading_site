@@ -379,6 +379,9 @@ def extract_trades_from_file(file):
         from io import StringIO
 
         def normalize(x):
+            import pandas as pd
+            if pd.isna(x):
+                return ""
             return str(x).strip().lower()
 
         def clean_number(x):
@@ -480,7 +483,10 @@ def extract_trades_from_file(file):
         # =========================
         elif filename.endswith(".xlsx"):
             file.seek(0)
-            df = pd.read_excel(file, header=None)
+            df = pd.read_excel(file, header=None, engine="openpyxl")
+
+            # FIX cross-platform (Windows vs Linux)
+            df = df.astype(str)
             print("DEBUG XLSX RAW shape:", df.shape)
             return extract_affari_from_df(df)
 
