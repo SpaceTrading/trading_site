@@ -29,6 +29,16 @@
 
 }
 
+/* TOGGLE UNIVERSALE */
+#insiderContent {
+  display: none;
+}
+
+#insiderFlow.expanded #insiderContent {
+  display: block;
+  margin-top:10px;
+}
+
 #3d-graph {
   position: relative;
   z-index: 999999 !important;
@@ -294,6 +304,14 @@ function getAnalytics(nodeId) {
     influenceScore: (outgoing.length * 2 + incoming.length + connected.size * 0.5).toFixed(2)
   };
 }
+
+window.addEventListener("load", () => {
+  const panel = document.getElementById("insiderFlow")
+
+  if (window.innerWidth > 768) {
+    panel.classList.add("expanded") // desktop aperto di default
+  }
+})
 
 window.addEventListener("click", function(e) {
   const panel = document.getElementById("companyPanel");
