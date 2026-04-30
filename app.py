@@ -1072,6 +1072,44 @@ def api_market_map():
         "links": links
     })
 
+@app.route("/api/insider-flow")
+def insider_flow():
+
+    import requests
+
+    API_KEY = "METTILA_DOPO"  # placeholder
+
+    tickers = [c.ticker for c in Company.query.filter(Company.ticker.isnot(None)).all()]
+
+    results = []
+
+    for t in tickers[:10]:  # LIMIT iniziale per sicurezza
+
+        try:
+            url = f"https://finnhub.io/api/v1/stock/insider-transactions?symbol={t}&token={API_KEY}"
+            r = requests.get(url, timeout=3)
+            data = r.json()
+
+            if "data" not in data:
+                continue
+
+            for item in data["data"][:1]:  # solo ultimo evento
+
+                results.append({
+                    "ticker": t,
+                    "name": item.get("name"),
+                    "position": item.get("shareholder"),
+                    "type": item.get("transactionCode"),
+                    "change": item.get("change"),
+                    "price": item.get("transactionPrice"),
+                    "date": item.get("transactionDate")
+                })
+
+        except Exception as e:
+            continue
+
+    return jsonify(results)
+
 # =========================================================
 # ROUTES (PUBLIC)
 # =========================================================

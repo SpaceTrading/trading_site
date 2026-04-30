@@ -42,6 +42,22 @@
 
 </div>
 
+<div id="insiderFlow" style="
+  position:fixed;
+  top:80px;
+  right:360px;
+  width:260px;
+  background:rgba(10,15,30,0.95);
+  border:1px solid rgba(0,200,255,0.3);
+  border-radius:12px;
+  padding:15px;
+  color:white;
+  z-index:99998;
+">
+  <h3 style="margin-top:0;">Insider Flow</h3>
+  <div id="insiderList">Caricamento...</div>
+</div>
+
 <script src="https://unpkg.com/3d-force-graph"></script>
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
@@ -49,7 +65,7 @@
 let selectedNode = null;
 let graphData = null;
 
-fetch("/api/companies?sector=Tech")
+fetch("/api/market-map")
   .then(res => res.json())
   .then(data => {
 
@@ -103,6 +119,44 @@ fetch("/api/companies?sector=Tech")
 
     window.Graph.zoomToFit(1000);
   });
+  
+  // =========================
+// INSIDER FLOW
+// =========================
+fetch("/api/insider-flow")
+  .then(res => res.json())
+  .then(data => {
+
+    const container = document.getElementById("insiderList")
+
+    if (!container) return
+
+    if (!data || data.length === 0) {
+      container.innerHTML = "Nessun dato"
+      return
+    }
+
+    container.innerHTML = data.map(item => {
+
+      const type = item.type === "P" ? "BUY" : "SELL"
+      const color = type === "BUY" ? "#22c55e" : "#ef4444"
+
+      const value = item.change && item.price
+        ? (item.change * item.price / 1_000_000).toFixed(2) + "M"
+        : "N/D"
+
+      return `
+        <div style="margin-bottom:10px;">
+          <b>${item.ticker}</b> — <span style="color:${color}">${type}</span><br>
+          ${item.name || "Unknown"}<br>
+          <span style="font-size:12px;color:#94a3b8;">
+            ${item.position || ""}
+          </span><br>
+          <span style="color:${color};">${type === "BUY" ? "+" : "-"}$${value}</span>
+        </div>
+      `
+    }).join("")
+  })
 
 /* =========================
    PANEL FUNCTIONS
