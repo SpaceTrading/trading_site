@@ -321,7 +321,7 @@ function drawRiskTable(data) {
     }
 
     function info(text) {
-        return `<span onclick="showMetricInfo('${text.replace(/'/g, "\\'")}')" style="
+        return `<span class="metric-info" data-info="${encodeURIComponent(text)}" style="
             cursor:pointer;
             color:#60a5fa;
             margin-left:6px;
@@ -374,6 +374,15 @@ Esempio: ${(m.probability_of_ruin*100).toFixed(2)}% → circa ${(m.probability_o
     `
 
     document.getElementById("risk-table").innerHTML = html
+
+    setTimeout(() => {
+        document.querySelectorAll(".metric-info").forEach(el => {
+            el.addEventListener("click", function () {
+                const text = decodeURIComponent(this.getAttribute("data-info"))
+                showMetricInfo(text)
+            })
+        })
+    }, 0)
 }
 
 function drawChart(data) {
