@@ -40,35 +40,13 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-change-me")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(INSTANCE_DIR, "app.db")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# =========================
-# FORCE WWW (CRITICO)
-# =========================
-from flask import request, redirect
-
-@app.before_request
-def force_www():
-    host = request.host.split(":")[0]  # FIX porta (443, ecc.)
-
-    if host == "space-trading.com":
-        return redirect(request.url.replace("://space-trading.com", "://www.space-trading.com", 1), code=301)
-
 db = SQLAlchemy(app)
 
 login_manager = LoginManager()
-login_manager.session_protection = "strong"
 login_manager.login_view = "login"
 login_manager.init_app(app)
 
-# =========================
-# FIX SESSIONE PRODUZIONE (CRITICO)
-# =========================
 
-app.config["SESSION_COOKIE_SECURE"] = True
-app.config["SESSION_COOKIE_HTTPONLY"] = True
-app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
-
-# FONDAMENTALE per www vs non-www
-app.config["SESSION_COOKIE_DOMAIN"] = ".space-trading.com"
 # =========================================================
 # CONTATTI
 # =========================================================
@@ -222,7 +200,6 @@ def api_convert():
 # =========================================================
 
 @app.route("/api/montecarlo/upload", methods=["POST"])
-@login_required
 def montecarlo_upload():
 
     print("AUTH:", current_user.is_authenticated)
@@ -269,9 +246,11 @@ def montecarlo_upload():
 
     
     
-app.route("/api/montecarlo/run", methods=["POST"])
+@app.route("/api/montecarlo/run", methods=["POST"])
 #@login_required
-def montecarlo_run():   
+def montecarlo_run():
+    if not current_user.is_authenticated:
+        return jsonify({"error": "not authenticated"}), 401    
 
     try:
         data = request.json
@@ -1121,8 +1100,7 @@ def reset_password(token):
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        next_page = request.args.get("next")
-        return redirect(next_page or url_for("dashboard"))
+        return redirect(url_for("dashboard"))
 
     if request.method == "POST":
         email = request.form.get("email", "").strip().lower()
