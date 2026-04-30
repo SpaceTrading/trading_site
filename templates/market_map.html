@@ -30,13 +30,14 @@
 }
 
 /* TOGGLE UNIVERSALE */
+/* DEFAULT: desktop aperto */
 #insiderContent {
-  display: none;
+  display: block;
 }
 
-#insiderFlow.expanded #insiderContent {
-  display: block;
-  margin-top:10px;
+/* quando collassato */
+#insiderFlow:not(.expanded) #insiderContent {
+  display: none;
 }
 
 #3d-graph {
