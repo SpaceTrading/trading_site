@@ -120,6 +120,15 @@
             display:none;
         "></div>
         
+        <div style="margin-top:25px; text-align:center;">
+            <button id="downloadCsvBtn"
+                    onclick="downloadMonteCarloCSV()"
+                    class="btn primary"
+                    style="display:none;">
+                Download CSV
+            </button>
+        </div>
+        
 
     </div>
 
@@ -134,6 +143,7 @@
 <script>
 
 let trades = []
+let lastMonteCarloData = null
 
 // =========================
 // UPLOAD FILE
@@ -221,11 +231,18 @@ function runMonteCarlo() {
             return
         }
 
+        lastMonteCarloData = data
+
         drawChart(data)
         drawDrawdownChart(data)
         drawTTRChart(data)
         drawBootstrapChart(data)
         drawRiskTable(data)
+        
+        const downloadBtn = document.getElementById("downloadCsvBtn")
+        if (downloadBtn) {
+            downloadBtn.style.display = "inline-flex"
+        }
     })
     .catch(err => {
         console.error(err)
@@ -424,6 +441,114 @@ Esempio: ${m.robustness_ratio.toFixed(1)} → valori bassi indicano rischio di o
             })
         })
     }, 0)
+}
+
+function downloadMonteCarloCSV() {
+
+    if (!lastMonteCarloData) {
+        alert("Esegui prima una simulazione Monte Carlo")
+        return
+    }
+
+    const data = lastMonteCarloData
+    const rows = []
+
+    function safe(value) {
+        if (value === null || value === undefined) return ""
+        return String(value).replace(/"/g, '""')
+    }
+
+    function addRow(section, key, value) {
+        rows.push([
+            `"${safe(section)}"`,
+            `"${safe(key)}"`,
+            `"${safe(value)}"`
+        ].join(","))
+    }
+
+    // =========================
+    // HEADER
+    // =========================
+    rows.push("section,key,value")
+
+    // =========================
+    // BASE METRICS
+    // =========================
+    if (data.metrics) {
+        Object.keys(data.metrics).forEach(key => {
+            addRow("metrics", key, data.metrics[key])
+        })
+    }
+
+    // =========================
+    // ADVANCED METRICS
+    // =========================
+    if (data.advanced_metrics) {
+        Object.keys(data.advanced_metrics).forEach(key => {
+            addRow("advanced_metrics", key, data.advanced_metrics[key])
+        })
+    }
+
+    // =========================
+    // EQUITY CURVES
+    // =========================
+    rows.push("")
+    rows.push("trade_index,original_equity,median_equity,worst_95_equity,best_5_equity")
+
+    const maxLen = Math.max(
+        data.original_equity ? data.original_equity.length : 0,
+        data.median_equity ? data.median_equity.length : 0,
+        data.worst_95_equity ? data.worst_95_equity.length : 0,
+        data.best_5_equity ? data.best_5_equity.length : 0
+    )
+
+    for (let i = 0; i < maxLen; i++) {
+        rows.push([
+            i + 1,
+            data.original_equity?.[i] ?? "",
+            data.median_equity?.[i] ?? "",
+            data.worst_95_equity?.[i] ?? "",
+            data.best_5_equity?.[i] ?? ""
+        ].join(","))
+    }
+
+    // =========================
+    // DRAWDOWN DISTRIBUTION
+    // =========================
+    rows.push("")
+    rows.push("simulation_index,drawdown,recovery_time")
+
+    const ddLen = Math.max(
+        data.drawdowns ? data.drawdowns.length : 0,
+        data.recovery_times ? data.recovery_times.length : 0
+    )
+
+    for (let i = 0; i < ddLen; i++) {
+        rows.push([
+            i + 1,
+            data.drawdowns?.[i] ?? "",
+            data.recovery_times?.[i] ?? ""
+        ].join(","))
+    }
+
+    // =========================
+    // DOWNLOAD
+    // =========================
+    const csvContent = rows.join("\n")
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
+
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+
+    const now = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-")
+
+    a.href = url
+    a.download = `montecarlo_report_${now}.csv`
+    document.body.appendChild(a)
+    a.click()
+
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
 }
 
 function drawChart(data) {
