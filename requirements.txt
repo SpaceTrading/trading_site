@@ -7,3 +7,5 @@ resend
 yfinance
 pandas
 numpy
+lxml
+openpyxl
