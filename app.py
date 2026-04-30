@@ -409,6 +409,32 @@ def montecarlo_run():
         var_95 = float(np.percentile(bootstrap_array, 5)) if len(bootstrap_array) else 0.0
         
         cvar = float(np.mean(bootstrap_array[bootstrap_array <= var_95])) if len(bootstrap_array) else 0.0        
+        
+        # =========================
+        # OVERFITTING METRICS (SAFE)
+        # =========================
+        
+        # 1. Noise Sensitivity Test
+        noise_level = std_ret * 0.1  # 10% rumore rispetto volatilità
+        
+        noisy_returns = returns + np.random.normal(0, noise_level, size=len(returns))
+        
+        mean_noisy = float(np.mean(noisy_returns))
+        std_noisy = float(np.std(noisy_returns))
+        
+        sharpe_noisy = mean_noisy / std_noisy if std_noisy != 0 else 0.0
+        
+        noise_sensitivity = sharpe_noisy / sharpe if sharpe != 0 else 0.0
+        
+        
+        # 2. Sharpe Haircut (prudenziale)
+        haircut_factor = 0.5
+        sharpe_haircut = sharpe * haircut_factor
+        
+        
+        # 3. Robustness Ratio (trade vs parametri)
+        estimated_params = 10  # default prudenziale
+        robustness_ratio = len(trades) / estimated_params if estimated_params > 0 else 0.0        
 
         # =========================
         # OUTPUT
@@ -438,7 +464,12 @@ def montecarlo_run():
             
                 "twv": twv,
                 "var_95": var_95,
-                "cvar": cvar
+                "cvar": cvar,
+                
+                # OVERFITTING
+                "noise_sensitivity": float(noise_sensitivity),
+                "sharpe_haircut": float(sharpe_haircut),
+                "robustness_ratio": float(robustness_ratio)                
             },
         
             # METRICHE BASE RESTANO QUI
@@ -447,8 +478,9 @@ def montecarlo_run():
                 "median_profit": median_profit,
                 "best_profit": best_profit,
                 "worst_profit": worst_profit,
-                "median_dd": median_dd
-            }
+                "median_dd": median_dd,
+                
+            },
         })
 
     except Exception as e:

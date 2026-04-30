@@ -314,6 +314,11 @@ function showMetricInfo(text) {
 function drawRiskTable(data) {
 
     const m = data.advanced_metrics
+    
+    // fallback sicurezza (evita crash se backend non manda ancora i nuovi campi)
+    m.noise_sensitivity = m.noise_sensitivity ?? 0
+    m.sharpe_haircut = m.sharpe_haircut ?? 0
+    m.robustness_ratio = m.robustness_ratio ?? 0
 
     if (!m) {
         document.getElementById("risk-table").innerHTML = "Nessuna metrica disponibile";
@@ -374,18 +379,36 @@ Esempio: ${(m.probability_of_ruin*100).toFixed(2)}% → circa ${(m.probability_o
                 <td>Terminal Wealth Volatility ${info(`Dispersione dei risultati finali delle simulazioni bootstrap.
 Esempio: ${m.twv.toFixed(2)} → indica quanto variano i risultati finali. Più alto = strategia instabile.`)}</td>
                 <td>${m.twv.toFixed(2)}</td>
-</tr>
+            </tr>
 
-<tr>
+            <tr>
                 <td>VaR 95% ${info(`Value at Risk (95%): perdita attesa nei peggiori scenari.
 Esempio: ${m.var_95.toFixed(2)} → nel 5% dei casi, potresti ottenere un risultato inferiore a questo valore.`)}</td>
                 <td>${m.var_95.toFixed(2)}</td>
-</tr>
+            </tr>
 
-<tr>
+            <tr>
                 <td>CVaR ${info(`Expected Shortfall: media delle perdite peggiori oltre il VaR.
 Esempio: ${m.cvar.toFixed(2)} → nei casi estremi, la perdita media è circa ${m.cvar.toFixed(2)}.`)}</td>
                 <td>${m.cvar.toFixed(2)}</td>
+            </tr>
+            
+            <tr>
+                <td>Noise Sensitivity ${info(`Misura quanto la strategia è sensibile a piccoli disturbi casuali.
+Esempio: ${m.noise_sensitivity.toFixed(2)} → se < 0.5, strategia probabilmente overfittata.`)}</td>
+                <td>${m.noise_sensitivity.toFixed(2)}</td>
+            </tr>
+
+            <tr>
+                <td>Sharpe Haircut ${info(`Sharpe corretto per overfitting (ridotto del 50%).
+Esempio: ${m.sharpe_haircut.toFixed(2)} → se scende sotto 0.5, edge probabilmente non reale.`)}</td>
+                <td>${m.sharpe_haircut.toFixed(2)}</td>
+            </tr>
+
+            <tr>
+                <td>Robustness Ratio ${info(`Rapporto tra numero di trade e complessità della strategia.
+Esempio: ${m.robustness_ratio.toFixed(1)} → sotto 30 = alto rischio overfitting.`)}</td>
+                <td>${m.robustness_ratio.toFixed(1)}</td>
             </tr>
 
         </table>
