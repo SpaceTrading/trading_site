@@ -60,6 +60,20 @@
         <!-- GRAFICO -->
         <div id="mc-chart" style="width:100%; height:600px;"></div>
         
+        <hr>
+
+        <div id="percentile-chart" style="height:400px;"></div>
+        <div id="bootstrap-chart" style="height:400px;"></div>
+        <div id="drawdown-chart" style="height:400px;"></div>
+        
+        <div id="risk-table" style="
+            margin-top:20px;
+            background:#111827;
+            border:1px solid #22304a;
+            border-radius:12px;
+            padding:20px;
+        "></div>
+        
         <!-- SPIEGAZIONE GRAFICO -->
         <div style="
             margin-top:20px;
@@ -196,6 +210,9 @@ function runMonteCarlo() {
         }
 
         drawChart(data)
+        drawDrawdownChart(data)
+        drawBootstrapChart(data)
+        drawRiskTable(data)
     })
     .catch(err => {
         console.error(err)
@@ -210,6 +227,62 @@ function runMonteCarlo() {
 // =========================
 // GRAFICO
 // =========================
+function drawDrawdownChart(data) {
+    const trace = {
+        x: data.drawdowns,
+        type: "histogram",
+        marker: {color: "#ef4444"}
+    }
+
+    Plotly.newPlot("drawdown-chart", [trace], {
+        title: "Drawdown Distribution",
+        paper_bgcolor: "#0f172a",
+        plot_bgcolor: "#0f172a",
+        font: {color: "#e5e7eb"}
+    })
+}
+
+function drawBootstrapChart(data) {
+
+    const traces = []
+
+    data.bootstrap_samples.forEach(curve => {
+        traces.push({
+            y: curve,
+            type: "scatter",
+            mode: "lines",
+            line: {color: "rgba(59,130,246,0.2)", width: 1},
+            showlegend: false
+        })
+    })
+
+    Plotly.newPlot("bootstrap-chart", traces, {
+        title: "Bootstrap Simulation",
+        paper_bgcolor: "#0f172a",
+        plot_bgcolor: "#0f172a",
+        font: {color: "#e5e7eb"}
+    })
+}
+
+function drawRiskTable(data) {
+
+    const m = data.advanced_metrics
+
+    const html = `
+        <h3>Advanced Metrics</h3>
+        <table style="width:100%; margin-top:10px;">
+            <tr><td>Sharpe</td><td>${m.sharpe.toFixed(3)}</td></tr>
+            <tr><td>Sortino</td><td>${m.sortino.toFixed(3)}</td></tr>
+            <tr><td>Calmar</td><td>${m.calmar.toFixed(3)}</td></tr>
+            <tr><td>Ulcer Index</td><td>${m.ulcer_index.toFixed(3)}</td></tr>
+            <tr><td>CDaR</td><td>${m.cdar.toFixed(3)}</td></tr>
+            <tr><td>Probability of Ruin</td><td>${(m.probability_of_ruin*100).toFixed(2)}%</td></tr>
+        </table>
+    `
+
+    document.getElementById("risk-table").innerHTML = html
+}
+
 function drawChart(data) {
 
     const traces = []

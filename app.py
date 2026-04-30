@@ -294,6 +294,78 @@ def montecarlo_run():
 
             all_equities.append(equity)
             final_profits.append(equity[-1])
+            
+        # =========================
+        # BOOTSTRAP (resampling)
+        # =========================
+        bootstrap_equities = []
+        bootstrap_profits = []
+        
+        for _ in range(sims):
+            resampled = np.random.choice(trades, size=len(trades), replace=True)
+            equity = np.cumsum(resampled)
+        
+            bootstrap_equities.append(equity)
+            bootstrap_profits.append(equity[-1])
+        
+        # =========================
+        # DRAWDOWN DISTRIBUTION
+        # =========================
+        drawdowns = []
+        recovery_times = []
+        
+        def time_to_recovery(eq):
+            peak = eq[0]
+            ttr = 0
+            max_ttr = 0
+            recovering = False
+        
+            for x in eq:
+                if x >= peak:
+                    peak = x
+                    if recovering:
+                        max_ttr = max(max_ttr, ttr)
+                        ttr = 0
+                        recovering = False
+                else:
+                    recovering = True
+                    ttr += 1
+        
+            return max_ttr
+        
+        for eq in all_equities:
+            dd = max_drawdown(eq)
+            drawdowns.append(dd)
+            recovery_times.append(time_to_recovery(eq))
+        
+        # =========================
+        # ADVANCED METRICS
+        # =========================
+        returns = np.array(trades)
+        
+        mean_ret = np.mean(returns)
+        std_ret = np.std(returns)
+        
+        downside = returns[returns < 0]
+        down_std = np.std(downside) if len(downside) > 0 else 0
+        
+        sharpe = mean_ret / std_ret if std_ret != 0 else 0
+        sortino = mean_ret / down_std if down_std != 0 else 0
+        
+        max_dd = np.max(drawdowns) if drawdowns else 0
+        calmar = mean_ret / max_dd if max_dd != 0 else 0
+        
+        ulcer_index = np.sqrt(np.mean(np.square(drawdowns)))
+        
+        # CDaR (worst 5%)
+        dd_array = np.array(drawdowns)
+        threshold = np.percentile(dd_array, 95)
+        cdar = np.mean(dd_array[dd_array >= threshold]) if len(dd_array) else 0
+        
+        # Probability of Ruin
+        ruin_threshold = -abs(np.sum(trades)) * 0.5
+        ruin_count = sum(1 for p in final_profits if p <= ruin_threshold)
+        por = ruin_count / len(final_profits) if final_profits else 0        
 
         # =========================
         # ORDINA PER PROFITTO
@@ -333,14 +405,29 @@ def montecarlo_run():
         # =========================
         return jsonify({
             "status": "success",
-
+        
             "original_equity": original_equity,
             "median_equity": median_equity,
             "worst_95_equity": worst_95_equity,
             "best_5_equity": best_5_equity,
-
+        
             "samples": samples,
-
+        
+            # QUESTI DEVONO STARE QUI (TOP LEVEL)
+            "bootstrap_samples": [b.tolist() for b in bootstrap_equities[:50]],
+            "drawdowns": drawdowns,
+            "recovery_times": recovery_times,
+        
+            "advanced_metrics": {
+                "sharpe": float(sharpe),
+                "sortino": float(sortino),
+                "calmar": float(calmar),
+                "ulcer_index": float(ulcer_index),
+                "cdar": float(cdar),
+                "probability_of_ruin": float(por)
+            },
+        
+            # METRICHE BASE RESTANO QUI
             "metrics": {
                 "avg_profit": avg_profit,
                 "median_profit": median_profit,

@@ -1,11 +1,1 @@
-Flask
-Flask-SQLAlchemy
-Flask-Login
-gunicorn
-requests
-resend
-yfinance
-pandas
-numpy
-lxml
-openpyxl
+Flask==3.1.2Flask-SQLAlchemy==3.1.1Flask-Login==0.6.3gunicorn==21.2.0requests==2.32.5resend==2.29.0yfinance==1.3.0pandas==2.3.3numpy==2.2.6lxml==6.1.0openpyxl==3.1.5
