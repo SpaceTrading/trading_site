@@ -397,12 +397,16 @@ def extract_trades_from_file(file):
             header_row = None
 
             for i, row in df.iterrows():
-                values = [normalize(v) for v in row.values]
+                values = [normalize(v) for v in row.values if normalize(v)]
                 row_text = " ".join(values)
+                
+                # DEBUG HARD
+                if i < 20:
+                    print(f"ROW {i}:", row_text)
 
                 if (
-                    "direzione" in row_text
-                    and ("profitto" in row_text or "profit" in row_text)
+                    any("direzione" in v for v in values)
+                    and any("profit" in v for v in values)
                 ):
                     header_row = i
                     break
@@ -486,7 +490,7 @@ def extract_trades_from_file(file):
             df = pd.read_excel(file, header=None, engine="openpyxl")
 
             # FIX cross-platform (Windows vs Linux)
-            df = df.astype(str)
+            df = df.applymap(lambda x: str(x).strip().lower() if pd.notna(x) else "")
             print("DEBUG XLSX RAW shape:", df.shape)
             return extract_affari_from_df(df)
 
