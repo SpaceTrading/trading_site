@@ -49,7 +49,7 @@
 let selectedNode = null;
 let graphData = null;
 
-fetch("/api/market-map")
+fetch("/api/companies?sector=Tech")
   .then(res => res.json())
   .then(data => {
 
@@ -93,9 +93,6 @@ fetch("/api/market-map")
       })
 
       .backgroundColor('#000');
-      .linkWidth(link => link.value * 2)
-      .linkOpacity(link => Math.min(0.8, link.value / 10))
-      .linkColor(() => "rgba(200,200,200,0.4)")
 
     window.Graph.d3Force('charge').strength(-120);
     window.Graph.d3Force('link').distance(120);
@@ -141,7 +138,7 @@ function openPanel(node) {
     <b>Chi investe:</b>
     ${incoming.length ? incoming.map(l => {
       const s = typeof l.source === "object" ? l.source.id : l.source;
-      return `<div>${s} → ${l.value}% (${(l.value / 100 * node.market_cap).toFixed(2)}B)</div>`;     
+      return `<div>${s} → ${l.value}%</div>`;
     }).join("") : "<div>Nessuno</div>"}
 
     <hr>
@@ -193,20 +190,7 @@ function getAnalytics(nodeId) {
 
   return {
     connectedCount: connected.size,
-    let influence = 0;
-
-    // somma pesata delle partecipazioni uscenti
-    outgoing.forEach(l => {
-      influence += l.value;
-    });
-    
-    // bonus leggero per connessioni
-    influence += connected.size * 0.5;
-    
-    return {
-      connectedCount: connected.size,
-      influenceScore: influence.toFixed(2)
-    };
+    influenceScore: (outgoing.length * 2 + incoming.length + connected.size * 0.5).toFixed(2)
   };
 }
 
