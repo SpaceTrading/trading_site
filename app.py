@@ -203,6 +203,7 @@ def api_convert():
 def montecarlo_upload():
 
     print("AUTH:", current_user.is_authenticated)
+    print("VERSION MONTECARLO V2 - LIVE CHECK")
 
     try:
         # =========================
