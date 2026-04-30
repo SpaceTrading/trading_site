@@ -47,10 +47,10 @@ from flask import request, redirect
 
 @app.before_request
 def force_www():
-    host = request.host
+    host = request.host.split(":")[0]  # FIX porta (443, ecc.)
 
-    if host.startswith("space-trading.com"):
-        return redirect(request.url.replace("space-trading.com", "www.space-trading.com", 1), code=301)
+    if host == "space-trading.com":
+        return redirect(request.url.replace("://space-trading.com", "://www.space-trading.com", 1), code=301)
 
 db = SQLAlchemy(app)
 
