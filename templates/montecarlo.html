@@ -131,7 +131,7 @@ function uploadFile() {
     fetch("/api/montecarlo/upload", {
         method: "POST",
         body: formData,
-        credentials: "same-origin"   // 
+        credentials: "include"   // 
     })
     .then(res => res.json())
     .then(data => {
@@ -179,7 +179,7 @@ function runMonteCarlo() {
             trades: trades,
             simulations: sims
         }),
-        credentials: "same-origin"   //
+        credentials: "include""   //
     })
     .then(res => {
         if (!res.ok) throw new Error("Errore server")
