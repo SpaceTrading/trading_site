@@ -314,16 +314,16 @@ function showMetricInfo(text) {
 function drawRiskTable(data) {
 
     const m = data.advanced_metrics
-    
-    // fallback sicurezza (evita crash se backend non manda ancora i nuovi campi)
-    m.noise_sensitivity = m.noise_sensitivity ?? 0
-    m.sharpe_haircut = m.sharpe_haircut ?? 0
-    m.robustness_ratio = m.robustness_ratio ?? 0
 
     if (!m) {
         document.getElementById("risk-table").innerHTML = "Nessuna metrica disponibile";
         return;
     }
+    
+    // fallback sicurezza
+    m.noise_sensitivity = m.noise_sensitivity ?? 0
+    m.sharpe_haircut = m.sharpe_haircut ?? 0
+    m.robustness_ratio = m.robustness_ratio ?? 0
 
     function info(text) {
         return `<span class="metric-info" data-info="${encodeURIComponent(text)}" style="

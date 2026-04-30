@@ -424,7 +424,8 @@ def montecarlo_run():
         
         sharpe_noisy = mean_noisy / std_noisy if std_noisy != 0 else 0.0
         
-        noise_sensitivity = sharpe_noisy / sharpe if sharpe != 0 else 0.0
+        epsilon = 1e-6
+        noise_sensitivity = sharpe_noisy / (sharpe + epsilon)
         
         
         # 2. Sharpe Haircut (prudenziale)
