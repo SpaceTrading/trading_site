@@ -100,6 +100,7 @@
         <!-- <div id="percentile-chart" style="height:400px;"></div> -->
         <div id="bootstrap-chart" style="height:400px;"></div>
         <div id="drawdown-chart" style="height:400px;"></div>
+        <div id="ttr-chart" style="height:400px;"></div>
         
         <div id="risk-table" style="
             margin-top:20px;
@@ -213,6 +214,7 @@ function runMonteCarlo() {
 
         drawChart(data)
         drawDrawdownChart(data)
+        drawTTRChart(data)
         drawBootstrapChart(data)
         drawRiskTable(data)
     })
@@ -242,6 +244,34 @@ function drawDrawdownChart(data) {
         plot_bgcolor: "#0f172a",
         font: {color: "#e5e7eb"}
     })
+}
+
+function drawTTRChart(data) {
+
+    if (!data.recovery_times || data.recovery_times.length === 0) return;
+
+    const trace = {
+        x: data.recovery_times,
+        type: "histogram",
+        marker: {color: "#10b981"}
+    }
+
+    const layout = {
+        title: "Time to Recovery Distribution",
+        paper_bgcolor: "#0f172a",
+        plot_bgcolor: "#0f172a",
+        font: {color: "#e5e7eb"},
+        xaxis: {
+            title: "Numero di trade per recupero",
+            gridcolor: "#1e293b"
+        },
+        yaxis: {
+            title: "Frequenza",
+            gridcolor: "#1e293b"
+        }
+    }
+
+    Plotly.newPlot("ttr-chart", [trace], layout)
 }
 
 function drawBootstrapChart(data) {
