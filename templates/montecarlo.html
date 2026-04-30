@@ -369,6 +369,24 @@ Esempio: ${m.cdar.toFixed(2)} → nei peggiori scenari, il drawdown medio è cir
 Esempio: ${(m.probability_of_ruin*100).toFixed(2)}% → circa ${(m.probability_of_ruin*100).toFixed(0)} simulazioni su 1000 hanno toccato la soglia (-50%).`)}</td>
                 <td>${(m.probability_of_ruin*100).toFixed(2)}%</td>
             </tr>
+            
+            <tr>
+                <td>Terminal Wealth Volatility ${info(`Dispersione dei risultati finali delle simulazioni bootstrap.
+Esempio: ${m.twv.toFixed(2)} → indica quanto variano i risultati finali. Più alto = strategia instabile.`)}</td>
+                <td>${m.twv.toFixed(2)}</td>
+</tr>
+
+<tr>
+                <td>VaR 95% ${info(`Value at Risk (95%): perdita attesa nei peggiori scenari.
+Esempio: ${m.var_95.toFixed(2)} → nel 5% dei casi, potresti ottenere un risultato inferiore a questo valore.`)}</td>
+                <td>${m.var_95.toFixed(2)}</td>
+</tr>
+
+<tr>
+                <td>CVaR ${info(`Expected Shortfall: media delle perdite peggiori oltre il VaR.
+Esempio: ${m.cvar.toFixed(2)} → nei casi estremi, la perdita media è circa ${m.cvar.toFixed(2)}.`)}</td>
+                <td>${m.cvar.toFixed(2)}</td>
+            </tr>
 
         </table>
     `

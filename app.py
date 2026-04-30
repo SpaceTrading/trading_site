@@ -399,6 +399,16 @@ def montecarlo_run():
         ruin_threshold = -abs(total_profit) * 0.5
         ruin_count = sum(1 for eq in bootstrap_equities if np.any(eq <= ruin_threshold))
         por = ruin_count / sims if sims > 0 else 0.0
+        
+        # =========================
+        # ADDITIONAL RISK METRICS (SAFE)
+        # =========================
+        bootstrap_array = np.array(bootstrap_profits)
+        
+        twv = float(np.std(bootstrap_array)) if len(bootstrap_array) else 0.0
+        var_95 = float(np.percentile(bootstrap_array, 5)) if len(bootstrap_array) else 0.0
+        
+        cvar = float(np.mean(bootstrap_array[bootstrap_array <= var_95])) if len(bootstrap_array) else 0.0        
 
         # =========================
         # OUTPUT
@@ -424,7 +434,11 @@ def montecarlo_run():
                 "calmar": float(calmar),
                 "ulcer_index": float(ulcer_index),
                 "cdar": float(cdar),
-                "probability_of_ruin": float(por)
+                "probability_of_ruin": float(por),
+            
+                "twv": twv,
+                "var_95": var_95,
+                "cvar": cvar
             },
         
             # METRICHE BASE RESTANO QUI
