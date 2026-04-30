@@ -1129,15 +1129,15 @@ def insider_flow():
             print("ERROR:", t, e)
             continue
 
-    # ordina per valore transazione
+    # ordina per valore transazione    
+    # 1. ordina per DATA (più recente prima)
     results.sort(
-        key=lambda x: (x["change"] or 0) * (x["price"] or 0),
+        key=lambda x: datetime.strptime(x["date"], "%Y-%m-%d") if x["date"] else datetime.min,
         reverse=True
     )
-
-    print("RESULTS COUNT:", len(results))
-
-    return jsonify(results[:10])
+    
+    # 2. limita output (più recente)
+    return jsonify(results[:15])
 
 # =========================================================
 # ROUTES (PUBLIC)
