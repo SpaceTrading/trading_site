@@ -5,12 +5,28 @@
 <style>
 
 @media (max-width: 768px) {
+
   #insiderFlow {
+    width: 140px !important;
     right: 10px !important;
     top: 70px !important;
-    width: 90% !important;
-    max-height: 50vh !important;
+    padding: 10px !important;
   }
+
+  #insiderContent {
+    display: none;
+  }
+
+  #insiderFlow.expanded {
+    width: 90% !important;
+    max-height: 60vh !important;
+  }
+
+  #insiderFlow.expanded #insiderContent {
+    display: block;
+    margin-top:10px;
+  }
+
 }
 
 #3d-graph {
@@ -66,8 +82,18 @@
   color:white;
   z-index:99998;
 ">
-  <h3 style="margin-top:0;">SEC Detector</h3>
+  <div id="insiderHeader" onclick="toggleInsider()" style="
+    cursor:pointer;
+    font-weight:bold;
+    font-size:16px;
+  ">
+    SEC Detector
+  </div>
+  
+  <div id="insiderContent">
   <div id="insiderList">Caricamento...</div>
+</div>
+
 </div>
 
 <script src="https://unpkg.com/3d-force-graph"></script>
@@ -172,6 +198,12 @@ fetch("/api/insider-flow")
       `
     }).join("")
   })
+  
+  
+function toggleInsider() {
+  const panel = document.getElementById("insiderFlow")
+  panel.classList.toggle("expanded")
+}
 
 /* =========================
    PANEL FUNCTIONS
