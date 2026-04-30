@@ -1077,9 +1077,8 @@ def insider_flow():
 
     import requests
 
-    API_KEY = "d7pm839r01qosaap4ii0d7pm839r01qosaap4iig"  # <-- INSERISCI QUI
+    API_KEY = "d7pm839r01qosaap4ii0d7pm839r01qosaap4iig"  # tua key
 
-    # Ticker solidi (eventi insider frequenti)
     tickers = ["AAPL", "TSLA", "MSFT", "NVDA", "AMZN"]
 
     results = []
@@ -1088,31 +1087,32 @@ def insider_flow():
 
         try:
             url = f"https://finnhub.io/api/v1/stock/insider-transactions?symbol={t}&token={API_KEY}"
-            r = requests.get(url, timeout=3)
+            r = requests.get(url, timeout=5)
 
             if r.status_code != 200:
+                print("HTTP ERROR:", t, r.status_code)
                 continue
 
             data = r.json()
 
             if "data" not in data or not data["data"]:
+                print("NO DATA:", t)
                 continue
 
-            for item in data["data"][:5]:
+            # prendiamo più eventi (non solo 5)
+            for item in data["data"][:20]:
 
                 code = item.get("transactionCode")
 
-                # solo BUY (P) e SELL (S)
-                if code not in ["P", "S"]:
-                    continue
-
                 change = item.get("change") or 0
                 price = item.get("transactionPrice") or 0
-
                 value = change * price
 
-                # filtro importo minimo (100k)
-                if value < 100000:
+                # DEBUG (puoi lasciarlo per ora)
+                print("ITEM:", t, code, value)
+
+                # filtro minimo SOLO per evitare spazzatura totale
+                if value == 0:
                     continue
 
                 results.append({
@@ -1126,15 +1126,17 @@ def insider_flow():
                 })
 
         except Exception as e:
+            print("ERROR:", t, e)
             continue
 
-    # ordina per importanza (valore transazione)
+    # ordina per valore transazione
     results.sort(
         key=lambda x: (x["change"] or 0) * (x["price"] or 0),
         reverse=True
     )
 
-    # limita output
+    print("RESULTS COUNT:", len(results))
+
     return jsonify(results[:10])
 
 # =========================================================
