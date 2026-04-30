@@ -1077,7 +1077,7 @@ def insider_flow():
 
     import requests
 
-    API_KEY = "METTI_LA_TUA_API_KEY"  # <-- INSERISCI QUI
+    API_KEY = "d7pm839r01qosaap4ii0d7pm839r01qosaap4iig"  # <-- INSERISCI QUI
 
     # Ticker solidi (eventi insider frequenti)
     tickers = ["AAPL", "TSLA", "MSFT", "NVDA", "AMZN"]
