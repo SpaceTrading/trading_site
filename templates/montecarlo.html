@@ -247,6 +247,11 @@ function drawDrawdownChart(data) {
 function drawBootstrapChart(data) {
 
     const traces = []
+    
+    if (!m) {
+        document.getElementById("risk-table").innerHTML = "Nessuna metrica disponibile";
+        return;
+    }
 
     data.bootstrap_samples.forEach(curve => {
         traces.push({
@@ -267,7 +272,7 @@ function drawBootstrapChart(data) {
 }
 
 function drawRiskTable(data) {
-    const m = data.metrics.advanced_metrics
+    const m = data.metrics?.advanced_metrics || data.advanced_metrics
 
     const html = `
         <h3>Advanced Metrics</h3>
