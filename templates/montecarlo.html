@@ -340,26 +340,26 @@ function drawRiskTable(data) {
         <table style="width:100%; margin-top:10px; border-collapse: collapse;">
 
             <tr>
-                <td>Sharpe ${info(`Sharpe Ratio: misura il rapporto tra rendimento medio e volatilità totale.
-Esempio: ${m.sharpe.toFixed(3)} → ogni unità di rischio produce ${m.sharpe.toFixed(3)} unità di rendimento.`)}</td>
+                <td>Sharpe ${info(`Sharpe Ratio: misura il rapporto tra profitto medio e variabilità dei trade.
+Esempio: ${m.sharpe.toFixed(3)} → il sistema genera in media ${m.sharpe.toFixed(3)} unità di profitto per unità di variabilità.`)}</td>
                 <td>${m.sharpe.toFixed(3)}</td>
             </tr>
 
             <tr>
-                <td>Sortino ${info(`Sortino Ratio: simile allo Sharpe ma considera solo la volatilità negativa.
-Esempio: ${m.sortino.toFixed(3)} → penalizza solo le perdite, non i profitti.`)}</td>
+                <td>Sortino ${info(`Sortino Ratio: misura il rendimento rispetto alla sola volatilità negativa.
+Esempio: ${m.sortino.toFixed(3)} → il sistema è ${m.sortino.toFixed(3)} volte efficiente considerando solo il rischio di perdita.`)}</td>
                 <td>${m.sortino.toFixed(3)}</td>
             </tr>
 
             <tr>
                 <td>Calmar ${info(`Calmar Ratio: rapporto tra profitto totale e massimo drawdown.
-Esempio: ${m.calmar.toFixed(3)} → per ogni unità di drawdown, il sistema genera ${m.calmar.toFixed(3)} unità di profitto.`)}</td>
+Esempio: ${m.calmar.toFixed(3)} → il sistema genera ${m.calmar.toFixed(3)} unità di profitto per ogni unità di drawdown subito.`)}</td>
                 <td>${m.calmar.toFixed(3)}</td>
             </tr>
 
             <tr>
-                <td>Ulcer Index ${info(`Ulcer Index: misura profondità e durata dei drawdown.
-Esempio: ${m.ulcer_index.toFixed(2)} → più è alto, più la strategia è psicologicamente difficile da sostenere.`)}</td>
+                <td>Ulcer Index ${info(`Ulcer Index: misura intensità e durata dei drawdown.
+Esempio: ${m.ulcer_index.toFixed(2)} → più è alto, più la strategia resta a lungo in perdita.`)}</td>
                 <td>${m.ulcer_index.toFixed(3)}</td>
             </tr>
 
@@ -370,44 +370,44 @@ Esempio: ${m.cdar.toFixed(2)} → nei peggiori scenari, il drawdown medio è cir
             </tr>
 
             <tr>
-                <td>Probability of Ruin ${info(`Probability of Ruin: probabilità che il conto tocchi la soglia di rovina.
-Esempio: ${(m.probability_of_ruin*100).toFixed(2)}% → circa ${(m.probability_of_ruin*100).toFixed(0)} simulazioni su 1000 hanno toccato la soglia (-50%).`)}</td>
+                <td>Probability of Ruin ${info(`Probability of Ruin: probabilità che l’equity scenda sotto la soglia critica durante la simulazione.
+Esempio: ${(m.probability_of_ruin*100).toFixed(2)}% → circa ${(m.probability_of_ruin*100).toFixed(0)} simulazioni su 1000 hanno raggiunto la soglia di rovina.`)}</td>
                 <td>${(m.probability_of_ruin*100).toFixed(2)}%</td>
             </tr>
             
             <tr>
-                <td>Terminal Wealth Volatility ${info(`Dispersione dei risultati finali delle simulazioni bootstrap.
-Esempio: ${m.twv.toFixed(2)} → indica quanto variano i risultati finali. Più alto = strategia instabile.`)}</td>
+                <td>Terminal Wealth Volatility ${info(`Terminal Wealth Volatility: dispersione dei risultati finali delle simulazioni.
+Esempio: ${m.twv.toFixed(2)} → più è alto, più i risultati finali sono incerti e variabili.`)}</td>
                 <td>${m.twv.toFixed(2)}</td>
             </tr>
 
             <tr>
-                <td>VaR 95% ${info(`Value at Risk (95%): perdita attesa nei peggiori scenari.
-Esempio: ${m.var_95.toFixed(2)} → nel 5% dei casi, potresti ottenere un risultato inferiore a questo valore.`)}</td>
+                <td>VaR 95% ${info(`Value at Risk 95%: soglia sotto la quale cadono i peggiori risultati (5% dei casi).
+Esempio: ${m.var_95.toFixed(2)} → nel 5% dei casi, il risultato finale è inferiore a ${m.var_95.toFixed(2)}.`)}</td>
                 <td>${m.var_95.toFixed(2)}</td>
             </tr>
 
             <tr>
-                <td>CVaR ${info(`Expected Shortfall: media delle perdite peggiori oltre il VaR.
+                <td>CVaR ${info(`CVaR: media delle perdite nei peggiori scenari (oltre il VaR).
 Esempio: ${m.cvar.toFixed(2)} → nei casi estremi, la perdita media è circa ${m.cvar.toFixed(2)}.`)}</td>
                 <td>${m.cvar.toFixed(2)}</td>
             </tr>
             
             <tr>
-                <td>Noise Sensitivity ${info(`Misura quanto la strategia è sensibile a piccoli disturbi casuali.
-Esempio: ${m.noise_sensitivity.toFixed(2)} → se < 0.5, strategia probabilmente overfittata.`)}</td>
+                <td>Noise Sensitivity ${info(`Noise Sensitivity: misura quanto la strategia cambia sotto piccoli disturbi casuali.
+Esempio: ${m.noise_sensitivity.toFixed(2)} → valori vicini a 1 indicano stabilità, valori molto bassi indicano possibile fragilità.`)}</td>
                 <td>${m.noise_sensitivity.toFixed(2)}</td>
             </tr>
 
             <tr>
-                <td>Sharpe Haircut ${info(`Sharpe corretto per overfitting (ridotto del 50%).
-Esempio: ${m.sharpe_haircut.toFixed(2)} → se scende sotto 0.5, edge probabilmente non reale.`)}</td>
+                <td>Sharpe Haircut ${info(`Sharpe Haircut: versione prudenziale dello Sharpe, ridotta per considerare overfitting.
+Esempio: ${m.sharpe_haircut.toFixed(2)} → valori bassi indicano che l’edge potrebbe ridursi in condizioni reali.`)}</td>
                 <td>${m.sharpe_haircut.toFixed(2)}</td>
             </tr>
 
             <tr>
-                <td>Robustness Ratio ${info(`Rapporto tra numero di trade e complessità della strategia.
-Esempio: ${m.robustness_ratio.toFixed(1)} → sotto 30 = alto rischio overfitting.`)}</td>
+                <td>Robustness Ratio ${info(`Robustness Ratio: rapporto tra numero di trade e complessità stimata della strategia.
+Esempio: ${m.robustness_ratio.toFixed(1)} → valori bassi indicano rischio di overfitting, valori alti maggiore affidabilità statistica.`)}</td>
                 <td>${m.robustness_ratio.toFixed(1)}</td>
             </tr>
 
