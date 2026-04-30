@@ -110,6 +110,15 @@
             padding:20px;
         "></div>
         
+        <div id="metric-info-box" style="
+            margin-top:10px;
+            background:#0f172a;
+            border:1px solid #334155;
+            border-radius:10px;
+            padding:15px;
+            color:#e5e7eb;
+            display:none;
+        "></div>
         
 
     </div>
@@ -296,6 +305,12 @@ function drawBootstrapChart(data) {
     })
 }
 
+function showMetricInfo(text) {
+    const box = document.getElementById("metric-info-box")
+    box.style.display = "block"
+    box.innerText = text
+}
+
 function drawRiskTable(data) {
 
     const m = data.advanced_metrics
@@ -306,8 +321,8 @@ function drawRiskTable(data) {
     }
 
     function info(text) {
-        return `<span title="${text}" style="
-            cursor: help;
+        return `<span onclick="showMetricInfo('${text.replace(/'/g, "\\'")}')" style="
+            cursor:pointer;
             color:#60a5fa;
             margin-left:6px;
             font-weight:bold;
