@@ -1077,38 +1077,65 @@ def insider_flow():
 
     import requests
 
-    API_KEY = "METTILA_DOPO"  # placeholder
+    API_KEY = "METTI_LA_TUA_API_KEY"  # <-- INSERISCI QUI
 
-    tickers = [c.ticker for c in Company.query.filter(Company.ticker.isnot(None)).all()]
+    # Ticker solidi (eventi insider frequenti)
+    tickers = ["AAPL", "TSLA", "MSFT", "NVDA", "AMZN"]
 
     results = []
 
-    for t in tickers[:10]:  # LIMIT iniziale per sicurezza
+    for t in tickers:
 
         try:
             url = f"https://finnhub.io/api/v1/stock/insider-transactions?symbol={t}&token={API_KEY}"
             r = requests.get(url, timeout=3)
-            data = r.json()
 
-            if "data" not in data:
+            if r.status_code != 200:
                 continue
 
-            for item in data["data"][:1]:  # solo ultimo evento
+            data = r.json()
+
+            if "data" not in data or not data["data"]:
+                continue
+
+            for item in data["data"][:5]:
+
+                code = item.get("transactionCode")
+
+                # solo BUY (P) e SELL (S)
+                if code not in ["P", "S"]:
+                    continue
+
+                change = item.get("change") or 0
+                price = item.get("transactionPrice") or 0
+
+                value = change * price
+
+                # filtro importo minimo (100k)
+                if value < 100000:
+                    continue
 
                 results.append({
                     "ticker": t,
-                    "name": item.get("name"),
-                    "position": item.get("shareholder"),
-                    "type": item.get("transactionCode"),
-                    "change": item.get("change"),
-                    "price": item.get("transactionPrice"),
+                    "name": item.get("name") or "Unknown",
+                    "position": item.get("shareholder") or "Insider",
+                    "type": code,
+                    "change": change,
+                    "price": price,
                     "date": item.get("transactionDate")
                 })
 
         except Exception as e:
             continue
 
-    return jsonify(results)
+    # ordina per importanza (valore transazione)
+    results.sort(
+        key=lambda x: (x["change"] or 0) * (x["price"] or 0),
+        reverse=True
+    )
+
+    # limita output
+    return jsonify(results[:10])
 
 # =========================================================
 # ROUTES (PUBLIC)
