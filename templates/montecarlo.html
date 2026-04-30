@@ -58,7 +58,7 @@
         <hr>
 
         <!-- GRAFICO -->
-        <div id="mc-chart" style="width:100%; height:600px;"></div>
+        <div id="mc-chart" style="width:100%; height:580px;"></div>
         
         <!-- SPIEGAZIONE GRAFICO -->
         <div style="
@@ -267,8 +267,7 @@ function drawBootstrapChart(data) {
 }
 
 function drawRiskTable(data) {
-
-    const m = data.advanced_metrics
+    const m = data.metrics.advanced_metrics
 
     const html = `
         <h3>Advanced Metrics</h3>
@@ -300,6 +299,31 @@ function drawChart(data) {
             showlegend: false
         })
     })
+    
+    // =========================
+    // CONFIDENCE CONE
+    // =========================
+    
+    // upper bound
+    traces.push({
+        y: data.best_5_equity,
+        type: "scatter",
+        mode: "lines",
+        line: {width: 0},
+        showlegend: false
+    });
+    
+    // lower bound + fill
+    traces.push({
+        y: data.worst_95_equity,
+        type: "scatter",
+        mode: "lines",
+        fill: "tonexty",
+        fillcolor: "rgba(59,130,246,0.10)",
+        line: {width: 0},
+        name: "Confidence Cone",
+        hoverinfo: "skip"
+    });
 
     // ORIGINAL
     traces.push({
