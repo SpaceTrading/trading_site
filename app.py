@@ -194,6 +194,11 @@ def api_convert():
     except Exception as e:
         print("API ERROR:", e)
         return jsonify({"error": "Errore API"})
+    
+    
+@app.route("/api/version")
+def version():
+    return {"version": "MC_FIX_2026_04_30_V3"}
 
 # =========================================================
 # SIMULATORE MONTE-CARLO
