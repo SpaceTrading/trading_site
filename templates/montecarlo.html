@@ -300,15 +300,61 @@ function drawRiskTable(data) {
 
     const m = data.advanced_metrics
 
+    if (!m) {
+        document.getElementById("risk-table").innerHTML = "Nessuna metrica disponibile";
+        return;
+    }
+
+    function info(text) {
+        return `<span title="${text}" style="
+            cursor: help;
+            color:#60a5fa;
+            margin-left:6px;
+            font-weight:bold;
+        ">(i)</span>`
+    }
+
     const html = `
         <h3>Advanced Metrics</h3>
-        <table style="width:100%; margin-top:10px;">
-            <tr><td>Sharpe</td><td>${m.sharpe.toFixed(3)}</td></tr>
-            <tr><td>Sortino</td><td>${m.sortino.toFixed(3)}</td></tr>
-            <tr><td>Calmar</td><td>${m.calmar.toFixed(3)}</td></tr>
-            <tr><td>Ulcer Index</td><td>${m.ulcer_index.toFixed(3)}</td></tr>
-            <tr><td>CDaR</td><td>${m.cdar.toFixed(3)}</td></tr>
-            <tr><td>Probability of Ruin</td><td>${(m.probability_of_ruin*100).toFixed(2)}%</td></tr>
+
+        <table style="width:100%; margin-top:10px; border-collapse: collapse;">
+
+            <tr>
+                <td>Sharpe ${info(`Sharpe Ratio: misura il rapporto tra rendimento medio e volatilità totale.
+Esempio: ${m.sharpe.toFixed(3)} → ogni unità di rischio produce ${m.sharpe.toFixed(3)} unità di rendimento.`)}</td>
+                <td>${m.sharpe.toFixed(3)}</td>
+            </tr>
+
+            <tr>
+                <td>Sortino ${info(`Sortino Ratio: simile allo Sharpe ma considera solo la volatilità negativa.
+Esempio: ${m.sortino.toFixed(3)} → penalizza solo le perdite, non i profitti.`)}</td>
+                <td>${m.sortino.toFixed(3)}</td>
+            </tr>
+
+            <tr>
+                <td>Calmar ${info(`Calmar Ratio: rapporto tra profitto totale e massimo drawdown.
+Esempio: ${m.calmar.toFixed(3)} → per ogni unità di drawdown, il sistema genera ${m.calmar.toFixed(3)} unità di profitto.`)}</td>
+                <td>${m.calmar.toFixed(3)}</td>
+            </tr>
+
+            <tr>
+                <td>Ulcer Index ${info(`Ulcer Index: misura profondità e durata dei drawdown.
+Esempio: ${m.ulcer_index.toFixed(2)} → più è alto, più la strategia è psicologicamente difficile da sostenere.`)}</td>
+                <td>${m.ulcer_index.toFixed(3)}</td>
+            </tr>
+
+            <tr>
+                <td>CDaR ${info(`Conditional Drawdown at Risk: media dei peggiori drawdown (worst 5%).
+Esempio: ${m.cdar.toFixed(2)} → nei peggiori scenari, il drawdown medio è circa ${m.cdar.toFixed(2)}.`)}</td>
+                <td>${m.cdar.toFixed(3)}</td>
+            </tr>
+
+            <tr>
+                <td>Probability of Ruin ${info(`Probability of Ruin: probabilità che il conto tocchi la soglia di rovina.
+Esempio: ${(m.probability_of_ruin*100).toFixed(2)}% → circa ${(m.probability_of_ruin*100).toFixed(0)} simulazioni su 1000 hanno toccato la soglia (-50%).`)}</td>
+                <td>${(m.probability_of_ruin*100).toFixed(2)}%</td>
+            </tr>
+
         </table>
     `
 
