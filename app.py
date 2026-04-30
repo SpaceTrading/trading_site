@@ -40,13 +40,35 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-change-me")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(INSTANCE_DIR, "app.db")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+# =========================
+# FORCE WWW (CRITICO)
+# =========================
+from flask import request, redirect
+
+@app.before_request
+def force_www():
+    host = request.host
+
+    if host.startswith("space-trading.com"):
+        return redirect(request.url.replace("space-trading.com", "www.space-trading.com", 1), code=301)
+
 db = SQLAlchemy(app)
 
 login_manager = LoginManager()
+login_manager.session_protection = "strong"
 login_manager.login_view = "login"
 login_manager.init_app(app)
 
+# =========================
+# FIX SESSIONE PRODUZIONE (CRITICO)
+# =========================
 
+app.config["SESSION_COOKIE_SECURE"] = True
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+
+# FONDAMENTALE per www vs non-www
+app.config["SESSION_COOKIE_DOMAIN"] = ".space-trading.com"
 # =========================================================
 # CONTATTI
 # =========================================================
@@ -1099,7 +1121,8 @@ def reset_password(token):
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for("dashboard"))
+        next_page = request.args.get("next")
+        return redirect(next_page or url_for("dashboard"))
 
     if request.method == "POST":
         email = request.form.get("email", "").strip().lower()
