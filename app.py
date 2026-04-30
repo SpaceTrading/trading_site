@@ -200,6 +200,7 @@ def api_convert():
 # =========================================================
 
 @app.route("/api/montecarlo/upload", methods=["POST"])
+@login_required
 def montecarlo_upload():
 
     print("AUTH:", current_user.is_authenticated)
@@ -246,11 +247,9 @@ def montecarlo_upload():
 
     
     
-@app.route("/api/montecarlo/run", methods=["POST"])
+app.route("/api/montecarlo/run", methods=["POST"])
 #@login_required
-def montecarlo_run():
-    if not current_user.is_authenticated:
-        return jsonify({"error": "not authenticated"}), 401    
+def montecarlo_run():   
 
     try:
         data = request.json
