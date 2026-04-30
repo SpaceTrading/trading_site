@@ -1139,6 +1139,58 @@ def insider_flow():
     # 2. limita output (più recente)
     return jsonify(results[:15])
 
+@app.route("/api/sector-ranking")
+def sector_ranking():
+
+    from collections import defaultdict
+
+    # =========================
+    # QUERY DB
+    # =========================
+    companies = Company.query.filter(
+        Company.market_cap.isnot(None),
+        Company.sector.isnot(None)
+    ).all()
+
+    # =========================
+    # GROUP BY SECTOR
+    # =========================
+    sector_map = defaultdict(list)
+
+    for c in companies:
+
+        # safety: evita dati sporchi
+        if not c.market_cap or c.market_cap <= 0:
+            continue
+
+        sector_map[c.sector].append({
+            "name": c.name,
+            "ticker": c.ticker,
+            "market_cap": float(c.market_cap)
+        })
+
+    # =========================
+    # SORT + TOP 15
+    # =========================
+    result = {}
+
+    for sector, comps in sector_map.items():
+
+        # ordina per market cap DESC
+        sorted_comps = sorted(
+            comps,
+            key=lambda x: x["market_cap"],
+            reverse=True
+        )
+
+        # prendi top 15
+        result[sector] = sorted_comps[:15]
+
+    # =========================
+    # RETURN JSON
+    # =========================
+    return jsonify(result)
+
 # =========================================================
 # ROUTES (PUBLIC)
 # =========================================================

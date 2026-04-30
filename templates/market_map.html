@@ -4,6 +4,45 @@
 
 <style>
 
+/* =========================
+   TOGGLE UNIVERSALE - SEC
+========================= */
+
+/* desktop: contenuto aperto se expanded */
+#insiderContent {
+  display: block;
+}
+
+/* quando collassato */
+#insiderFlow:not(.expanded) #insiderContent {
+  display: none;
+}
+
+/* =========================
+   TOGGLE UNIVERSALE - SECTOR
+========================= */
+
+#sectorContent {
+  display: block;
+}
+
+#sectorRanking:not(.expanded) #sectorContent {
+  display: none;
+}
+
+/* =========================
+   GRAFO 3D
+========================= */
+
+#3d-graph {
+  position: relative;
+  z-index: 999999 !important;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
 @media (max-width: 768px) {
 
   #insiderFlow {
@@ -27,23 +66,29 @@
     margin-top:10px;
   }
 
+  #sectorRanking {
+    width: 170px !important;
+    right: 10px !important;
+    top: 125px !important;
+    padding: 10px !important;
+  }
+
+  #sectorContent {
+    display: none;
+  }
+
+  #sectorRanking.expanded {
+    width: 90% !important;
+    max-height: 55vh !important;
+  }
+
+  #sectorRanking.expanded #sectorContent {
+    display: block;
+    margin-top:10px;
+  }
+
 }
 
-/* TOGGLE UNIVERSALE */
-/* DEFAULT: desktop aperto */
-#insiderContent {
-  display: block;
-}
-
-/* quando collassato */
-#insiderFlow:not(.expanded) #insiderContent {
-  display: none;
-}
-
-#3d-graph {
-  position: relative;
-  z-index: 999999 !important;
-}
 </style>
 
 <div style="height:100vh; background:black;">
@@ -105,6 +150,33 @@
   <div id="insiderList">Caricamento...</div>
 </div>
 
+</div>
+
+<div id="sectorRanking" style="
+  position:fixed;
+  top:80px;
+  right:320px;
+  width:320px;
+  max-height:70vh;
+  overflow-y:auto;
+  background:rgba(10,15,30,0.95);
+  border:1px solid rgba(0,200,255,0.3);
+  border-radius:12px;
+  padding:15px;
+  color:white;
+  z-index:99997;
+">
+  <div id="sectorHeader" onclick="toggleSectorRanking()" style="
+    cursor:pointer;
+    font-weight:bold;
+    font-size:16px;
+  ">
+    Sector Ranking
+  </div>
+
+  <div id="sectorContent">
+    <div id="sectorList">Caricamento...</div>
+  </div>
 </div>
 
 <script src="https://unpkg.com/3d-force-graph"></script>
@@ -210,9 +282,73 @@ fetch("/api/insider-flow")
     }).join("")
   })
   
+// =========================
+// SECTOR RANKING
+// =========================
+fetch("/api/sector-ranking")
+  .then(res => res.json())
+  .then(data => {
+
+    const container = document.getElementById("sectorList")
+
+    if (!container) return
+
+    if (!data || Object.keys(data).length === 0) {
+      container.innerHTML = "Nessun dato"
+      return
+    }
+
+    const sectors = Object.keys(data).sort()
+
+    container.innerHTML = sectors.map(sector => {
+
+      const companies = data[sector] || []
+
+      return `
+        <details style="
+          margin-bottom:10px;
+          border-bottom:1px solid #1e293b;
+          padding-bottom:8px;
+        ">
+          <summary style="
+            cursor:pointer;
+            font-weight:bold;
+            color:#38bdf8;
+            margin-bottom:8px;
+          ">
+            ${sector}
+          </summary>
+
+          ${companies.map((c, index) => `
+            <div style="
+              display:flex;
+              justify-content:space-between;
+              gap:10px;
+              font-size:12px;
+              margin-bottom:6px;
+            ">
+              <span>
+                ${index + 1}. <b>${c.ticker || ""}</b>
+                <span style="color:#cbd5e1;">${c.name || ""}</span>
+              </span>
+              <span style="color:#94a3b8; white-space:nowrap;">
+                ${formatCap(c.market_cap)}
+              </span>
+            </div>
+          `).join("")}
+        </details>
+      `
+    }).join("")
+  })
+  
   
 function toggleInsider() {
   const panel = document.getElementById("insiderFlow")
+  panel.classList.toggle("expanded")
+}
+
+function toggleSectorRanking() {
+  const panel = document.getElementById("sectorRanking")
   panel.classList.toggle("expanded")
 }
 
@@ -307,10 +443,12 @@ function getAnalytics(nodeId) {
 }
 
 window.addEventListener("load", () => {
-  const panel = document.getElementById("insiderFlow")
+  const insiderPanel = document.getElementById("insiderFlow")
+  const sectorPanel = document.getElementById("sectorRanking")
 
   if (window.innerWidth > 768) {
-    panel.classList.add("expanded") // desktop aperto di default
+    if (insiderPanel) insiderPanel.classList.add("expanded")
+    if (sectorPanel) sectorPanel.classList.add("expanded")
   }
 })
 
