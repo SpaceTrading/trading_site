@@ -490,7 +490,8 @@ def extract_trades_from_file(file):
             df = pd.read_excel(file, header=None, engine="openpyxl")
 
             # FIX cross-platform (Windows vs Linux)
-            df = df.applymap(lambda x: str(x).strip().lower() if pd.notna(x) else "")
+            df = df.fillna("")
+            df = df.astype(str)
             print("DEBUG XLSX RAW shape:", df.shape)
             return extract_affari_from_df(df)
 
