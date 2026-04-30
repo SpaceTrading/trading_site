@@ -283,122 +283,122 @@ def montecarlo_run():
         # =========================
         # MONTE CARLO
         # =========================
+        # =========================
+        # MONTE CARLO - SHUFFLE
+        # Sequence Risk / Drawdown Risk
+        # =========================
         all_equities = []
-        final_profits = []
-
-        for _ in range(sims):
-            shuffled = trades.copy()
-            np.random.shuffle(shuffled)
-
-            equity = np.cumsum(shuffled)
-
-            all_equities.append(equity)
-            final_profits.append(equity[-1])
-            
-        # =========================
-        # BOOTSTRAP (resampling)
-        # =========================
-        bootstrap_equities = []
-        bootstrap_profits = []
-        
-        for _ in range(sims):
-            resampled = np.random.choice(trades, size=len(trades), replace=True)
-            equity = np.cumsum(resampled)
-        
-            bootstrap_equities.append(equity)
-            bootstrap_profits.append(equity[-1])
-        
-        # =========================
-        # DRAWDOWN DISTRIBUTION
-        # =========================
         drawdowns = []
         recovery_times = []
-        
+    
         def time_to_recovery(eq):
             peak = eq[0]
-            ttr = 0
-            max_ttr = 0
-            recovering = False
-        
+            current_duration = 0
+            max_duration = 0
+    
             for x in eq:
                 if x >= peak:
                     peak = x
-                    if recovering:
-                        max_ttr = max(max_ttr, ttr)
-                        ttr = 0
-                        recovering = False
+                    current_duration = 0
                 else:
-                    recovering = True
-                    ttr += 1
-        
-            return max_ttr
-        
-        for eq in all_equities:
-            dd = max_drawdown(eq)
-            drawdowns.append(dd)
-            recovery_times.append(time_to_recovery(eq))
-        
+                    current_duration += 1
+                    max_duration = max(max_duration, current_duration)
+    
+            return max_duration
+    
+        def ulcer_index_from_equity(eq):
+            peak = eq[0]
+            dd_points = []
+    
+            for x in eq:
+                if x > peak:
+                    peak = x
+    
+                dd = peak - x
+                dd_points.append(dd)
+    
+            return float(np.sqrt(np.mean(np.square(dd_points))))
+    
+        ulcer_values = []
+    
+        for _ in range(sims):
+            shuffled = trades.copy()
+            np.random.shuffle(shuffled)
+    
+            equity = np.cumsum(shuffled)
+    
+            all_equities.append(equity)
+            drawdowns.append(float(max_drawdown(equity)))
+            recovery_times.append(int(time_to_recovery(equity)))
+            ulcer_values.append(ulcer_index_from_equity(equity))
+    
+        # Ordine corretto: per drawdown, NON per profitto finale
+        sorted_by_dd_indices = np.argsort(drawdowns)
+    
+        best_5_equity = all_equities[sorted_by_dd_indices[int(sims * 0.05)]].tolist()
+        median_equity = all_equities[sorted_by_dd_indices[int(sims * 0.50)]].tolist()
+        worst_95_equity = all_equities[sorted_by_dd_indices[int(sims * 0.95)]].tolist()
+    
         # =========================
-        # ADVANCED METRICS
+        # BOOTSTRAP - Outcome Risk
         # =========================
-        returns = np.array(trades)
-        
-        mean_ret = np.mean(returns)
-        std_ret = np.std(returns)
-        
-        downside = returns[returns < 0]
-        down_std = np.std(downside) if len(downside) > 0 else 0
-        
-        sharpe = mean_ret / std_ret if std_ret != 0 else 0
-        sortino = mean_ret / down_std if down_std != 0 else 0
-        
-        max_dd = np.max(drawdowns) if drawdowns else 0
-        calmar = mean_ret / max_dd if max_dd != 0 else 0
-        
-        ulcer_index = np.sqrt(np.mean(np.square(drawdowns)))
-        
-        # CDaR (worst 5%)
-        dd_array = np.array(drawdowns)
-        threshold = np.percentile(dd_array, 95)
-        cdar = np.mean(dd_array[dd_array >= threshold]) if len(dd_array) else 0
-        
-        # Probability of Ruin
-        ruin_threshold = -abs(np.sum(trades)) * 0.5
-        ruin_count = sum(1 for p in final_profits if p <= ruin_threshold)
-        por = ruin_count / len(final_profits) if final_profits else 0        
-
-        # =========================
-        # ORDINA PER PROFITTO
-        # =========================
-        sorted_indices = np.argsort(final_profits)
-        sorted_equities = [all_equities[i] for i in sorted_indices]
-
-        # percentili
-        p5_index = int(sims * 0.95)
-        p50_index = int(sims * 0.5)
-        p95_index = int(sims * 0.05)
-
-        best_5_equity = sorted_equities[p5_index].tolist()
-        median_equity = sorted_equities[p50_index].tolist()
-        worst_95_equity = sorted_equities[p95_index].tolist()
-
+        bootstrap_equities = []
+        bootstrap_profits = []
+    
+        for _ in range(sims):
+            resampled = np.random.choice(trades, size=len(trades), replace=True)
+            equity = np.cumsum(resampled)
+    
+            bootstrap_equities.append(equity)
+            bootstrap_profits.append(float(equity[-1]))
+    
         # =========================
         # SAMPLE CURVES (50)
         # =========================
         sample_size = min(50, sims)
         sample_indices = np.random.choice(range(sims), size=sample_size, replace=False)
         samples = [all_equities[i].tolist() for i in sample_indices]
-
+    
         # =========================
         # METRICHE BASE
         # =========================
-        median_profit = float(np.median(final_profits))
-        avg_profit = float(np.mean(final_profits))
-        worst_profit = float(np.min(final_profits))
-        best_profit = float(np.max(final_profits))
-
-        # drawdown su curva mediana
+        median_profit = float(np.median(bootstrap_profits))
+        avg_profit = float(np.mean(bootstrap_profits))
+        worst_profit = float(np.min(bootstrap_profits))
+        best_profit = float(np.max(bootstrap_profits))
+    
         median_dd = float(max_drawdown(median_equity))
+    
+        # =========================
+        # ADVANCED METRICS
+        # =========================
+        returns = np.array(trades, dtype=float)
+    
+        mean_ret = float(np.mean(returns))
+        std_ret = float(np.std(returns))
+    
+        downside = returns[returns < 0]
+        down_std = float(np.std(downside)) if len(downside) > 0 else 0.0
+    
+        # Nota: sono PnL Sharpe-like / Sortino-like, non Sharpe accademici su rendimenti %
+        sharpe = mean_ret / std_ret if std_ret != 0 else 0.0
+        sortino = mean_ret / down_std if down_std != 0 else 0.0
+    
+        max_dd = float(np.max(drawdowns)) if drawdowns else 0.0
+        total_profit = float(np.sum(trades))
+    
+        calmar = total_profit / max_dd if max_dd != 0 else 0.0
+        ulcer_index = float(np.mean(ulcer_values)) if ulcer_values else 0.0
+    
+        # CDaR = media del peggior 5% dei drawdown simulati
+        dd_array = np.array(drawdowns, dtype=float)
+        threshold = np.percentile(dd_array, 95)
+        cdar = float(np.mean(dd_array[dd_array >= threshold])) if len(dd_array) else 0.0
+    
+        # Probability of Ruin corretta: rovina se la curva tocca la soglia in qualunque punto
+        ruin_threshold = -abs(total_profit) * 0.5
+        ruin_count = sum(1 for eq in bootstrap_equities if np.any(eq <= ruin_threshold))
+        por = ruin_count / sims if sims > 0 else 0.0
 
         # =========================
         # OUTPUT
