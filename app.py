@@ -281,6 +281,12 @@ class LicenseCheckLog(db.Model):
     checked_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
     license = db.relationship("License", backref="check_logs")
+    
+# =========================================================
+# BLUEPRINTS
+# =========================================================
+from licensing.routes import licensing_bp
+app.register_blueprint(licensing_bp)
 
 @app.route("/lab/converter")
 @login_required
