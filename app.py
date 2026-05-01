@@ -156,6 +156,131 @@ class Ownership(db.Model):
             "value": self.percentage
         }
 
+# =========================================================
+# PRODUCT / LICENSING MODELS
+# =========================================================
+
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    # Esempio: "Strategy Pegasus"
+    name = db.Column(db.String(180), nullable=False)
+
+    # Esempio: "strategy_pegasus"
+    slug = db.Column(db.String(120), unique=True, nullable=False, index=True)
+
+    # Esempio: "mql5", "python_tool", "web_tool"
+    platform = db.Column(db.String(50), nullable=False, default="mql5")
+
+    description = db.Column(db.Text, nullable=True)
+
+    is_active = db.Column(db.Boolean, default=True, nullable=False)
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+    versions = db.relationship(
+        "ProductVersion",
+        backref="product",
+        lazy=True,
+        cascade="all, delete-orphan"
+    )
+
+
+class ProductVersion(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    product_id = db.Column(
+        db.Integer,
+        db.ForeignKey("product.id"),
+        nullable=False,
+        index=True
+    )
+
+    # Esempio: "1.0"
+    version = db.Column(db.String(40), nullable=False)
+
+    # Percorso relativo privato:
+    # strategy_pegasus/v1.0/StrategyPegasus.ex5
+    file_path = db.Column(db.String(255), nullable=False)
+
+    # File opzionali
+    set_file_path = db.Column(db.String(255), nullable=True)
+    manual_path = db.Column(db.String(255), nullable=True)
+    changelog_path = db.Column(db.String(255), nullable=True)
+
+    is_latest = db.Column(db.Boolean, default=False, nullable=False)
+    is_active = db.Column(db.Boolean, default=True, nullable=False)
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+
+class License(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=True,
+        index=True
+    )
+
+    product_id = db.Column(
+        db.Integer,
+        db.ForeignKey("product.id"),
+        nullable=False,
+        index=True
+    )
+
+    # Chiave che l'utente inserirà nell'EA
+    license_key = db.Column(db.String(255), unique=True, nullable=False, index=True)
+
+    # Account MT5 autorizzato
+    mt5_account = db.Column(db.String(80), nullable=True, index=True)
+
+    # Broker/server opzionale
+    mt5_server = db.Column(db.String(180), nullable=True)
+
+    # active / expired / revoked / pending
+    status = db.Column(db.String(40), default="active", nullable=False, index=True)
+
+    starts_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    expires_at = db.Column(db.DateTime, nullable=True)
+
+    last_check_at = db.Column(db.DateTime, nullable=True)
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+    user = db.relationship("User", backref="licenses")
+    product = db.relationship("Product", backref="licenses")
+
+
+class LicenseCheckLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    license_id = db.Column(
+        db.Integer,
+        db.ForeignKey("license.id"),
+        nullable=True,
+        index=True
+    )
+
+    product_slug = db.Column(db.String(120), nullable=True, index=True)
+    license_key = db.Column(db.String(255), nullable=True, index=True)
+
+    mt5_account = db.Column(db.String(80), nullable=True)
+    mt5_server = db.Column(db.String(180), nullable=True)
+
+    ip_address = db.Column(db.String(80), nullable=True)
+
+    # OK / BLOCK
+    result = db.Column(db.String(40), nullable=False)
+
+    # LICENSE_OK / LICENSE_EXPIRED / ACCOUNT_MISMATCH / ecc.
+    reason = db.Column(db.String(120), nullable=False)
+
+    checked_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+    license = db.relationship("License", backref="check_logs")
 
 @app.route("/lab/converter")
 @login_required
