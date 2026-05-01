@@ -331,6 +331,11 @@ def api_convert():
 def version():
     return {"version": "MC_FIX_2026_04_30_V3"}
 
+@app.route("/lab/rolling-analysis")
+@login_required
+def rolling_analysis_page():
+    return render_template("rolling_analysis.html")
+
 # =========================================================
 # SIMULATORE MONTE-CARLO
 # =========================================================

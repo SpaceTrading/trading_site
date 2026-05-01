@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block title %}Rolling Analysis{% endblock %}
+
+{% block content %}
+
+<div style="display:flex; min-height:100vh;">
+
+    {% if current_user.is_authenticated %}
+
+    <div style="flex:1; padding:40px;">
+
+        <h1>Rolling Forward Temporal Analysis</h1>
+
+        <p style="margin-top:10px; color:#94a3b8;">
+            Analisi della stabilità della strategia nel tempo tramite finestre mobili sui trade.
+        </p>
+
+        <hr>
+
+        <!-- UPLOAD -->
+        <input type="file" id="fileInput" accept=".html,.xlsx,.csv">
+        <button class="btn">Carica Report</button>
+
+        <p id="uploadStatus"></p>
+
+        <hr>
+
+        <!-- PARAMETRI -->
+        <div style="margin-top:20px;">
+            <label>Window Size (numero trade):</label>
+            <input type="number" value="50" min="10" max="500">
+        </div>
+
+        <div style="margin-top:10px;">
+            <label>Step (scorrimento):</label>
+            <input type="number" value="10" min="1" max="100">
+        </div>
+
+        <button class="btn primary" style="margin-top:20px;">
+            Avvia Analisi
+        </button>
+
+        <hr>
+
+        <!-- GRAFICI -->
+        <div id="rolling-profit-chart" style="height:400px;"></div>
+        <div id="rolling-dd-chart" style="height:400px;"></div>
+        <div id="rolling-winrate-chart" style="height:400px;"></div>
+
+    </div>
+
+    {% else %}
+    <div style="width:100%; text-align:center; padding:100px;">
+        <h1>Accesso richiesto</h1>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
