@@ -781,6 +781,59 @@ def extract_trades_from_file(file):
         print("PARSING ERROR:", e)
         return []
     
+    
+@app.route("/api/rolling/run", methods=["POST"])
+def rolling_analysis_run():
+
+    if not current_user.is_authenticated:
+        return jsonify({"error": "not authenticated"}), 401
+
+    try:
+        data = request.json
+
+        trades = data.get("trades", [])
+        window = int(data.get("window", 50))
+        step = int(data.get("step", 10))
+
+        # =========================
+        # VALIDAZIONE
+        # =========================
+        if not isinstance(trades, list):
+            return jsonify({"error": "invalid trades"})
+
+        trades = [float(x) for x in trades]
+
+        if len(trades) < window:
+            return jsonify({"error": "not enough trades for window"})
+
+        # =========================
+        # ROLLING WINDOWS
+        # =========================
+        rolling_profit = []
+        rolling_dd = []
+
+        for i in range(0, len(trades) - window + 1, step):
+
+            chunk = trades[i:i+window]
+
+            equity = np.cumsum(chunk)
+
+            profit = float(equity[-1])
+            dd = float(max_drawdown(equity))
+
+            rolling_profit.append(profit)
+            rolling_dd.append(dd)
+
+        return jsonify({
+            "status": "success",
+            "rolling_profit": rolling_profit,
+            "rolling_drawdown": rolling_dd
+        })
+
+    except Exception as e:
+        print("ROLLING ERROR:", e)
+        return jsonify({"error": "rolling error"})
+    
 @app.route("/api/correlations")
 @login_required
 def api_correlations():

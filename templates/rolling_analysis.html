@@ -20,7 +20,7 @@
 
         <!-- UPLOAD -->
         <input type="file" id="fileInput" accept=".html,.xlsx,.csv">
-        <button class="btn">Carica Report</button>
+        <button onclick="uploadRollingFile()" class="btn">Carica Report</button>
 
         <p id="uploadStatus"></p>
 
@@ -29,17 +29,20 @@
         <!-- PARAMETRI -->
         <div style="margin-top:20px;">
             <label>Window Size (numero trade):</label>
-            <input type="number" value="50" min="10" max="500">
+            <input type="number" id="window" value="50" min="10" max="500">
         </div>
 
         <div style="margin-top:10px;">
             <label>Step (scorrimento):</label>
-            <input type="number" value="10" min="1" max="100">
+            <input type="number" id="step" value="10" min="1" max="100">
         </div>
 
-        <button class="btn primary" style="margin-top:20px;">
+        <button onclick="runRollingAnalysis()" class="btn primary"> style="margin-top:20px;">
             Avvia Analisi
         </button>
+        
+        <hr>
+        <div id="rolling-chart" style="height:500px;"></div>
 
         <hr>
 
@@ -57,5 +60,96 @@
     {% endif %}
 
 </div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<script>
+
+let trades = []
+
+function uploadRollingFile() {
+    const file = document.getElementById("fileInput").files[0]
+
+    if (!file) {
+        alert("Seleziona un file")
+        return
+    }
+
+    const formData = new FormData()
+    formData.append("file", file)
+
+    fetch("/api/montecarlo/upload", {
+        method: "POST",
+        body: formData,
+        credentials: "include"
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error)
+            return
+        }
+
+        trades = data.trades
+        alert("Trades caricati: " + trades.length)
+    })
+}
+
+function runRollingAnalysis() {
+
+    if (trades.length === 0) {
+        alert("Carica prima un file")
+        return
+    }
+
+    const window = parseInt(document.getElementById("window").value)
+    const step = parseInt(document.getElementById("step").value)
+
+    fetch("/api/rolling/run", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            trades: trades,
+            window: window,
+            step: step
+        }),
+        credentials: "include"
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if (data.error) {
+            alert(data.error)
+            return
+        }
+
+        drawRollingChart(data)
+
+    })
+}
+
+function drawRollingChart(data) {
+
+    const trace = {
+        y: data.rolling_profit,
+        type: "scatter",
+        mode: "lines",
+        line: { color: "#3b82f6", width: 3 },
+        name: "Rolling Profit"
+    }
+
+    const layout = {
+        title: "Rolling Profit Analysis",
+        paper_bgcolor: "#0f172a",
+        plot_bgcolor: "#0f172a",
+        font: { color: "#e5e7eb" }
+    }
+
+    Plotly.newPlot("rolling-chart", [trace], layout)
+}
+
+</script>
 
 {% endblock %}
