@@ -95,13 +95,18 @@ function uploadRollingFile() {
     .then(res => res.json())
     .then(data => {
         if (data.error) {
-            alert(data.error)
+            const status = document.getElementById("uploadStatus")
+        
+            status.style.display = "block"
+            status.style.color = "#ef4444"
+            status.innerText = data.error
             return
         }
 
         trades = data.trades
         const status = document.getElementById("uploadStatus")
-
+        
+        status.style.display = "block"
         status.style.color = "#10b981"
         status.innerText = "Trades caricati: " + trades.length
     })
