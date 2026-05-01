@@ -1,0 +1,130 @@
+{% extends "layout.html" %}
+
+{% block title %}I miei prodotti{% endblock %}
+
+{% block content %}
+
+<div style="
+    min-height:100vh;
+    padding:40px;
+    background:#0b0e14;
+    color:#e5e7eb;
+">
+
+    <h1>I miei prodotti</h1>
+
+    <p style="color:#94a3b8; margin-bottom:30px;">
+        Qui trovi gli Expert Advisor, i manuali e i file collegati alle tue licenze attive.
+    </p>
+
+    {% if not rows %}
+        <div style="
+            background:#111827;
+            border:1px solid #22304a;
+            border-radius:12px;
+            padding:20px;
+            max-width:700px;
+        ">
+            Nessun prodotto disponibile.
+        </div>
+    {% endif %}
+
+    {% for row in rows %}
+        <div style="
+            background:#111827;
+            border:1px solid #22304a;
+            border-radius:14px;
+            padding:22px;
+            margin-bottom:20px;
+            max-width:850px;
+        ">
+
+            <h2 style="margin-top:0;">
+                {{ row.product.name }}
+            </h2>
+
+            <div style="color:#94a3b8; font-size:14px;">
+                Prodotto: <b>{{ row.product.slug }}</b><br>
+                Piattaforma: <b>{{ row.product.platform }}</b><br>
+
+                {% if row.version %}
+                    Versione disponibile: <b>{{ row.version.version }}</b><br>
+                {% else %}
+                    Versione disponibile: <b>N/D</b><br>
+                {% endif %}
+
+                Stato licenza:
+                {% if row.is_active %}
+                    <span style="color:#22c55e; font-weight:bold;">ATTIVA</span>
+                {% else %}
+                    <span style="color:#ef4444; font-weight:bold;">NON ATTIVA</span>
+                {% endif %}
+                <br>
+
+                Scadenza:
+                {% if row.expires_at %}
+                    <b>{{ row.expires_at }}</b>
+                {% else %}
+                    <b>Nessuna scadenza</b>
+                {% endif %}
+            </div>
+
+            <hr style="border-color:#22304a; margin:18px 0;">
+
+            {% if row.is_active and row.version %}
+
+                <div style="
+                    display:flex;
+                    flex-wrap:wrap;
+                    gap:10px;
+                ">
+
+                    {% if row.files.ea %}
+                        <a class="btn primary"
+                           href="{{ url_for('licensing.download_product_file', slug=row.product.slug, version=row.version.version, filename=row.files.ea) }}">
+                            Scarica EA (.ex5)
+                        </a>
+                    {% endif %}
+
+                    {% if row.files.set %}
+                        <a class="btn"
+                           href="{{ url_for('licensing.download_product_file', slug=row.product.slug, version=row.version.version, filename=row.files.set) }}">
+                            Scarica SET
+                        </a>
+                    {% endif %}
+
+                    {% if row.files.manual %}
+                        <a class="btn"
+                           href="{{ url_for('licensing.download_product_file', slug=row.product.slug, version=row.version.version, filename=row.files.manual) }}">
+                            Manuale PDF
+                        </a>
+                    {% endif %}
+
+                    {% if row.files.changelog %}
+                        <a class="btn"
+                           href="{{ url_for('licensing.download_product_file', slug=row.product.slug, version=row.version.version, filename=row.files.changelog) }}">
+                            Changelog
+                        </a>
+                    {% endif %}
+
+                </div>
+
+                <p style="margin-top:16px; color:#94a3b8; font-size:13px;">
+                    Installa il file <b>.ex5</b> nella cartella <b>MQL5/Experts</b> del tuo MetaTrader 5.
+                    Il codice sorgente non viene distribuito.
+                </p>
+
+            {% else %}
+
+                <div style="color:#ef4444;">
+                    Download non disponibile: licenza non attiva o versione prodotto mancante.
+                </div>
+
+            {% endif %}
+
+        </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

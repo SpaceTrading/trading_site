@@ -1,7 +1,22 @@
 from datetime import datetime
+import sys
 
-from app import db, Product, License, LicenseCheckLog
+def get_app_models():
+    """
+    Recupera db e modelli dal modulo Flask già caricato.
+    Serve a evitare circular import e doppio import app/__main__.
+    """
+    app_module = sys.modules.get("app") or sys.modules.get("__main__")
 
+    if not app_module:
+        raise RuntimeError("App module not loaded")
+
+    return (
+        app_module.db,
+        app_module.Product,
+        app_module.License,
+        app_module.LicenseCheckLog,
+    )
 
 def _now():
     return datetime.utcnow()
@@ -21,6 +36,9 @@ def log_license_check(
     Log audit del controllo licenza.
     Non deve mai bloccare la risposta principale.
     """
+    
+    db, Product, License, LicenseCheckLog = get_app_models()
+    
     try:
         row = LicenseCheckLog(
             license_id=license_obj.id if license_obj else None,
@@ -55,6 +73,8 @@ def check_license_payload(payload, ip_address=None):
     Output:
     dict JSON-ready.
     """
+    
+    db, Product, License, LicenseCheckLog = get_app_models()
 
     license_key = (payload.get("license_key") or "").strip()
     product_slug = (payload.get("product") or "").strip()
