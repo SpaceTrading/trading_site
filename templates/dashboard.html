@@ -1,10 +1,10 @@
-Ôªø{% extends "layout.html" %}
+{% extends "layout.html" %}
 
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
 
-<div style="max-width:900px; margin:40px auto;">
+<div style="max-width:900px; margin:40px auto; padding:0 20px;">
 
     <h1>Dashboard</h1>
 
@@ -20,7 +20,7 @@
     ">
 
         <p>
-            Il sito √® attualmente <strong>in fase di sviluppo</strong>.
+            Il sito Ë attualmente <strong>in fase di sviluppo</strong>.
         </p>
 
         <p>
@@ -28,13 +28,33 @@
         </p>
 
         <p>
-            Puoi gi√† iniziare ad utilizzare gli strumenti disponibili all'interno del <strong>Laboratorio</strong>.
+            Puoi gi‡ iniziare ad utilizzare gli strumenti disponibili all'interno del <strong>Laboratorio</strong>.
         </p>
 
         <p>
-            Stiamo lavorando costantemente per aggiungere nuove funzionalit√† e rendere la piattaforma un ambiente sempre pi√π completo e adatto allo studio e alla ricerca quantitativa.
+            Stiamo lavorando costantemente per aggiungere nuove funzionalit‡ e rendere la piattaforma un ambiente sempre pi˘ completo e adatto allo studio e alla ricerca quantitativa.
         </p>
 
+    </div>
+
+    <!-- PRODOTTI / LICENZE -->
+    <div style="
+        margin-top:25px;
+        background:#111827;
+        border:1px solid #22304a;
+        border-radius:12px;
+        padding:25px 30px;
+    ">
+        <h2 style="margin-top:0;">I miei prodotti</h2>
+
+        <p style="color:#94a3b8; line-height:1.6;">
+            Accedi agli Expert Advisor acquistati o affittati, scarica i file <strong>.ex5</strong>,
+            i manuali PDF, i file SET e controlla lo stato delle tue licenze.
+        </p>
+
+        <a href="{{ url_for('licensing.my_products') }}" class="btn primary">
+            Apri i miei prodotti
+        </a>
     </div>
 
     <div style="margin-top:25px;">
