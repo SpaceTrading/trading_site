@@ -158,18 +158,18 @@
 
     <nav class="nav" id="navMenu">
 
-      <a href="{{ url_for('home') }}">Home</a>
-      <a href="{{ url_for('expert_advisor') }}">Expert Advisor</a>
+      <a href="{{ url_for('home') }}">{{ _("Home") }}</a>
+      <a href="{{ url_for('expert_advisor') }}">{{ _("Expert Advisor") }}</a>
 
       <div class="dropdown">
         <a href="{{ url_for('strumenti') }}" class="dropbtn">
-          <span class="lab-text">Laboratorio</span><span class="lab-arrow"> ▾</span>
+          <span class="lab-text">{{ _("Laboratorio") }}</span><span class="lab-arrow"> ▾</span>
         </a>
 
         {% if current_user.is_authenticated %}
         <div class="dropdown-content">
           <div class="dropdown-section">
-            <span class="dropdown-title">Trading Tools</span>
+            <span class="dropdown-title">{{ _("Trading Tools") }}</span>
             <a href="{{ url_for('risk_manager') }}">Risk Manager</a>
             <a href="{{ url_for('montecarlo_page') }}">Monte Carlo</a>
             <a href="/lab/rolling-analysis">Rolling Forward Analysis</a>
@@ -177,25 +177,39 @@
           </div>
 
           <div class="dropdown-section">
-            <span class="dropdown-title">Market Tools</span>
-            <a href="{{ url_for('correlation') }}">Correlazioni</a>
-            <a href="{{ url_for('converter') }}">Forex Converter</a>
-            <a href="/market-map">Mappa Azionariato</a>
+            <span class="dropdown-title">{{ _("Market Tools") }}</span>
+            <a href="{{ url_for('correlation') }}">{{ _("Correlazioni") }}</a>
+            <a href="{{ url_for('converter') }}">{{ _("Forex Converter") }}</a>
+            <a href="/market-map">{{ _("Mappa Azionariato") }}</a>
           </div>
         </div>
         {% endif %}
       </div>
 
-      <a href="{{ url_for('contatti') }}">Contatti</a>
+      <a href="{{ url_for('contatti') }}">{{ _("Contatti") }}</a>
+      
+      <div class="dropdown lang-switcher">
+        <a href="javascript:void(0)" class="dropbtn">
+          🌐 {{ current_language|upper }} <span class="lab-arrow">▾</span>
+        </a>
+      
+        <div class="dropdown-content lang-menu">
+          {% for code, label in supported_languages.items() %}
+            <a href="{{ url_for('set_language', lang_code=code) }}">
+              {{ code|upper }} — {{ label }}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
 
       {% if current_user.is_authenticated %}
-        <a href="{{ url_for('dashboard') }}">Dashboard</a>
-        <a href="{{ url_for('signals') }}">Segnali</a>
+        <a href="{{ url_for('dashboard') }}">{{ _("Dashboard") }}</a>
+        <a href="{{ url_for('signals') }}">{{ _("Segnali") }}</a>
         <!-- <a href="{{ url_for('licensing.my_products') }}">I miei prodotti</a> -->
-        <a class="btn" href="{{ url_for('logout') }}">Logout</a>
+        <a class="btn" href="{{ url_for('logout') }}">{{ _("Logout") }}</a>
       {% else %}
-        <a href="javascript:void(0)" onclick="openLogin()">Login</a>
-        <a href="javascript:void(0)" onclick="openRegister()">Register</a>
+        <a href="javascript:void(0)" onclick="openLogin()">{{ _("Login") }}</a>
+        <a href="javascript:void(0)" onclick="openRegister()">{{ _("Register") }}</a>
       {% endif %}
 
     </nav>
@@ -223,19 +237,21 @@
     <div class="modal-content">
       <span class="close" onclick="closeLogin()">&times;</span>
   
-      <h2>Login</h2>
+      <h2>{{ _("Login") }}</h2>
+
   
       <form method="POST" action="{{ url_for('login') }}">
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required>
+        <input type="email" name="email" placeholder="{{ _('Email') }}" required>
+
+        <input type="password" name="password" placeholder="{{ _('Password') }}" required>
   
         <div class="cf-turnstile" data-sitekey="0x4AAAAAADEMHoEtR_tcg9s3"></div>
   
-        <button type="submit">Accedi</button>
+        <button type="submit">{{ _("Accedi") }}</button>
       </form>
       
       <p style="margin-top:10px; text-align:center;">
-        <a href="{{ url_for('forgot_password') }}">Hai dimenticato la password?</a>
+        <a href="{{ url_for('forgot_password') }}">{{ _("Hai dimenticato la password?") }}</a>
       </p>
     </div>
   </div>
@@ -244,16 +260,16 @@
     <div class="modal-content">
       <span class="close" onclick="closeRegister()">&times;</span>
   
-      <h2>Register</h2>
+      <h2>{{ _("Register") }}</h2>
   
       <form method="POST" action="{{ url_for('register') }}">
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <input type="password" name="password2" placeholder="Ripeti Password" required>
+        <input type="email" name="email" placeholder="{{ _('Email') }}" required>
+        <input type="password" name="password" placeholder="{{ _('Password') }}" required>
+        <input type="password" name="password2" placeholder="{{ _('Ripeti Password') }}" required>
   
         <div class="cf-turnstile" data-sitekey="0x4AAAAAADEMHoEtR_tcg9s3"></div>
   
-        <button type="submit">Registrati</button>
+        <button type="submit">{{ _("Registrati") }}</button>
       </form>
     </div>
   </div>

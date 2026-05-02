@@ -1,0 +1,95 @@
+# German translations for Space-T.
+msgid ""
+msgstr ""
+"Project-Id-Version: Space-T 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-02 20:32+0200\n"
+"PO-Revision-Date: 2026-05-02 20:34+0200\n"
+"Last-Translator: Space-T\n"
+"Language: de\n"
+"Language-Team: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: templates/layout.html:161
+msgid "Home"
+msgstr "Startseite"
+
+#: templates/layout.html:162
+msgid "Expert Advisor"
+msgstr "Expert Advisor"
+
+#: templates/layout.html:166
+msgid "Laboratorio"
+msgstr "Labor"
+
+#: templates/layout.html:172
+msgid "Trading Tools"
+msgstr "Trading-Tools"
+
+#: templates/layout.html:180
+msgid "Market Tools"
+msgstr "Markt-Tools"
+
+#: templates/layout.html:181
+msgid "Correlazioni"
+msgstr "Korrelationen"
+
+#: templates/layout.html:182
+msgid "Forex Converter"
+msgstr "Forex-Konverter"
+
+#: templates/layout.html:183
+msgid "Mappa Azionariato"
+msgstr "Eigentümerstruktur-Karte"
+
+#: templates/layout.html:189
+msgid "Contatti"
+msgstr "Kontakt"
+
+#: templates/layout.html:206
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: templates/layout.html:207
+msgid "Segnali"
+msgstr "Signale"
+
+#: templates/layout.html:209
+msgid "Logout"
+msgstr "Abmelden"
+
+#: templates/layout.html:211 templates/layout.html:240
+msgid "Login"
+msgstr "Anmelden"
+
+#: templates/layout.html:212 templates/layout.html:263
+msgid "Register"
+msgstr "Registrieren"
+
+#: templates/layout.html:244 templates/layout.html:266
+msgid "Email"
+msgstr "E-Mail"
+
+#: templates/layout.html:246 templates/layout.html:267
+msgid "Password"
+msgstr "Passwort"
+
+#: templates/layout.html:250
+msgid "Accedi"
+msgstr "Einloggen"
+
+#: templates/layout.html:254
+msgid "Hai dimenticato la password?"
+msgstr "Passwort vergessen?"
+
+#: templates/layout.html:268
+msgid "Ripeti Password"
+msgstr "Passwort wiederholen"
+
+#: templates/layout.html:272
+msgid "Registrati"
+msgstr "Registrieren"

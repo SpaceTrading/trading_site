@@ -243,6 +243,18 @@ h2{font-size:18px; color:#d7deea}
   color: white;
 }
 
+/* ===== LANGUAGE SWITCHER ===== */
+
+.lang-switcher .dropdown-content {
+  right: 0;
+  left: auto;
+  min-width: 190px;
+}
+
+.lang-switcher .dropdown-content a {
+  white-space: nowrap;
+}
+
 /* =========================
    MOBILE RESPONSIVE FIX
 ========================= */

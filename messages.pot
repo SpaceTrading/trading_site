@@ -1,0 +1,99 @@
+# Translations template for PROJECT.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-05-02 20:32+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: templates/layout.html:161
+msgid "Home"
+msgstr ""
+
+#: templates/layout.html:162
+msgid "Expert Advisor"
+msgstr ""
+
+#: templates/layout.html:166
+msgid "Laboratorio"
+msgstr ""
+
+#: templates/layout.html:172
+msgid "Trading Tools"
+msgstr ""
+
+#: templates/layout.html:180
+msgid "Market Tools"
+msgstr ""
+
+#: templates/layout.html:181
+msgid "Correlazioni"
+msgstr ""
+
+#: templates/layout.html:182
+msgid "Forex Converter"
+msgstr ""
+
+#: templates/layout.html:183
+msgid "Mappa Azionariato"
+msgstr ""
+
+#: templates/layout.html:189
+msgid "Contatti"
+msgstr ""
+
+#: templates/layout.html:206
+msgid "Dashboard"
+msgstr ""
+
+#: templates/layout.html:207
+msgid "Segnali"
+msgstr ""
+
+#: templates/layout.html:209
+msgid "Logout"
+msgstr ""
+
+#: templates/layout.html:211 templates/layout.html:240
+msgid "Login"
+msgstr ""
+
+#: templates/layout.html:212 templates/layout.html:263
+msgid "Register"
+msgstr ""
+
+#: templates/layout.html:244 templates/layout.html:266
+msgid "Email"
+msgstr ""
+
+#: templates/layout.html:246 templates/layout.html:267
+msgid "Password"
+msgstr ""
+
+#: templates/layout.html:250
+msgid "Accedi"
+msgstr ""
+
+#: templates/layout.html:254
+msgid "Hai dimenticato la password?"
+msgstr ""
+
+#: templates/layout.html:268
+msgid "Ripeti Password"
+msgstr ""
+
+#: templates/layout.html:272
+msgid "Registrati"
+msgstr ""
+

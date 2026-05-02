@@ -1,0 +1,95 @@
+# French translations for Space-T.
+msgid ""
+msgstr ""
+"Project-Id-Version: Space-T 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-02 20:32+0200\n"
+"PO-Revision-Date: 2026-05-02 20:34+0200\n"
+"Last-Translator: Space-T\n"
+"Language: fr\n"
+"Language-Team: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: templates/layout.html:161
+msgid "Home"
+msgstr "Accueil"
+
+#: templates/layout.html:162
+msgid "Expert Advisor"
+msgstr "Expert Advisor"
+
+#: templates/layout.html:166
+msgid "Laboratorio"
+msgstr "Laboratoire"
+
+#: templates/layout.html:172
+msgid "Trading Tools"
+msgstr "Outils de trading"
+
+#: templates/layout.html:180
+msgid "Market Tools"
+msgstr "Outils de marché"
+
+#: templates/layout.html:181
+msgid "Correlazioni"
+msgstr "Corrélations"
+
+#: templates/layout.html:182
+msgid "Forex Converter"
+msgstr "Convertisseur Forex"
+
+#: templates/layout.html:183
+msgid "Mappa Azionariato"
+msgstr "Carte de l’actionnariat"
+
+#: templates/layout.html:189
+msgid "Contatti"
+msgstr "Contact"
+
+#: templates/layout.html:206
+msgid "Dashboard"
+msgstr "Tableau de bord"
+
+#: templates/layout.html:207
+msgid "Segnali"
+msgstr "Signaux"
+
+#: templates/layout.html:209
+msgid "Logout"
+msgstr "Déconnexion"
+
+#: templates/layout.html:211 templates/layout.html:240
+msgid "Login"
+msgstr "Connexion"
+
+#: templates/layout.html:212 templates/layout.html:263
+msgid "Register"
+msgstr "Inscription"
+
+#: templates/layout.html:244 templates/layout.html:266
+msgid "Email"
+msgstr "Email"
+
+#: templates/layout.html:246 templates/layout.html:267
+msgid "Password"
+msgstr "Mot de passe"
+
+#: templates/layout.html:250
+msgid "Accedi"
+msgstr "Se connecter"
+
+#: templates/layout.html:254
+msgid "Hai dimenticato la password?"
+msgstr "Mot de passe oublié ?"
+
+#: templates/layout.html:268
+msgid "Ripeti Password"
+msgstr "Répéter le mot de passe"
+
+#: templates/layout.html:272
+msgid "Registrati"
+msgstr "S’inscrire"

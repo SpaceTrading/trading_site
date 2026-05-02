@@ -75,6 +75,13 @@ def get_locale():
 
 babel = Babel(app, locale_selector=get_locale)
 
+@app.context_processor
+def inject_i18n():
+    return {
+        "supported_languages": SUPPORTED_LANGUAGES,
+        "current_language": get_locale(),
+    }
+
 
 # =========================================================
 # CONTATTI
