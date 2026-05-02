@@ -46,9 +46,17 @@
             <input type="number" id="step" value="10" min="1" max="100">
         </div>
 
-        <button onclick="runRollingAnalysis()" class="btn primary" style="margin-top:20px;">
-            Avvia Analisi
-        </button>
+        <div style="margin-top:20px; display:flex; align-items:center; gap:10px;">
+            <button onclick="runRollingAnalysis()" class="btn primary">
+                Avvia Analisi
+            </button>
+        
+            <span onclick="showRollingInfo(event, 'rolling_params')" style="
+                cursor:pointer;
+                color:#60a5fa;
+                font-weight:600;
+            ">(i)</span>
+        </div>
         
         <hr>
 
@@ -357,7 +365,15 @@ function showRollingInfo(event, type) {
             "Rolling Profit Factor: ogni punto mostra il rapporto tra profitti lordi e perdite lorde dentro una finestra mobile. " +
             "L’asse X indica il numero progressivo della finestra; l’asse Y indica il profit factor della finestra. " +
             "Valori superiori a 1 indicano che, in quella finestra, i profitti lordi superano le perdite lorde.",
-
+            
+        rolling_params:
+            "Window Size indica quanti trade vengono inclusi in ogni finestra rolling. " +
+            "Una finestra più piccola rende l’analisi più sensibile, ma anche più rumorosa; una finestra più grande rende l’analisi più stabile, ma meno reattiva ai cambiamenti locali. " +
+            "Step indica di quanti trade avanza ogni nuova finestra. Uno step piccolo produce più finestre e maggiore dettaglio; uno step grande produce meno finestre e una lettura più sintetica. " +
+            "Impostazione consigliata: Step circa pari al 20% della Window Size. Esempio: Window Size 50 e Step 10. " +
+            "Attenzione: sotto circa 30 trade per finestra i risultati hanno bassa significatività statistica e possono essere molto rumorosi. " +
+            "Se la Window Size è troppo grande rispetto al numero totale di trade, vengono generate poche finestre e l’analisi rolling perde utilità.",
+            
         summary:
             "La tabella summary sintetizza il comportamento globale delle finestre rolling: profitto medio, peggior finestra, volatilità dei profitti, percentuale di finestre negative, drawdown medio/peggiore e indicatori di stabilità temporale.",
         avg_rolling_profit:
