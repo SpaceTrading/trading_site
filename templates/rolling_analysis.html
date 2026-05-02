@@ -367,12 +367,27 @@ function showRollingInfo(event, type) {
             "Valori superiori a 1 indicano che, in quella finestra, i profitti lordi superano le perdite lorde.",
             
         rolling_params:
-            "Window Size indica quanti trade vengono inclusi in ogni finestra rolling. " +
-            "Una finestra più piccola rende l’analisi più sensibile, ma anche più rumorosa; una finestra più grande rende l’analisi più stabile, ma meno reattiva ai cambiamenti locali. " +
-            "Step indica di quanti trade avanza ogni nuova finestra. Uno step piccolo produce più finestre e maggiore dettaglio; uno step grande produce meno finestre e una lettura più sintetica. " +
-            "Impostazione consigliata: Step circa pari al 20% della Window Size. Esempio: Window Size 50 e Step 10. " +
-            "Attenzione: sotto circa 30 trade per finestra i risultati hanno bassa significatività statistica e possono essere molto rumorosi. " +
-            "Se la Window Size è troppo grande rispetto al numero totale di trade, vengono generate poche finestre e l’analisi rolling perde utilità.",
+            "Window Size:\n" +
+            "indica quanti trade vengono inclusi in ogni finestra rolling.\n\n" +
+        
+            "Come interpretarla:\n" +
+            "- una finestra più piccola rende l’analisi più sensibile, ma anche più rumorosa;\n" +
+            "- una finestra più grande rende l’analisi più stabile, ma meno reattiva ai cambiamenti locali.\n\n" +
+        
+            "Step:\n" +
+            "indica di quanti trade avanza ogni nuova finestra.\n\n" +
+        
+            "Come interpretarlo:\n" +
+            "- uno step piccolo produce più finestre e maggiore dettaglio;\n" +
+            "- uno step grande produce meno finestre e una lettura più sintetica.\n\n" +
+        
+            "Impostazione consigliata:\n" +
+            "Step circa pari al 20% della Window Size.\n" +
+            "Esempio: Window Size 50 e Step 10.\n\n" +
+        
+            "Attenzione:\n" +
+            "- sotto circa 30 trade per finestra i risultati hanno bassa significatività statistica e possono essere molto rumorosi;\n" +
+            "- se la Window Size è troppo grande rispetto al numero totale di trade, vengono generate poche finestre e l’analisi rolling perde utilità.",
             
         summary:
             "La tabella summary sintetizza il comportamento globale delle finestre rolling: profitto medio, peggior finestra, volatilità dei profitti, percentuale di finestre negative, drawdown medio/peggiore e indicatori di stabilità temporale.",
