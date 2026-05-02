@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="it">
+<html lang="{{ current_language or 'it' }}">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -187,27 +187,43 @@
       </div>
 
       <a href="{{ url_for('contatti') }}">{{ _("Contatti") }}</a>
-      
-      <div class="dropdown lang-switcher">
-        <a href="javascript:void(0)" class="dropbtn">
-          🌐 {{ current_language|upper }} <span class="lab-arrow">▾</span>
-        </a>
-      
-        <div class="dropdown-content lang-menu">
-          {% for code, label in supported_languages.items() %}
-            <a href="{{ url_for('set_language', lang_code=code) }}">
-              {{ code|upper }} — {{ label }}
-            </a>
-          {% endfor %}
-        </div>
-      </div>
 
       {% if current_user.is_authenticated %}
         <a href="{{ url_for('dashboard') }}">{{ _("Dashboard") }}</a>
         <a href="{{ url_for('signals') }}">{{ _("Segnali") }}</a>
         <!-- <a href="{{ url_for('licensing.my_products') }}">I miei prodotti</a> -->
+      
+        <div class="dropdown lang-switcher">
+          <a href="javascript:void(0)" class="dropbtn">
+            🌐 {{ current_language|upper }} <span class="lab-arrow">▾</span>
+          </a>
+      
+          <div class="dropdown-content lang-menu">
+            {% for code, label in supported_languages.items() %}
+              <a href="{{ url_for('set_language', lang_code=code) }}">
+                {{ code|upper }} — {{ label }}
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      
         <a class="btn" href="{{ url_for('logout') }}">{{ _("Logout") }}</a>
       {% else %}
+      
+        <div class="dropdown lang-switcher">
+          <a href="javascript:void(0)" class="dropbtn">
+            🌐 {{ current_language|upper }} <span class="lab-arrow">▾</span>
+          </a>
+      
+          <div class="dropdown-content lang-menu">
+            {% for code, label in supported_languages.items() %}
+              <a href="{{ url_for('set_language', lang_code=code) }}">
+                {{ code|upper }} — {{ label }}
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      
         <a href="javascript:void(0)" onclick="openLogin()">{{ _("Login") }}</a>
         <a href="javascript:void(0)" onclick="openRegister()">{{ _("Register") }}</a>
       {% endif %}

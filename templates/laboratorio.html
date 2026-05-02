@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Laboratorio{% endblock %}
+{% block title %}{{ _("Laboratorio") }}{% endblock %}
 
 {% block content %}
 
@@ -53,8 +53,8 @@
                 color:white;
             ">✖</span>
         
-            <h1 style="font-size:42px;">Laboratorio Trading</h1>
-            <p>Strumenti professionali per trader</p>
+            <h1 style="font-size:42px;">{{ _("Laboratorio Trading") }}</h1>
+            <p>{{ _("Strumenti professionali per trader") }}</p>
         </div>
     </div>
 
@@ -73,7 +73,7 @@
         border-right:1px solid #22304a;
         padding:20px;
     ">
-        <h3>Strumenti</h3>
+        <h3>{{ _("Strumenti") }}</h3>
 
         <div style="
             display:flex;
@@ -82,20 +82,20 @@
             margin-top:20px;
         ">
 
-            <a href="{{ url_for('converter') }}" class="btn">Convertitore Forex</a>
-            <a href="{{ url_for('correlation') }}" class="btn">Calcolatore Correlazioni</a>
-            <a href="{{ url_for('risk_manager') }}" class="btn">Risk Manager</a>
-            <a href="/lab/montecarlo" class="btn">Simulatore Monte Carlo</a>
-            <a href="/market-map" class="btn">Mappa Azionariato</a>
-            <a href="/lab/rolling-analysis" class="btn">Rolling Forward Analysis</a>
+            <a href="{{ url_for('converter') }}" class="btn">{{ _("Convertitore Forex") }}</a>
+            <a href="{{ url_for('correlation') }}" class="btn">{{ _("Calcolatore Correlazioni") }}</a>
+            <a href="{{ url_for('risk_manager') }}" class="btn">{{ _("Risk Manager") }}</a>
+            <a href="/lab/montecarlo" class="btn">{{ _("Simulatore Monte Carlo") }}</a>
+            <a href="/lab/rolling-analysis" class="btn">{{ _("Rolling Forward Analysis") }}</a>
+            <a href="/market-map" class="btn">{{ _("Mappa Azionariato") }}</a>
 
         </div>
     </div>
 
     <!-- AREA CONTENUTO -->
     <div style="flex:1; padding:40px;">
-        <h1>Laboratorio</h1>
-        <p>Seleziona uno strumento dal menu a sinistra</p>
+        <h1>{{ _("Laboratorio") }}</h1>
+        <p>{{ _("Seleziona uno strumento dal menu a sinistra") }}</p>
     </div>
 
     {% else %}
@@ -106,8 +106,8 @@
         text-align:center;
         padding:100px 20px;
     ">
-        <h1>Laboratorio Trading</h1>
-        <p>Accedi per utilizzare strumenti avanzati</p>
+        <h1>{{ _("Laboratorio Trading") }}</h1>
+        <p>{{ _("Accedi per utilizzare strumenti avanzati") }}</p>
 
         <br>
 

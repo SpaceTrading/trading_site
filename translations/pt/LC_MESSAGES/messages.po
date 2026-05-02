@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Space-T 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-02 20:32+0200\n"
-"PO-Revision-Date: 2026-05-02 20:34+0200\n"
+"POT-Creation-Date: 2026-05-02 20:59+0200\n"
+"PO-Revision-Date: 2026-05-02 20:59+0200\n"
 "Last-Translator: Space-T\n"
 "Language: pt\n"
 "Language-Team: pt\n"
@@ -14,6 +14,55 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
+#: templates/laboratorio.html:3 templates/laboratorio.html:97
+#: templates/layout.html:166
+msgid "Laboratorio"
+msgstr "Laboratório"
+
+#: templates/laboratorio.html:56 templates/laboratorio.html:109
+msgid "Laboratorio Trading"
+msgstr "Laboratório de Trading"
+
+#: templates/laboratorio.html:57
+msgid "Strumenti professionali per trader"
+msgstr "Ferramentas profissionais para traders"
+
+#: templates/laboratorio.html:76
+msgid "Strumenti"
+msgstr "Ferramentas"
+
+#: templates/laboratorio.html:85
+msgid "Convertitore Forex"
+msgstr "Conversor Forex"
+
+#: templates/laboratorio.html:86
+msgid "Calcolatore Correlazioni"
+msgstr "Calculadora de correlações"
+
+#: templates/laboratorio.html:87
+msgid "Risk Manager"
+msgstr "Risk Manager"
+
+#: templates/laboratorio.html:88
+msgid "Simulatore Monte Carlo"
+msgstr "Simulador Monte Carlo"
+
+#: templates/laboratorio.html:89
+msgid "Rolling Forward Analysis"
+msgstr "Rolling Forward Analysis"
+
+#: templates/laboratorio.html:90 templates/layout.html:183
+msgid "Mappa Azionariato"
+msgstr "Mapa de participação acionária"
+
+#: templates/laboratorio.html:98
+msgid "Seleziona uno strumento dal menu a sinistra"
+msgstr "Selecione uma ferramenta no menu à esquerda"
+
+#: templates/laboratorio.html:110
+msgid "Accedi per utilizzare strumenti avanzati"
+msgstr "Faça login para usar ferramentas avançadas"
+
 #: templates/layout.html:161
 msgid "Home"
 msgstr "Início"
@@ -21,10 +70,6 @@ msgstr "Início"
 #: templates/layout.html:162
 msgid "Expert Advisor"
 msgstr "Expert Advisor"
-
-#: templates/layout.html:166
-msgid "Laboratorio"
-msgstr "Laboratório"
 
 #: templates/layout.html:172
 msgid "Trading Tools"
@@ -42,54 +87,50 @@ msgstr "Correlações"
 msgid "Forex Converter"
 msgstr "Conversor Forex"
 
-#: templates/layout.html:183
-msgid "Mappa Azionariato"
-msgstr "Mapa de participação acionária"
-
 #: templates/layout.html:189
 msgid "Contatti"
 msgstr "Contato"
 
-#: templates/layout.html:206
+#: templates/layout.html:192
 msgid "Dashboard"
 msgstr "Painel"
 
-#: templates/layout.html:207
+#: templates/layout.html:193
 msgid "Segnali"
 msgstr "Sinais"
 
-#: templates/layout.html:209
+#: templates/layout.html:210
 msgid "Logout"
 msgstr "Sair"
 
-#: templates/layout.html:211 templates/layout.html:240
+#: templates/layout.html:227 templates/layout.html:256
 msgid "Login"
 msgstr "Login"
 
-#: templates/layout.html:212 templates/layout.html:263
+#: templates/layout.html:228 templates/layout.html:279
 msgid "Register"
 msgstr "Registrar"
 
-#: templates/layout.html:244 templates/layout.html:266
+#: templates/layout.html:260 templates/layout.html:282
 msgid "Email"
 msgstr "Email"
 
-#: templates/layout.html:246 templates/layout.html:267
+#: templates/layout.html:262 templates/layout.html:283
 msgid "Password"
 msgstr "Senha"
 
-#: templates/layout.html:250
+#: templates/layout.html:266
 msgid "Accedi"
 msgstr "Entrar"
 
-#: templates/layout.html:254
+#: templates/layout.html:270
 msgid "Hai dimenticato la password?"
 msgstr "Esqueceu a senha?"
 
-#: templates/layout.html:268
+#: templates/layout.html:284
 msgid "Ripeti Password"
 msgstr "Repetir senha"
 
-#: templates/layout.html:272
+#: templates/layout.html:288
 msgid "Registrati"
 msgstr "Registrar-se"
