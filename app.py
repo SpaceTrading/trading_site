@@ -12,10 +12,11 @@ import secrets
 from sicurezza.firewall import check_request
 from sicurezza.ip_tracker import register_failure, register_success
 from sicurezza.turnstile import verify_turnstile
+from flask_babel import Babel, gettext as _
 
 resend.api_key = os.environ.get("re_XmoZNh36_7KGpqnEDDKxH3PwUHKmVC8Ko")
 
-from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
+from flask import Flask, render_template, redirect, url_for, request, flash, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import (
     LoginManager,
@@ -45,6 +46,34 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
+
+# =========================================================
+# I18N / MULTILINGUA
+# =========================================================
+SUPPORTED_LANGUAGES = {
+    "it": "Italiano",
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "de": "Deutsch",
+    "pt": "Português",
+}
+
+app.config["BABEL_DEFAULT_LOCALE"] = "it"
+app.config["BABEL_TRANSLATION_DIRECTORIES"] = "translations"
+
+
+def get_locale():
+    lang = session.get("lang")
+
+    if lang in SUPPORTED_LANGUAGES:
+        return lang
+
+    best = request.accept_languages.best_match(list(SUPPORTED_LANGUAGES.keys()))
+    return best or "it"
+
+
+babel = Babel(app, locale_selector=get_locale)
 
 
 # =========================================================
@@ -1594,6 +1623,13 @@ def sector_ranking():
     # RETURN JSON
     # =========================
     return jsonify(result)
+
+@app.route("/set-language/<lang_code>")
+def set_language(lang_code):
+    if lang_code in SUPPORTED_LANGUAGES:
+        session["lang"] = lang_code
+
+    return redirect(request.referrer or url_for("home"))
 
 # =========================================================
 # ROUTES (PUBLIC)
