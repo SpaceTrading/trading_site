@@ -64,12 +64,27 @@
             display:none;
             line-height:1.6;
         "></div>
+        
+        <div id="rollingInfoPopup" style="
+            position:fixed;
+            max-width:420px;
+            background:white;
+            color:#111827;
+            border:1px solid #cbd5e1;
+            border-radius:10px;
+            padding:14px 16px;
+            font-size:14px;
+            line-height:1.5;
+            box-shadow:0 10px 30px rgba(0,0,0,0.35);
+            display:none;
+            z-index:99999;
+        "></div>
 
         <!-- GRAFICO 1: ROLLING PROFIT -->
         <div id="rolling-profit-section" style="margin-top:25px; display:none;">
             <h3>
                 Rolling Profit
-                <span onclick="showRollingInfo('profit')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
+                <span onclick="showRollingInfo(event, 'profit')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
             </h3>
             <p style="color:#94a3b8; font-size:14px;">
                 Asse X: indice della finestra rolling. Asse Y: profitto totale della finestra.
@@ -81,7 +96,7 @@
         <div id="rolling-dd-section" style="margin-top:35px; display:none;">
             <h3>
                 Rolling Drawdown
-                <span onclick="showRollingInfo('drawdown')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
+                <span onclick="showRollingInfo(event, 'drawdown')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
             </h3>
             <p style="color:#94a3b8; font-size:14px;">
                 Asse X: indice della finestra rolling. Asse Y: massimo drawdown locale della finestra.
@@ -93,7 +108,7 @@
         <div id="rolling-winrate-section" style="margin-top:35px; display:none;">
             <h3>
                 Rolling Winrate
-                <span onclick="showRollingInfo('winrate')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
+                <span onclick="showRollingInfo(event, 'winrate')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
             </h3>
             <p style="color:#94a3b8; font-size:14px;">
                 Asse X: indice della finestra rolling. Asse Y: percentuale di trade vincenti nella finestra.
@@ -105,7 +120,7 @@
         <div id="rolling-pf-section" style="margin-top:35px; display:none;">
             <h3>
                 Rolling Profit Factor
-                <span onclick="showRollingInfo('profit_factor')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
+                <span onclick="showRollingInfo(event, 'profit_factor')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
             </h3>
             <p style="color:#94a3b8; font-size:14px;">
                 Asse X: indice della finestra rolling. Asse Y: rapporto tra profitti lordi e perdite lorde della finestra.
@@ -328,9 +343,10 @@ function drawRollingCharts(data) {
     )
 }
 
-function showRollingInfo(type) {
-    const box = document.getElementById("rollingInfoBox")
-    console.log("INFO CLICK:", type, box)
+function showRollingInfo(event, type) {
+    event.stopPropagation()
+
+    const box = document.getElementById("rollingInfoPopup")
 
     const texts = {
         profit:
@@ -357,14 +373,29 @@ function showRollingInfo(type) {
             "La tabella summary sintetizza il comportamento globale delle finestre rolling: profitto medio, peggior finestra, volatilità dei profitti, percentuale di finestre negative, drawdown medio/peggiore e indicatori di stabilità temporale."
     }
 
-    box.style.display = "block"
     box.innerText = texts[type] || ""
-    
-    box.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-    })
+    box.style.display = "block"
+
+    let left = event.clientX + 14
+    let top = event.clientY + 14
+
+    const boxWidth = 420
+    const margin = 20
+
+    if (left + boxWidth > window.innerWidth - margin) {
+        left = window.innerWidth - boxWidth - margin
+    }
+
+    box.style.left = left + "px"
+    box.style.top = top + "px"
 }
+
+document.addEventListener("click", function() {
+    const box = document.getElementById("rollingInfoPopup")
+    if (box) {
+        box.style.display = "none"
+    }
+})
 
 function formatValue(x, decimals = 2) {
     if (x === null || x === undefined || Number.isNaN(Number(x))) return "-"
@@ -380,7 +411,7 @@ function drawRollingSummary(data) {
     box.innerHTML = `
         <h3>
             Rolling Summary
-            <span onclick="showRollingInfo('summary')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
+            <span onclick="showRollingInfo(event, 'summary')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
         </h3>
 
         <table style="width:100%; margin-top:10px; border-collapse:collapse;">
