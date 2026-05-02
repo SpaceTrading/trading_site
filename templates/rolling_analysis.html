@@ -78,7 +78,7 @@
         </div>
 
         <!-- GRAFICO 2: ROLLING DRAWDOWN -->
-        <div style="margin-top:35px;">
+        <div id="rolling-dd-section" style="margin-top:35px; display:none;">
             <h3>
                 Rolling Drawdown
                 <span onclick="showRollingInfo('drawdown')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
@@ -90,7 +90,7 @@
         </div>
 
         <!-- GRAFICO 3: ROLLING WINRATE -->
-        <div style="margin-top:35px;">
+        <div id="rolling-winrate-section" style="margin-top:35px; display:none;">
             <h3>
                 Rolling Winrate
                 <span onclick="showRollingInfo('winrate')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
@@ -102,7 +102,7 @@
         </div>
 
         <!-- GRAFICO 4: ROLLING PROFIT FACTOR -->
-        <div style="margin-top:35px;">
+        <div id="rolling-pf-section" style="margin-top:35px; display:none;">
             <h3>
                 Rolling Profit Factor
                 <span onclick="showRollingInfo('profit_factor')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
@@ -289,6 +289,11 @@ function drawLineChart(elementId, y, title, yTitle, traceName) {
 
 function drawRollingCharts(data) {
     const s = data.series
+    
+    document.getElementById("rolling-profit-section").style.display = "block"
+    document.getElementById("rolling-dd-section").style.display = "block"
+    document.getElementById("rolling-winrate-section").style.display = "block"
+    document.getElementById("rolling-pf-section").style.display = "block"
 
     drawLineChart(
         "rolling-profit-chart",
