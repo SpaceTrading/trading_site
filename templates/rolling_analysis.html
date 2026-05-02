@@ -330,6 +330,7 @@ function drawRollingCharts(data) {
 
 function showRollingInfo(type) {
     const box = document.getElementById("rollingInfoBox")
+    console.log("INFO CLICK:", type, box)
 
     const texts = {
         profit:
@@ -358,6 +359,11 @@ function showRollingInfo(type) {
 
     box.style.display = "block"
     box.innerText = texts[type] || ""
+    
+    box.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    })
 }
 
 function formatValue(x, decimals = 2) {
