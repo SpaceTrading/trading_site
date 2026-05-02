@@ -51,14 +51,99 @@
         </button>
         
         <hr>
-        <div id="rolling-chart" style="height:500px;"></div>
 
-        <hr>
+        <!-- INFO BOX -->
+        <div id="rollingInfoBox" style="
+            margin-top:15px;
+            margin-bottom:20px;
+            background:#0f172a;
+            border:1px solid #334155;
+            border-radius:10px;
+            padding:15px;
+            color:#e5e7eb;
+            display:none;
+            line-height:1.6;
+        "></div>
 
-        <!-- GRAFICI -->
-        <div id="rolling-profit-chart" style="height:400px;"></div>
-        <div id="rolling-dd-chart" style="height:400px;"></div>
-        <div id="rolling-winrate-chart" style="height:400px;"></div>
+        <!-- GRAFICO 1: ROLLING PROFIT -->
+        <div style="margin-top:25px;">
+            <h3>
+                Rolling Profit
+                <span onclick="showRollingInfo('profit')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
+            </h3>
+            <p style="color:#94a3b8; font-size:14px;">
+                Asse X: indice della finestra rolling. Asse Y: profitto totale della finestra.
+            </p>
+            <div id="rolling-profit-chart" style="height:430px;"></div>
+        </div>
+
+        <!-- GRAFICO 2: ROLLING DRAWDOWN -->
+        <div style="margin-top:35px;">
+            <h3>
+                Rolling Drawdown
+                <span onclick="showRollingInfo('drawdown')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
+            </h3>
+            <p style="color:#94a3b8; font-size:14px;">
+                Asse X: indice della finestra rolling. Asse Y: massimo drawdown locale della finestra.
+            </p>
+            <div id="rolling-dd-chart" style="height:430px;"></div>
+        </div>
+
+        <!-- GRAFICO 3: ROLLING WINRATE -->
+        <div style="margin-top:35px;">
+            <h3>
+                Rolling Winrate
+                <span onclick="showRollingInfo('winrate')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
+            </h3>
+            <p style="color:#94a3b8; font-size:14px;">
+                Asse X: indice della finestra rolling. Asse Y: percentuale di trade vincenti nella finestra.
+            </p>
+            <div id="rolling-winrate-chart" style="height:430px;"></div>
+        </div>
+
+        <!-- GRAFICO 4: ROLLING PROFIT FACTOR -->
+        <div style="margin-top:35px;">
+            <h3>
+                Rolling Profit Factor
+                <span onclick="showRollingInfo('profit_factor')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
+            </h3>
+            <p style="color:#94a3b8; font-size:14px;">
+                Asse X: indice della finestra rolling. Asse Y: rapporto tra profitti lordi e perdite lorde della finestra.
+            </p>
+            <div id="rolling-pf-chart" style="height:430px;"></div>
+        </div>
+
+        <!-- SUMMARY TABLE -->
+        <div id="rolling-summary" style="
+            margin-top:35px;
+            background:#111827;
+            border:1px solid #22304a;
+            border-radius:12px;
+            padding:20px;
+            display:none;
+        "></div>
+
+        <!-- INTERPRETATION BOX -->
+        <div id="rolling-interpretation" style="
+            margin-top:20px;
+            background:#0f172a;
+            border:1px solid #334155;
+            border-radius:12px;
+            padding:20px;
+            color:#e5e7eb;
+            display:none;
+            line-height:1.6;
+        "></div>
+
+        <!-- DOWNLOAD CSV -->
+        <div style="margin-top:25px; text-align:center;">
+            <button id="downloadRollingCsvBtn"
+                    onclick="downloadRollingCSV()"
+                    class="btn primary"
+                    style="display:none;">
+                Download CSV
+            </button>
+        </div>
 
     </div>
 
@@ -74,7 +159,9 @@
 
 <script>
 
+
 let trades = []
+let lastRollingData = null
 
 function uploadRollingFile() {
     const file = document.getElementById("fileInput").files[0]
@@ -94,9 +181,9 @@ function uploadRollingFile() {
     })
     .then(res => res.json())
     .then(data => {
+        const status = document.getElementById("uploadStatus")
+
         if (data.error) {
-            const status = document.getElementById("uploadStatus")
-        
             status.style.display = "block"
             status.style.color = "#ef4444"
             status.innerText = data.error
@@ -104,10 +191,9 @@ function uploadRollingFile() {
         }
 
         trades = data.trades
-        const status = document.getElementById("uploadStatus")
-        
+
         status.style.display = "block"
-        status.style.color = "#10b981"
+        status.style.color = "#cbd5e1"
         status.innerText = "Trades caricati: " + trades.length
     })
 }
@@ -119,7 +205,7 @@ function runRollingAnalysis() {
         return
     }
 
-    const window = parseInt(document.getElementById("window").value)
+    const windowSize = parseInt(document.getElementById("window").value)
     const step = parseInt(document.getElementById("step").value)
 
     fetch("/api/rolling/run", {
@@ -129,7 +215,7 @@ function runRollingAnalysis() {
         },
         body: JSON.stringify({
             trades: trades,
-            window: window,
+            window: windowSize,
             step: step
         }),
         credentials: "include"
@@ -137,38 +223,264 @@ function runRollingAnalysis() {
     .then(res => res.json())
     .then(data => {
 
-        if (data.error) {
-            const status = document.getElementById("uploadStatus")
+        const status = document.getElementById("uploadStatus")
 
+        if (data.error) {
             status.style.display = "block"
             status.style.color = "#ef4444"
             status.innerText = data.error
             return
         }
 
-        drawRollingChart(data)
+        lastRollingData = data
 
+        drawRollingCharts(data)
+        drawRollingSummary(data)
+        drawRollingInterpretation(data)
+
+        const downloadBtn = document.getElementById("downloadRollingCsvBtn")
+        if (downloadBtn) {
+            downloadBtn.style.display = "inline-flex"
+        }
+    })
+    .catch(err => {
+        console.error(err)
+        alert("Errore di connessione server")
     })
 }
 
-function drawRollingChart(data) {
-
-    const trace = {
-        y: data.rolling_profit,
-        type: "scatter",
-        mode: "lines",
-        line: { color: "#3b82f6", width: 3 },
-        name: "Rolling Profit"
-    }
-
-    const layout = {
-        title: "Rolling Profit Analysis",
+function baseLayout(title, yTitle) {
+    return {
+        title: title,
         paper_bgcolor: "#0f172a",
         plot_bgcolor: "#0f172a",
-        font: { color: "#e5e7eb" }
+        font: { color: "#e5e7eb" },
+        xaxis: {
+            title: "Indice finestra rolling",
+            gridcolor: "#1e293b"
+        },
+        yaxis: {
+            title: yTitle,
+            gridcolor: "#1e293b"
+        },
+        margin: { t: 50, b: 50, l: 60, r: 30 },
+        hovermode: "x unified"
+    }
+}
+
+function drawLineChart(elementId, y, title, yTitle, traceName) {
+    const x = y.map((_, i) => i + 1)
+
+    const trace = {
+        x: x,
+        y: y,
+        type: "scatter",
+        mode: "lines+markers",
+        name: traceName,
+        line: { width: 3 },
+        marker: { size: 5 }
     }
 
-    Plotly.newPlot("rolling-chart", [trace], layout)
+    Plotly.newPlot(elementId, [trace], baseLayout(title, yTitle), {
+        responsive: true,
+        displaylogo: false
+    })
+}
+
+function drawRollingCharts(data) {
+    const s = data.series
+
+    drawLineChart(
+        "rolling-profit-chart",
+        s.rolling_profit,
+        "Rolling Profit",
+        "Profitto della finestra",
+        "Rolling Profit"
+    )
+
+    drawLineChart(
+        "rolling-dd-chart",
+        s.rolling_drawdown,
+        "Rolling Drawdown",
+        "Massimo drawdown locale",
+        "Rolling Drawdown"
+    )
+
+    drawLineChart(
+        "rolling-winrate-chart",
+        s.rolling_winrate,
+        "Rolling Winrate",
+        "Winrate (%)",
+        "Rolling Winrate"
+    )
+
+    drawLineChart(
+        "rolling-pf-chart",
+        s.rolling_profit_factor,
+        "Rolling Profit Factor",
+        "Profit Factor",
+        "Rolling Profit Factor"
+    )
+}
+
+function showRollingInfo(type) {
+    const box = document.getElementById("rollingInfoBox")
+
+    const texts = {
+        profit:
+            "Rolling Profit: ogni punto rappresenta il profitto totale generato da una finestra mobile di trade. " +
+            "L’asse X indica il numero progressivo della finestra; l’asse Y indica il profitto della finestra. " +
+            "Serve a capire se la strategia produce risultati in modo distribuito nel tempo oppure se guadagna solo in alcune zone specifiche.",
+
+        drawdown:
+            "Rolling Drawdown: ogni punto mostra il massimo drawdown registrato all’interno di una finestra mobile. " +
+            "L’asse X indica il numero progressivo della finestra; l’asse Y indica la perdita temporanea massima dal picco locale. " +
+            "Serve a capire in quali fasi la strategia ha richiesto più rischio per generare risultato.",
+
+        winrate:
+            "Rolling Winrate: ogni punto mostra la percentuale di trade vincenti dentro una finestra mobile. " +
+            "L’asse X indica il numero progressivo della finestra; l’asse Y indica il winrate percentuale. " +
+            "Serve a osservare se la frequenza dei trade vincenti resta stabile o cambia nel tempo.",
+
+        profit_factor:
+            "Rolling Profit Factor: ogni punto mostra il rapporto tra profitti lordi e perdite lorde dentro una finestra mobile. " +
+            "L’asse X indica il numero progressivo della finestra; l’asse Y indica il profit factor della finestra. " +
+            "Valori superiori a 1 indicano che, in quella finestra, i profitti lordi superano le perdite lorde.",
+
+        summary:
+            "La tabella summary sintetizza il comportamento globale delle finestre rolling: profitto medio, peggior finestra, volatilità dei profitti, percentuale di finestre negative, drawdown medio/peggiore e indicatori di stabilità temporale."
+    }
+
+    box.style.display = "block"
+    box.innerText = texts[type] || ""
+}
+
+function formatValue(x, decimals = 2) {
+    if (x === null || x === undefined || Number.isNaN(Number(x))) return "-"
+    return Number(x).toFixed(decimals)
+}
+
+function drawRollingSummary(data) {
+    const box = document.getElementById("rolling-summary")
+    const s = data.summary
+
+    box.style.display = "block"
+
+    box.innerHTML = `
+        <h3>
+            Rolling Summary
+            <span onclick="showRollingInfo('summary')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
+        </h3>
+
+        <table style="width:100%; margin-top:10px; border-collapse:collapse;">
+            <tr>
+                <td>Average Rolling Profit</td>
+                <td>${formatValue(s.avg_rolling_profit)}</td>
+            </tr>
+            <tr>
+                <td>Worst Rolling Profit</td>
+                <td>${formatValue(s.worst_rolling_profit)}</td>
+            </tr>
+            <tr>
+                <td>Best Rolling Profit</td>
+                <td>${formatValue(s.best_rolling_profit)}</td>
+            </tr>
+            <tr>
+                <td>Negative Windows %</td>
+                <td>${formatValue(s.negative_windows_pct)}%</td>
+            </tr>
+            <tr>
+                <td>Rolling Profit Volatility</td>
+                <td>${formatValue(s.rolling_profit_volatility)}</td>
+            </tr>
+            <tr>
+                <td>Worst Rolling Drawdown</td>
+                <td>${formatValue(s.worst_rolling_drawdown)}</td>
+            </tr>
+            <tr>
+                <td>Average Rolling Drawdown</td>
+                <td>${formatValue(s.avg_rolling_drawdown)}</td>
+            </tr>
+            <tr>
+                <td>Stability Ratio</td>
+                <td>${formatValue(s.stability_ratio, 3)}</td>
+            </tr>
+            <tr>
+                <td>Profit Concentration</td>
+                <td>${formatValue(s.profit_concentration)}%</td>
+            </tr>
+            <tr>
+                <td>Degradation Score</td>
+                <td>${formatValue(s.degradation_score)}%</td>
+            </tr>
+        </table>
+    `
+}
+
+function drawRollingInterpretation(data) {
+    const box = document.getElementById("rolling-interpretation")
+    const interp = data.interpretation
+
+    box.style.display = "block"
+
+    box.innerHTML = `
+        <h3 style="margin-top:0;">Interpretazione: ${interp.label}</h3>
+        <p>${interp.text}</p>
+    `
+}
+
+function downloadRollingCSV() {
+
+    if (!lastRollingData) {
+        alert("Esegui prima una Rolling Analysis")
+        return
+    }
+
+    const data = lastRollingData
+    const rows = []
+
+    function safe(value) {
+        if (value === null || value === undefined) return ""
+        return String(value).replace(/"/g, '""')
+    }
+
+    rows.push("section,key,value")
+
+    Object.keys(data.summary).forEach(key => {
+        rows.push(`"summary","${safe(key)}","${safe(data.summary[key])}"`)
+    })
+
+    rows.push("")
+    rows.push("window_index,start_trade,end_trade,profit,drawdown,winrate,profit_factor,ulcer_index")
+
+    data.windows.forEach(w => {
+        rows.push([
+            w.index + 1,
+            w.start_trade,
+            w.end_trade,
+            w.profit ?? "",
+            w.drawdown ?? "",
+            w.winrate ?? "",
+            w.profit_factor ?? "",
+            w.ulcer_index ?? ""
+        ].join(","))
+    })
+
+    const csvContent = rows.join("\n")
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
+
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+
+    const now = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-")
+
+    a.href = url
+    a.download = `rolling_analysis_${now}.csv`
+    document.body.appendChild(a)
+    a.click()
+
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
 }
 
 </script>

@@ -789,10 +789,10 @@ def rolling_analysis_run():
         return jsonify({"error": "not authenticated"}), 401
 
     try:
-        data = request.json
+        data = request.json or {}
 
         trades = data.get("trades", [])
-        window = int(data.get("window", 50))
+        window_size = int(data.get("window", 50))
         step = int(data.get("step", 10))
 
         # =========================
@@ -801,39 +801,254 @@ def rolling_analysis_run():
         if not isinstance(trades, list):
             return jsonify({"error": "invalid trades"})
 
-        trades = [float(x) for x in trades]
+        try:
+            trades = [float(x) for x in trades]
+        except:
+            return jsonify({"error": "trades must be numbers"})
 
-        if len(trades) < window:
-            return jsonify({"error": "not enough trades for window"})
+        if window_size < 5:
+            return jsonify({"error": "window too small"})
+
+        if step < 1:
+            return jsonify({"error": "step must be >= 1"})
+
+        if len(trades) < window_size:
+            return jsonify({"error": "not enough trades for selected window"})
+
+        # =========================
+        # HELPERS
+        # =========================
+        def safe_float(x):
+            try:
+                if x is None:
+                    return None
+                x = float(x)
+                if np.isnan(x) or np.isinf(x):
+                    return None
+                return x
+            except:
+                return None
+
+        def local_equity_curve(chunk):
+            # parte da 0 per misurare correttamente drawdown anche se il primo trade è negativo
+            return np.concatenate([[0.0], np.cumsum(chunk)])
+
+        def local_max_drawdown(eq):
+            peak = eq[0]
+            max_dd = 0.0
+
+            for x in eq:
+                if x > peak:
+                    peak = x
+
+                dd = peak - x
+                if dd > max_dd:
+                    max_dd = dd
+
+            return float(max_dd)
+
+        def local_ulcer_index(eq):
+            peak = eq[0]
+            dd_points = []
+
+            for x in eq:
+                if x > peak:
+                    peak = x
+
+                dd = peak - x
+                dd_points.append(dd)
+
+            return float(np.sqrt(np.mean(np.square(dd_points)))) if dd_points else 0.0
 
         # =========================
         # ROLLING WINDOWS
         # =========================
+        windows = []
+
         rolling_profit = []
-        rolling_dd = []
+        rolling_drawdown = []
+        rolling_winrate = []
+        rolling_profit_factor = []
+        rolling_ulcer = []
 
-        for i in range(0, len(trades) - window + 1, step):
+        for start in range(0, len(trades) - window_size + 1, step):
 
-            chunk = trades[i:i+window]
+            end = start + window_size
+            chunk = np.array(trades[start:end], dtype=float)
 
-            equity = np.cumsum(chunk)
+            eq = local_equity_curve(chunk)
 
-            profit = float(equity[-1])
-            dd = float(max_drawdown(equity))
+            profit = float(np.sum(chunk))
+            dd = local_max_drawdown(eq)
+            ulcer = local_ulcer_index(eq)
 
-            rolling_profit.append(profit)
-            rolling_dd.append(dd)
+            wins = chunk[chunk > 0]
+            losses = chunk[chunk < 0]
+
+            winrate = float(len(wins) / len(chunk) * 100) if len(chunk) else 0.0
+
+            gross_profit = float(np.sum(wins)) if len(wins) else 0.0
+            gross_loss = float(np.sum(losses)) if len(losses) else 0.0
+
+            if gross_loss < 0:
+                profit_factor = gross_profit / abs(gross_loss)
+            else:
+                profit_factor = None
+
+            item = {
+                "index": len(windows),
+                "start_trade": start + 1,
+                "end_trade": end,
+                "profit": safe_float(profit),
+                "drawdown": safe_float(dd),
+                "winrate": safe_float(winrate),
+                "profit_factor": safe_float(profit_factor),
+                "ulcer_index": safe_float(ulcer),
+            }
+
+            windows.append(item)
+
+            rolling_profit.append(safe_float(profit))
+            rolling_drawdown.append(safe_float(dd))
+            rolling_winrate.append(safe_float(winrate))
+            rolling_profit_factor.append(safe_float(profit_factor))
+            rolling_ulcer.append(safe_float(ulcer))
+
+        if not windows:
+            return jsonify({"error": "no rolling windows generated"})
+
+        # =========================
+        # SUMMARY
+        # =========================
+        profit_array = np.array([x for x in rolling_profit if x is not None], dtype=float)
+        dd_array = np.array([x for x in rolling_drawdown if x is not None], dtype=float)
+
+        avg_rolling_profit = float(np.mean(profit_array)) if len(profit_array) else 0.0
+        worst_rolling_profit = float(np.min(profit_array)) if len(profit_array) else 0.0
+        best_rolling_profit = float(np.max(profit_array)) if len(profit_array) else 0.0
+        rolling_profit_volatility = float(np.std(profit_array)) if len(profit_array) else 0.0
+
+        negative_windows_pct = float(np.mean(profit_array < 0) * 100) if len(profit_array) else 0.0
+
+        worst_rolling_drawdown = float(np.max(dd_array)) if len(dd_array) else 0.0
+        avg_rolling_drawdown = float(np.mean(dd_array)) if len(dd_array) else 0.0
+
+        stability_ratio = (
+            avg_rolling_profit / rolling_profit_volatility
+            if rolling_profit_volatility != 0
+            else 0.0
+        )
+
+        # Profit concentration:
+        # quota del profitto positivo totale spiegata dal top 10% delle finestre migliori
+        positive_profits = profit_array[profit_array > 0]
+        if len(positive_profits) > 0:
+            top_n = max(1, int(np.ceil(len(positive_profits) * 0.10)))
+            sorted_pos = np.sort(positive_profits)[::-1]
+            top_profit = float(np.sum(sorted_pos[:top_n]))
+            total_positive_profit = float(np.sum(positive_profits))
+            profit_concentration = (
+                top_profit / total_positive_profit * 100
+                if total_positive_profit > 0
+                else 0.0
+            )
+        else:
+            profit_concentration = 0.0
+
+        # Degradation score:
+        # confronto tra primo 30% e ultimo 30% delle finestre.
+        n = len(profit_array)
+        k = max(1, int(np.ceil(n * 0.30)))
+
+        first_avg = float(np.mean(profit_array[:k])) if n else 0.0
+        last_avg = float(np.mean(profit_array[-k:])) if n else 0.0
+
+        if abs(first_avg) > 1e-9:
+            degradation_score = ((last_avg - first_avg) / abs(first_avg)) * 100
+        else:
+            degradation_score = 0.0
+
+        # =========================
+        # INTERPRETAZIONE
+        # =========================
+        flags = []
+
+        if negative_windows_pct > 30:
+            flags.append("alta percentuale di finestre negative")
+
+        if profit_concentration > 55:
+            flags.append("profitto molto concentrato in poche finestre")
+
+        if degradation_score < -30:
+            flags.append("possibile deterioramento nella parte finale")
+
+        if stability_ratio < 0.5:
+            flags.append("bassa stabilità dei profitti rolling")
+
+        if worst_rolling_drawdown > abs(avg_rolling_profit) * 2 and avg_rolling_profit > 0:
+            flags.append("drawdown rolling elevato rispetto al profitto medio")
+
+        if not flags:
+            interpretation = (
+                "La strategia appare relativamente stabile sulle finestre analizzate. "
+                "I profitti rolling risultano distribuiti in modo accettabile e non emergono segnali forti di deterioramento."
+            )
+            regime_label = "STABILE"
+        else:
+            interpretation = (
+                "La strategia mostra potenziali fragilità temporali: "
+                + ", ".join(flags)
+                + ". Conviene confrontare questa analisi con Monte Carlo, drawdown e distribuzione dei trade."
+            )
+
+            if profit_concentration > 55:
+                regime_label = "CONCENTRATA / REGIME-DEPENDENT"
+            elif degradation_score < -30:
+                regime_label = "IN DETERIORAMENTO"
+            else:
+                regime_label = "INSTABILE"
+
+        summary = {
+            "avg_rolling_profit": safe_float(avg_rolling_profit),
+            "worst_rolling_profit": safe_float(worst_rolling_profit),
+            "best_rolling_profit": safe_float(best_rolling_profit),
+            "negative_windows_pct": safe_float(negative_windows_pct),
+            "rolling_profit_volatility": safe_float(rolling_profit_volatility),
+            "worst_rolling_drawdown": safe_float(worst_rolling_drawdown),
+            "avg_rolling_drawdown": safe_float(avg_rolling_drawdown),
+            "stability_ratio": safe_float(stability_ratio),
+            "profit_concentration": safe_float(profit_concentration),
+            "degradation_score": safe_float(degradation_score),
+        }
 
         return jsonify({
             "status": "success",
-            "rolling_profit": rolling_profit,
-            "rolling_drawdown": rolling_dd
+            "window_size": window_size,
+            "step": step,
+            "total_trades": len(trades),
+            "windows": windows,
+
+            "series": {
+                "rolling_profit": rolling_profit,
+                "rolling_drawdown": rolling_drawdown,
+                "rolling_winrate": rolling_winrate,
+                "rolling_profit_factor": rolling_profit_factor,
+                "rolling_ulcer": rolling_ulcer,
+            },
+
+            "summary": summary,
+
+            "interpretation": {
+                "label": regime_label,
+                "text": interpretation,
+                "flags": flags,
+            }
         })
 
     except Exception as e:
         print("ROLLING ERROR:", e)
         return jsonify({"error": "rolling error"})
-    
+
 @app.route("/api/correlations")
 @login_required
 def api_correlations():
