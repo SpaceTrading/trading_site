@@ -53,17 +53,6 @@
         <hr>
 
         <!-- INFO BOX -->
-        <div id="rollingInfoBox" style="
-            margin-top:15px;
-            margin-bottom:20px;
-            background:#0f172a;
-            border:1px solid #334155;
-            border-radius:10px;
-            padding:15px;
-            color:#e5e7eb;
-            display:none;
-            line-height:1.6;
-        "></div>
         
         <div id="rollingInfoPopup" style="
             position:fixed;
@@ -370,7 +359,37 @@ function showRollingInfo(event, type) {
             "Valori superiori a 1 indicano che, in quella finestra, i profitti lordi superano le perdite lorde.",
 
         summary:
-            "La tabella summary sintetizza il comportamento globale delle finestre rolling: profitto medio, peggior finestra, volatilità dei profitti, percentuale di finestre negative, drawdown medio/peggiore e indicatori di stabilità temporale."
+            "La tabella summary sintetizza il comportamento globale delle finestre rolling: profitto medio, peggior finestra, volatilità dei profitti, percentuale di finestre negative, drawdown medio/peggiore e indicatori di stabilità temporale.",
+        avg_rolling_profit:
+            "Average Rolling Profit: media dei profitti delle finestre rolling. Misura il rendimento medio prodotto da una finestra mobile. Valori più alti indicano che, in media, la strategia mantiene una buona capacità di generare profitto lungo il campione.",
+        
+        worst_rolling_profit:
+            "Worst Rolling Profit: peggior profitto osservato tra tutte le finestre rolling. Se è molto negativo, significa che almeno una fase del campione è stata particolarmente debole o critica.",
+        
+        best_rolling_profit:
+            "Best Rolling Profit: miglior profitto osservato tra tutte le finestre rolling. Indica la finestra più favorevole del campione e aiuta a capire qual è stato il picco di performance locale.",
+        
+        negative_windows_pct:
+            "Negative Windows %: percentuale di finestre rolling con profitto negativo. Più questo valore è alto, più la strategia tende a mostrare instabilità o difficoltà distribuite nel tempo.",
+        
+        rolling_profit_volatility:
+            "Rolling Profit Volatility: volatilità dei profitti rolling. Misura quanto i risultati delle finestre oscillano tra loro. Valori elevati indicano performance meno uniformi e maggiore variabilità temporale.",
+        
+        worst_rolling_drawdown:
+            "Worst Rolling Drawdown: massimo drawdown peggiore registrato tra tutte le finestre rolling. Indica il momento localmente più rischioso del campione.",
+        
+        avg_rolling_drawdown:
+            "Average Rolling Drawdown: media dei drawdown rolling. Misura il livello medio di pressione/rischio sopportato dalle finestre nel tempo.",
+        
+        stability_ratio:
+            "Stability Ratio: rapporto sintetico tra rendimento rolling medio e drawdown rolling medio. Valori più alti indicano una migliore stabilità del profilo rischio/rendimento nel tempo.",
+        
+        profit_concentration:
+            "Profit Concentration: misura quanto il profitto complessivo è concentrato in poche finestre. Valori alti suggeriscono che la strategia dipende da pochi segmenti particolarmente forti, anziché distribuire i risultati in modo omogeneo.",
+        
+        degradation_score:
+            "Degradation Score: misura il deterioramento relativo tra finestre migliori e peggiori. Valori alti suggeriscono una perdita di qualità più marcata in certe fasi del campione."
+    
     }
 
     box.innerText = texts[type] || ""
@@ -384,6 +403,16 @@ function showRollingInfo(event, type) {
 
     if (left + boxWidth > window.innerWidth - margin) {
         left = window.innerWidth - boxWidth - margin
+    }
+    
+    const boxHeight = 220
+
+    if (top + boxHeight > window.innerHeight - margin) {
+        top = event.clientY - boxHeight - 14
+    }
+    
+    if (top < margin) {
+        top = margin
     }
 
     box.style.left = left + "px"
@@ -416,43 +445,73 @@ function drawRollingSummary(data) {
 
         <table style="width:100%; margin-top:10px; border-collapse:collapse;">
             <tr>
-                <td>Average Rolling Profit</td>
+                <td>
+                    Average Rolling Profit
+                    <span onclick="showRollingInfo(event, 'avg_rolling_profit')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
+                </td>
                 <td>${formatValue(s.avg_rolling_profit)}</td>
             </tr>
             <tr>
-                <td>Worst Rolling Profit</td>
+                <td>
+                    Worst Rolling Profit
+                    <span onclick="showRollingInfo(event, 'worst_rolling_profit')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
+                </td>
                 <td>${formatValue(s.worst_rolling_profit)}</td>
             </tr>
             <tr>
-                <td>Best Rolling Profit</td>
+                <td>
+                    Best Rolling Profit
+                    <span onclick="showRollingInfo(event, 'best_rolling_profit')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
+                </td>
                 <td>${formatValue(s.best_rolling_profit)}</td>
             </tr>
             <tr>
-                <td>Negative Windows %</td>
+                <td>
+                    Negative Windows %
+                    <span onclick="showRollingInfo(event, 'negative_windows_pct')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
+                </td>
                 <td>${formatValue(s.negative_windows_pct)}%</td>
             </tr>
             <tr>
-                <td>Rolling Profit Volatility</td>
+                <td>
+                    Rolling Profit Volatility
+                    <span onclick="showRollingInfo(event, 'rolling_profit_volatility')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
+                </td>
                 <td>${formatValue(s.rolling_profit_volatility)}</td>
             </tr>
             <tr>
-                <td>Worst Rolling Drawdown</td>
+                <td>
+                    Worst Rolling Drawdown
+                    <span onclick="showRollingInfo(event, 'worst_rolling_drawdown')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
+                </td>
                 <td>${formatValue(s.worst_rolling_drawdown)}</td>
             </tr>
             <tr>
-                <td>Average Rolling Drawdown</td>
+                <td>
+                    Average Rolling Drawdown
+                    <span onclick="showRollingInfo(event, 'avg_rolling_drawdown')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
+                </td>
                 <td>${formatValue(s.avg_rolling_drawdown)}</td>
             </tr>
             <tr>
-                <td>Stability Ratio</td>
+                <td>
+                    Stability Ratio
+                    <span onclick="showRollingInfo(event, 'stability_ratio')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
+                </td>
                 <td>${formatValue(s.stability_ratio, 3)}</td>
             </tr>
             <tr>
-                <td>Profit Concentration</td>
+                <td>
+                    Profit Concentration
+                    <span onclick="showRollingInfo(event, 'profit_concentration')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
+                </td>
                 <td>${formatValue(s.profit_concentration)}%</td>
             </tr>
             <tr>
-                <td>Degradation Score</td>
+                <td>
+                    Degradation Score
+                    <span onclick="showRollingInfo(event, 'degradation_score')" style="cursor:pointer; color:#60a5fa; margin-left:6px;">(i)</span>
+                </td>
                 <td>${formatValue(s.degradation_score)}%</td>
             </tr>
         </table>
