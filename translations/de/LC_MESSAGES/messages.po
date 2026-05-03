@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Space-T 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 10:58+0200\n"
+"POT-Creation-Date: 2026-05-03 11:17+0200\n"
 "PO-Revision-Date: 2026-05-03 10:58+0200\n"
 "Last-Translator: Space-T\n"
 "Language: de\n"
@@ -13,6 +13,48 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
+
+#: templates/contatti.html:3 templates/contatti.html:40
+#: templates/layout.html:189
+msgid "Contatti"
+msgstr "Kontakt"
+
+#: templates/contatti.html:41
+msgid "Hai domande o richieste? Scrivici"
+msgstr ""
+
+#: templates/contatti.html:66
+msgid "Invia un messaggio"
+msgstr ""
+
+#: templates/contatti.html:78
+msgid "Grazie per averci contattato!"
+msgstr ""
+
+#: templates/contatti.html:79
+msgid "Ti risponderemo entro 3-4 ore."
+msgstr ""
+
+#: templates/contatti.html:80
+msgid "Controlla anche la cartella spam."
+msgstr ""
+
+#: templates/contatti.html:86 templates/layout.html:260
+#: templates/layout.html:282
+msgid "Email"
+msgstr "E-Mail"
+
+#: templates/contatti.html:95
+msgid "Oggetto"
+msgstr ""
+
+#: templates/contatti.html:104
+msgid "Messaggio"
+msgstr ""
+
+#: templates/contatti.html:115
+msgid "Invia"
+msgstr ""
 
 #: templates/expert_advisor.html:3 templates/expert_advisor.html:34
 #: templates/layout.html:162
@@ -122,10 +164,6 @@ msgstr "Korrelationen"
 msgid "Forex Converter"
 msgstr "Forex-Konverter"
 
-#: templates/layout.html:189
-msgid "Contatti"
-msgstr "Kontakt"
-
 #: templates/layout.html:192
 msgid "Dashboard"
 msgstr "Dashboard"
@@ -141,10 +179,6 @@ msgstr "Abmelden"
 #: templates/layout.html:228 templates/layout.html:279
 msgid "Register"
 msgstr "Registrieren"
-
-#: templates/layout.html:260 templates/layout.html:282
-msgid "Email"
-msgstr "E-Mail"
 
 #: templates/layout.html:262 templates/layout.html:283
 msgid "Password"
@@ -165,3 +199,4 @@ msgstr "Passwort wiederholen"
 #: templates/layout.html:288
 msgid "Registrati"
 msgstr "Registrieren"
+

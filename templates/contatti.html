@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Contatti{% endblock %}
+{% block title %}{{ _("Contatti") }}{% endblock %}
 
 {% block content %}
 
@@ -37,8 +37,8 @@
             padding:25px 30px;
             border-radius:12px;
         ">
-            <h1>Contatti</h1>
-            <p>Hai domande o richieste? Scrivici</p>
+            <h1>{{ _("Contatti") }}</h1>
+            <p>{{ _("Hai domande o richieste? Scrivici") }}</p>
         </div>
     </div>
 
@@ -63,7 +63,7 @@
     ">
 
         <h2 style="text-align:center; margin-bottom:30px;">
-            Invia un messaggio
+            {{ _("Invia un messaggio") }}
         </h2>
         
         {% if success %}
@@ -75,15 +75,15 @@
                 margin-bottom:20px;
                 text-align:center;
             ">
-                Grazie per averci contattato!  
-                Ti risponderemo entro 3-4 ore.  
-                Controlla anche la cartella spam.
+                {{ _("Grazie per averci contattato!") }}<br>
+                {{ _("Ti risponderemo entro 3-4 ore.") }}<br>
+                {{ _("Controlla anche la cartella spam.") }}
             </div>
         {% endif %}
         
         <form method="POST">
 
-            <input type="email" name="email" placeholder="Email"
+            <input type="email" name="email" placeholder="{{ _('Email') }}"
                 style="
                     width:100%;
                     padding:12px;
@@ -92,7 +92,7 @@
                     border:none;
                 " required>
         
-            <input type="text" name="oggetto" placeholder="Oggetto"
+            <input type="text" name="oggetto" placeholder="{{ _('Oggetto') }}"
                 style="
                     width:100%;
                     padding:12px;
@@ -101,7 +101,7 @@
                     border:none;
                 " required>
         
-            <textarea name="messaggio" placeholder="Messaggio"
+            <textarea name="messaggio" placeholder="{{ _('Messaggio') }}"
                 style="
                     width:100%;
                     padding:12px;
@@ -112,7 +112,7 @@
                 " required></textarea>
         
             <button type="submit" class="btn primary" style="width:100%;">
-                Invia
+                {{ _("Invia") }}
             </button>
         
         </form>
