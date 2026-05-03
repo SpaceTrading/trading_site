@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Space-T 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 11:51+0200\n"
+"POT-Creation-Date: 2026-05-03 12:02+0200\n"
 "PO-Revision-Date: 2026-05-03 11:30+0200\n"
 "Last-Translator: Space-T\n"
 "Language: fr\n"
@@ -112,11 +112,11 @@ msgstr "Mensuel"
 msgid "Numero periodi:"
 msgstr "Nombre de périodes :"
 
-#: templates/correlazioni.html:70
+#: templates/correlazioni.html:70 templates/risk_manager.html:76
 msgid "Calcola"
 msgstr "Calculer"
 
-#: templates/correlazioni.html:79
+#: templates/correlazioni.html:79 templates/risk_manager.html:32
 msgid "Coppia"
 msgstr "Paire"
 
@@ -268,7 +268,7 @@ msgstr "Outils professionnels pour traders"
 msgid "Strumenti"
 msgstr "Outils"
 
-#: templates/laboratorio.html:87
+#: templates/laboratorio.html:87 templates/risk_manager.html:3
 msgid "Risk Manager"
 msgstr "Risk Manager"
 
@@ -339,4 +339,66 @@ msgstr "Répéter le mot de passe"
 #: templates/layout.html:288
 msgid "Registrati"
 msgstr "S’inscrire"
+
+#: templates/risk_manager.html:9
+#, fuzzy
+msgid "Risk Manager PRO"
+msgstr "Risk Manager"
+
+#: templates/risk_manager.html:10
+msgid "Calcolo completo del trade"
+msgstr ""
+
+#: templates/risk_manager.html:19
+msgid "Capitale"
+msgstr ""
+
+#: templates/risk_manager.html:24
+msgid "Valuta"
+msgstr ""
+
+#: templates/risk_manager.html:45
+msgid "Lot Size"
+msgstr ""
+
+#: templates/risk_manager.html:50
+msgid "Ordine"
+msgstr ""
+
+#: templates/risk_manager.html:58
+msgid "Prezzo Entry"
+msgstr ""
+
+#: templates/risk_manager.html:63
+msgid "Prezzo Target"
+msgstr ""
+
+#: templates/risk_manager.html:68
+msgid "Stop Loss"
+msgstr ""
+
+#: templates/risk_manager.html:92
+#, fuzzy
+msgid "Risultati"
+msgstr "S’inscrire"
+
+#: templates/risk_manager.html:94
+msgid "Profitto"
+msgstr ""
+
+#: templates/risk_manager.html:95
+msgid "Perdita"
+msgstr ""
+
+#: templates/risk_manager.html:96
+msgid "Risk %"
+msgstr ""
+
+#: templates/risk_manager.html:97
+msgid "Return %"
+msgstr ""
+
+#: templates/risk_manager.html:98
+msgid "R/R"
+msgstr ""
 

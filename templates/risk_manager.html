@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 
-{% block title %}Risk Manager{% endblock %}
+{% block title %}{{ _("Risk Manager") }}{% endblock %}
 
 {% block content %}
 
 <div class="container">
 
-    <h1>Risk Manager PRO</h1>
-    <p>Calcolo completo del trade</p>
+    <h1>{{ _("Risk Manager PRO") }}</h1>
+    <p>{{ _("Calcolo completo del trade") }}</p>
 
     <div class="card">
 
@@ -16,12 +16,12 @@
             <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px;">
         
                 <div>
-                    <label>Capitale</label>
+                    <label>{{ _("Capitale") }}</label>
                     <input type="number" name="balance" step="0.01" min="0" required>
                 </div>
         
                 <div>
-                    <label>Valuta</label>
+                    <label>{{ _("Valuta") }}</label>
                     <select name="currency">
                         <option value="EUR">EUR</option>
                         <option value="USD">USD</option>
@@ -29,7 +29,7 @@
                 </div>
         
                 <div>
-                    <label>Coppia</label>
+                    <label>{{ _("Coppia") }}</label>
                     <select name="pair">
                         <option value="EURUSD">EUR/USD</option>
                         <option value="USDJPY">USD/JPY</option>
@@ -42,12 +42,12 @@
                 </div>
         
                 <div>
-                    <label>Lot Size</label>
+                    <label>{{ _("Lot Size") }}</label>
                     <input type="number" name="lot" step="0.01" min="0" required>
                 </div>
         
                 <div>
-                    <label>Ordine</label>
+                    <label>{{ _("Ordine") }}</label>
                     <select name="type">
                         <option value="buy">BUY</option>
                         <option value="sell">SELL</option>
@@ -55,17 +55,17 @@
                 </div>
         
                 <div>
-                    <label>Prezzo Entry</label>
+                    <label>{{ _("Prezzo Entry") }}</label>
                     <input type="number" name="entry" step="0.00001" min="0" required>
                 </div>
         
                 <div>
-                    <label>Prezzo Target</label>
+                    <label>{{ _("Prezzo Target") }}</label>
                     <input type="number" name="target" step="0.00001" min="0" required>
                 </div>
         
                 <div>
-                    <label>Stop Loss</label>
+                    <label>{{ _("Stop Loss") }}</label>
                     <input type="number" name="sl" step="0.00001" min="0" required>
                 </div>
         
@@ -73,7 +73,7 @@
         
             <br>
         
-            <button type="submit" class="btn primary">Calcola</button>
+            <button type="submit" class="btn primary">{{ _("Calcola") }}</button>
         
         </form>
 
@@ -89,13 +89,13 @@
 
         {% else %}
             <div class="card" style="margin-top:20px;">
-                <h2>Risultati</h2>
+                <h2>{{ _("Risultati") }}</h2>
 
-                <p>Profitto: {{ result.profit }}</p>
-                <p>Perdita: {{ result.loss }}</p>
-                <p>Risk %: {{ result.risk }}%</p>
-                <p>Return %: {{ result.return }}%</p>
-                <p>R/R: {{ result.rr }}</p>
+                <p>{{ _("Profitto") }}: {{ result.profit }}</p>
+                <p>{{ _("Perdita") }}: {{ result.loss }}</p>
+                <p>{{ _("Risk %") }}: {{ result.risk }}%</p>
+                <p>{{ _("Return %") }}: {{ result.return }}%</p>
+                <p>{{ _("R/R") }}: {{ result.rr }}</p>
 
             </div>
         {% endif %}
