@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Space-T 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 12:02+0200\n"
+"POT-Creation-Date: 2026-05-03 12:50+0200\n"
 "PO-Revision-Date: 2026-05-03 11:30+0200\n"
 "Last-Translator: Space-T\n"
 "Language: fr\n"
@@ -341,64 +341,61 @@ msgid "Registrati"
 msgstr "S’inscrire"
 
 #: templates/risk_manager.html:9
-#, fuzzy
 msgid "Risk Manager PRO"
-msgstr "Risk Manager"
+msgstr "Risk Manager PRO"
 
 #: templates/risk_manager.html:10
 msgid "Calcolo completo del trade"
-msgstr ""
+msgstr "Calcul complet du trade"
 
 #: templates/risk_manager.html:19
 msgid "Capitale"
-msgstr ""
+msgstr "Capital"
 
 #: templates/risk_manager.html:24
 msgid "Valuta"
-msgstr ""
+msgstr "Devise"
 
 #: templates/risk_manager.html:45
 msgid "Lot Size"
-msgstr ""
+msgstr "Taille du lot"
 
 #: templates/risk_manager.html:50
 msgid "Ordine"
-msgstr ""
+msgstr "Ordre"
 
 #: templates/risk_manager.html:58
 msgid "Prezzo Entry"
-msgstr ""
+msgstr "Prix d’entrée"
 
 #: templates/risk_manager.html:63
 msgid "Prezzo Target"
-msgstr ""
+msgstr "Prix cible"
 
 #: templates/risk_manager.html:68
 msgid "Stop Loss"
-msgstr ""
+msgstr "Stop Loss"
 
 #: templates/risk_manager.html:92
-#, fuzzy
 msgid "Risultati"
-msgstr "S’inscrire"
+msgstr "Résultats"
 
 #: templates/risk_manager.html:94
 msgid "Profitto"
-msgstr ""
+msgstr "Profit"
 
 #: templates/risk_manager.html:95
 msgid "Perdita"
-msgstr ""
+msgstr "Perte"
 
 #: templates/risk_manager.html:96
 msgid "Risk %"
-msgstr ""
+msgstr "Risque %"
 
 #: templates/risk_manager.html:97
 msgid "Return %"
-msgstr ""
+msgstr "Rendement %"
 
 #: templates/risk_manager.html:98
 msgid "R/R"
-msgstr ""
-
+msgstr "R/R"
