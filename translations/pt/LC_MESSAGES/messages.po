@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: Space-T 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 11:17+0200\n"
-"PO-Revision-Date: 2026-05-03 10:58+0200\n"
+"PO-Revision-Date: 2026-05-03 11:17+0200\n"
 "Last-Translator: Space-T\n"
 "Language: pt\n"
 "Language-Team: pt\n"
@@ -21,23 +21,23 @@ msgstr "Contactos"
 
 #: templates/contatti.html:41
 msgid "Hai domande o richieste? Scrivici"
-msgstr ""
+msgstr "Tem perguntas ou pedidos? Escreva-nos"
 
 #: templates/contatti.html:66
 msgid "Invia un messaggio"
-msgstr ""
+msgstr "Enviar uma mensagem"
 
 #: templates/contatti.html:78
 msgid "Grazie per averci contattato!"
-msgstr ""
+msgstr "Obrigado por nos contactar!"
 
 #: templates/contatti.html:79
 msgid "Ti risponderemo entro 3-4 ore."
-msgstr ""
+msgstr "Responderemos dentro de 3 a 4 horas."
 
 #: templates/contatti.html:80
 msgid "Controlla anche la cartella spam."
-msgstr ""
+msgstr "Verifique também a pasta de spam."
 
 #: templates/contatti.html:86 templates/layout.html:260
 #: templates/layout.html:282
@@ -46,15 +46,15 @@ msgstr "Email"
 
 #: templates/contatti.html:95
 msgid "Oggetto"
-msgstr ""
+msgstr "Assunto"
 
 #: templates/contatti.html:104
 msgid "Messaggio"
-msgstr ""
+msgstr "Mensagem"
 
 #: templates/contatti.html:115
 msgid "Invia"
-msgstr ""
+msgstr "Enviar"
 
 #: templates/expert_advisor.html:3 templates/expert_advisor.html:34
 #: templates/layout.html:162
@@ -199,4 +199,3 @@ msgstr "Repetir palavra-passe"
 #: templates/layout.html:288
 msgid "Registrati"
 msgstr "Registar-se"
-
