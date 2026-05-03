@@ -1,14 +1,14 @@
 ﻿{% extends "layout.html" %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}{{ _("Dashboard") }}{% endblock %}
 
 {% block content %}
 
 <div style="max-width:900px; margin:40px auto; padding:0 20px;">
 
-    <h1>Dashboard</h1>
+    <h1>{{ _("Dashboard") }}</h1>
 
-    <p>Benvenuto <strong>{{ current_user.email }}</strong></p>
+    <p>{{ _("Benvenuto") }} <strong>{{ current_user.email }}</strong></p>
 
     <div style="
         margin-top:30px;
@@ -20,19 +20,19 @@
     ">
 
         <p>
-            Il sito è attualmente <strong>in fase di sviluppo</strong>.
+            {{ _("Il sito è attualmente") }} <strong>{{ _("in fase di sviluppo") }}</strong>.
         </p>
 
         <p>
-            Ti ringraziamo per la tua <strong>pre-registrazione</strong> e per far parte di questo progetto fin dall'inizio.
+            {{ _("Ti ringraziamo per la tua") }} <strong>{{ _("pre-registrazione") }}</strong> {{ _("e per far parte di questo progetto fin dall'inizio.") }}
         </p>
 
         <p>
-            Puoi già iniziare ad utilizzare gli strumenti disponibili all'interno del <strong>Laboratorio</strong>.
+            {{ _("Puoi già iniziare ad utilizzare gli strumenti disponibili all'interno del") }} <strong>{{ _("Laboratorio") }}</strong>.
         </p>
 
         <p>
-            Stiamo lavorando costantemente per aggiungere nuove funzionalità e rendere la piattaforma un ambiente sempre più completo e adatto allo studio e alla ricerca quantitativa.
+            {{ _("Stiamo lavorando costantemente per aggiungere nuove funzionalità e rendere la piattaforma un ambiente sempre più completo e adatto allo studio e alla ricerca quantitativa.") }}
         </p>
 
     </div>
@@ -45,20 +45,20 @@
         border-radius:12px;
         padding:25px 30px;
     ">
-        <h2 style="margin-top:0;">I miei prodotti</h2>
+        <h2 style="margin-top:0;">{{ _("I miei prodotti") }}</h2>
 
         <p style="color:#94a3b8; line-height:1.6;">
-            Accedi agli Expert Advisor acquistati o affittati, scarica i file <strong>.ex5</strong>,
-            i manuali PDF, i file SET e controlla lo stato delle tue licenze.
+            {{ _("Accedi agli Expert Advisor acquistati o affittati, scarica i file") }} <strong>.ex5</strong>,
+            {{ _("i manuali PDF, i file SET e controlla lo stato delle tue licenze.") }}
         </p>
 
         <a href="{{ url_for('licensing.my_products') }}" class="btn primary">
-            Apri i miei prodotti
+            {{ _("Apri i miei prodotti") }}
         </a>
     </div>
 
     <div style="margin-top:25px;">
-        <a href="{{ url_for('logout') }}" class="btn">Logout</a>
+        <a href="{{ url_for('logout') }}" class="btn">{{ _("Logout") }}</a>
     </div>
 
 </div>

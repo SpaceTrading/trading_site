@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-05-03 11:17+0200\n"
+"POT-Creation-Date: 2026-05-03 11:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,6 +59,71 @@ msgstr ""
 msgid "Invia"
 msgstr ""
 
+#: templates/dashboard.html:3 templates/dashboard.html:9
+#: templates/layout.html:192
+msgid "Dashboard"
+msgstr ""
+
+#: templates/dashboard.html:11
+msgid "Benvenuto"
+msgstr ""
+
+#: templates/dashboard.html:23
+msgid "Il sito è attualmente"
+msgstr ""
+
+#: templates/dashboard.html:23
+msgid "in fase di sviluppo"
+msgstr ""
+
+#: templates/dashboard.html:27
+msgid "Ti ringraziamo per la tua"
+msgstr ""
+
+#: templates/dashboard.html:27
+msgid "pre-registrazione"
+msgstr ""
+
+#: templates/dashboard.html:27
+msgid "e per far parte di questo progetto fin dall'inizio."
+msgstr ""
+
+#: templates/dashboard.html:31
+msgid "Puoi già iniziare ad utilizzare gli strumenti disponibili all'interno del"
+msgstr ""
+
+#: templates/dashboard.html:31 templates/laboratorio.html:3
+#: templates/laboratorio.html:97 templates/layout.html:166
+msgid "Laboratorio"
+msgstr ""
+
+#: templates/dashboard.html:35
+msgid ""
+"Stiamo lavorando costantemente per aggiungere nuove funzionalità e "
+"rendere la piattaforma un ambiente sempre più completo e adatto allo "
+"studio e alla ricerca quantitativa."
+msgstr ""
+
+#: templates/dashboard.html:48
+msgid "I miei prodotti"
+msgstr ""
+
+#: templates/dashboard.html:51
+msgid "Accedi agli Expert Advisor acquistati o affittati, scarica i file"
+msgstr ""
+
+#: templates/dashboard.html:52
+msgid "i manuali PDF, i file SET e controlla lo stato delle tue licenze."
+msgstr ""
+
+#: templates/dashboard.html:56
+msgid "Apri i miei prodotti"
+msgstr ""
+
+#: templates/dashboard.html:61 templates/layout.html:210
+msgid "Logout"
+msgstr ""
+
 #: templates/expert_advisor.html:3 templates/expert_advisor.html:34
 #: templates/layout.html:162
 msgid "Expert Advisor"
@@ -96,11 +161,6 @@ msgstr ""
 
 #: templates/expert_advisor.html:142
 msgid "Algoritmo avanzato con logiche AI"
-msgstr ""
-
-#: templates/laboratorio.html:3 templates/laboratorio.html:97
-#: templates/layout.html:166
-msgid "Laboratorio"
 msgstr ""
 
 #: templates/laboratorio.html:56 templates/laboratorio.html:109
@@ -167,16 +227,8 @@ msgstr ""
 msgid "Forex Converter"
 msgstr ""
 
-#: templates/layout.html:192
-msgid "Dashboard"
-msgstr ""
-
 #: templates/layout.html:193
 msgid "Segnali"
-msgstr ""
-
-#: templates/layout.html:210
-msgid "Logout"
 msgstr ""
 
 #: templates/layout.html:228 templates/layout.html:279

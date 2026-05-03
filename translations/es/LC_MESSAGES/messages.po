@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Space-T 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 11:17+0200\n"
-"PO-Revision-Date: 2026-05-03 11:17+0200\n"
+"POT-Creation-Date: 2026-05-03 11:30+0200\n"
+"PO-Revision-Date: 2026-05-03 11:30+0200\n"
 "Last-Translator: Space-T\n"
 "Language: es\n"
 "Language-Team: es\n"
@@ -56,6 +56,74 @@ msgstr "Mensaje"
 msgid "Invia"
 msgstr "Enviar"
 
+#: templates/dashboard.html:3 templates/dashboard.html:9
+#: templates/layout.html:192
+msgid "Dashboard"
+msgstr "Panel"
+
+#: templates/dashboard.html:11
+msgid "Benvenuto"
+msgstr "Bienvenido"
+
+#: templates/dashboard.html:23
+msgid "Il sito è attualmente"
+msgstr "El sitio está actualmente"
+
+#: templates/dashboard.html:23
+msgid "in fase di sviluppo"
+msgstr "en fase de desarrollo"
+
+#: templates/dashboard.html:27
+msgid "Ti ringraziamo per la tua"
+msgstr "Te agradecemos tu"
+
+#: templates/dashboard.html:27
+msgid "pre-registrazione"
+msgstr "preinscripción"
+
+#: templates/dashboard.html:27
+msgid "e per far parte di questo progetto fin dall'inizio."
+msgstr "y por formar parte de este proyecto desde el principio."
+
+#: templates/dashboard.html:31
+msgid "Puoi già iniziare ad utilizzare gli strumenti disponibili all'interno del"
+msgstr "Ya puedes empezar a utilizar las herramientas disponibles dentro del"
+
+#: templates/dashboard.html:31 templates/laboratorio.html:3
+#: templates/laboratorio.html:97 templates/layout.html:166
+msgid "Laboratorio"
+msgstr "Laboratorio"
+
+#: templates/dashboard.html:35
+msgid ""
+"Stiamo lavorando costantemente per aggiungere nuove funzionalità e "
+"rendere la piattaforma un ambiente sempre più completo e adatto allo "
+"studio e alla ricerca quantitativa."
+msgstr ""
+"Estamos trabajando constantemente para añadir nuevas funcionalidades y "
+"convertir la plataforma en un entorno cada vez más completo, adecuado "
+"para el estudio y la investigación cuantitativa."
+
+#: templates/dashboard.html:48
+msgid "I miei prodotti"
+msgstr "Mis productos"
+
+#: templates/dashboard.html:51
+msgid "Accedi agli Expert Advisor acquistati o affittati, scarica i file"
+msgstr "Accede a los Expert Advisors comprados o alquilados, descarga los archivos"
+
+#: templates/dashboard.html:52
+msgid "i manuali PDF, i file SET e controlla lo stato delle tue licenze."
+msgstr "los manuales PDF, los archivos SET y controla el estado de tus licencias."
+
+#: templates/dashboard.html:56
+msgid "Apri i miei prodotti"
+msgstr "Abrir mis productos"
+
+#: templates/dashboard.html:61 templates/layout.html:210
+msgid "Logout"
+msgstr "Cerrar sesión"
+
 #: templates/expert_advisor.html:3 templates/expert_advisor.html:34
 #: templates/layout.html:162
 msgid "Expert Advisor"
@@ -94,11 +162,6 @@ msgstr "Operaciones rápidas en marcos temporales bajos"
 #: templates/expert_advisor.html:142
 msgid "Algoritmo avanzato con logiche AI"
 msgstr "Algoritmo avanzado con lógica de IA"
-
-#: templates/laboratorio.html:3 templates/laboratorio.html:97
-#: templates/layout.html:166
-msgid "Laboratorio"
-msgstr "Laboratorio"
 
 #: templates/laboratorio.html:56 templates/laboratorio.html:109
 msgid "Laboratorio Trading"
@@ -164,17 +227,9 @@ msgstr "Correlaciones"
 msgid "Forex Converter"
 msgstr "Conversor Forex"
 
-#: templates/layout.html:192
-msgid "Dashboard"
-msgstr "Panel"
-
 #: templates/layout.html:193
 msgid "Segnali"
 msgstr "Señales"
-
-#: templates/layout.html:210
-msgid "Logout"
-msgstr "Cerrar sesión"
 
 #: templates/layout.html:228 templates/layout.html:279
 msgid "Register"
