@@ -57,9 +57,8 @@ msgid "Invia"
 msgstr "Enviar"
 
 #: templates/correlazioni.html:3
-#, fuzzy
 msgid "Correlazioni Forex"
-msgstr "Correlações"
+msgstr "Correlações Forex"
 
 #: templates/correlazioni.html:9 templates/laboratorio.html:86
 msgid "Calcolatore Correlazioni"
@@ -67,69 +66,67 @@ msgstr "Calculadora de correlações"
 
 #: templates/correlazioni.html:10
 msgid "Analisi correlazione tra coppie Forex"
-msgstr ""
+msgstr "Análise de correlação entre pares Forex"
 
 #: templates/correlazioni.html:16
 msgid "Coppia principale:"
-msgstr ""
+msgstr "Par principal:"
 
 #: templates/correlazioni.html:40
 msgid "Timeframe:"
-msgstr ""
+msgstr "Timeframe:"
 
 #: templates/correlazioni.html:42
 msgid "5 Minuti"
-msgstr ""
+msgstr "5 minutos"
 
 #: templates/correlazioni.html:43
 msgid "15 Minuti"
-msgstr ""
+msgstr "15 minutos"
 
 #: templates/correlazioni.html:44
 msgid "30 Minuti"
-msgstr ""
+msgstr "30 minutos"
 
 #: templates/correlazioni.html:46
 msgid "1 Ora"
-msgstr ""
+msgstr "1 hora"
 
 #: templates/correlazioni.html:47
 msgid "4 Ore"
-msgstr ""
+msgstr "4 horas"
 
 #: templates/correlazioni.html:48
 msgid "Giornaliero"
-msgstr ""
+msgstr "Diário"
 
 #: templates/correlazioni.html:49
 msgid "Settimanale"
-msgstr ""
+msgstr "Semanal"
 
 #: templates/correlazioni.html:50
 msgid "Mensile"
-msgstr ""
+msgstr "Mensal"
 
 #: templates/correlazioni.html:56
 msgid "Numero periodi:"
-msgstr ""
+msgstr "Número de períodos:"
 
 #: templates/correlazioni.html:70
 msgid "Calcola"
-msgstr ""
+msgstr "Calcular"
 
 #: templates/correlazioni.html:79
-#, fuzzy
 msgid "Coppia"
-msgstr "Descobrir"
+msgstr "Par"
 
 #: templates/correlazioni.html:80
-#, fuzzy
 msgid "Correlazione"
-msgstr "Correlações"
+msgstr "Correlação"
 
 #: templates/correlazioni.html:91
 msgid "Caricamento..."
-msgstr ""
+msgstr "A carregar..."
 
 #: templates/correlazioni.html:92 templates/forex_converter.html:70
 msgid "Errore"
@@ -137,7 +134,7 @@ msgstr "Erro"
 
 #: templates/correlazioni.html:153
 msgid "* Correlazione calcolata con indice di Pearson sui rendimenti"
-msgstr ""
+msgstr "* Correlação calculada com o coeficiente de Pearson sobre os retornos"
 
 #: templates/dashboard.html:3 templates/dashboard.html:9
 #: templates/layout.html:192

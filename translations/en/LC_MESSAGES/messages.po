@@ -57,9 +57,8 @@ msgid "Invia"
 msgstr "Send"
 
 #: templates/correlazioni.html:3
-#, fuzzy
 msgid "Correlazioni Forex"
-msgstr "Correlations"
+msgstr "Forex Correlations"
 
 #: templates/correlazioni.html:9 templates/laboratorio.html:86
 msgid "Calcolatore Correlazioni"
@@ -67,69 +66,67 @@ msgstr "Correlation Calculator"
 
 #: templates/correlazioni.html:10
 msgid "Analisi correlazione tra coppie Forex"
-msgstr ""
+msgstr "Correlation analysis between Forex pairs"
 
 #: templates/correlazioni.html:16
 msgid "Coppia principale:"
-msgstr ""
+msgstr "Main pair:"
 
 #: templates/correlazioni.html:40
 msgid "Timeframe:"
-msgstr ""
+msgstr "Timeframe:"
 
 #: templates/correlazioni.html:42
 msgid "5 Minuti"
-msgstr ""
+msgstr "5 Minutes"
 
 #: templates/correlazioni.html:43
 msgid "15 Minuti"
-msgstr ""
+msgstr "15 Minutes"
 
 #: templates/correlazioni.html:44
 msgid "30 Minuti"
-msgstr ""
+msgstr "30 Minutes"
 
 #: templates/correlazioni.html:46
 msgid "1 Ora"
-msgstr ""
+msgstr "1 Hour"
 
 #: templates/correlazioni.html:47
 msgid "4 Ore"
-msgstr ""
+msgstr "4 Hours"
 
 #: templates/correlazioni.html:48
 msgid "Giornaliero"
-msgstr ""
+msgstr "Daily"
 
 #: templates/correlazioni.html:49
 msgid "Settimanale"
-msgstr ""
+msgstr "Weekly"
 
 #: templates/correlazioni.html:50
 msgid "Mensile"
-msgstr ""
+msgstr "Monthly"
 
 #: templates/correlazioni.html:56
 msgid "Numero periodi:"
-msgstr ""
+msgstr "Number of periods:"
 
 #: templates/correlazioni.html:70
 msgid "Calcola"
-msgstr ""
+msgstr "Calculate"
 
 #: templates/correlazioni.html:79
-#, fuzzy
 msgid "Coppia"
-msgstr "Discover"
+msgstr "Pair"
 
 #: templates/correlazioni.html:80
-#, fuzzy
 msgid "Correlazione"
-msgstr "Correlations"
+msgstr "Correlation"
 
 #: templates/correlazioni.html:91
 msgid "Caricamento..."
-msgstr ""
+msgstr "Loading..."
 
 #: templates/correlazioni.html:92 templates/forex_converter.html:70
 msgid "Errore"
@@ -137,7 +134,7 @@ msgstr "Error"
 
 #: templates/correlazioni.html:153
 msgid "* Correlazione calcolata con indice di Pearson sui rendimenti"
-msgstr ""
+msgstr "* Correlation calculated using the Pearson coefficient on returns"
 
 #: templates/dashboard.html:3 templates/dashboard.html:9
 #: templates/layout.html:192
