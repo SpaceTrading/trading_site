@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Space-T 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 11:41+0200\n"
+"POT-Creation-Date: 2026-05-03 11:51+0200\n"
 "PO-Revision-Date: 2026-05-03 11:30+0200\n"
 "Last-Translator: Space-T\n"
 "Language: en\n"
@@ -55,6 +55,89 @@ msgstr "Message"
 #: templates/contatti.html:115
 msgid "Invia"
 msgstr "Send"
+
+#: templates/correlazioni.html:3
+#, fuzzy
+msgid "Correlazioni Forex"
+msgstr "Correlations"
+
+#: templates/correlazioni.html:9 templates/laboratorio.html:86
+msgid "Calcolatore Correlazioni"
+msgstr "Correlation Calculator"
+
+#: templates/correlazioni.html:10
+msgid "Analisi correlazione tra coppie Forex"
+msgstr ""
+
+#: templates/correlazioni.html:16
+msgid "Coppia principale:"
+msgstr ""
+
+#: templates/correlazioni.html:40
+msgid "Timeframe:"
+msgstr ""
+
+#: templates/correlazioni.html:42
+msgid "5 Minuti"
+msgstr ""
+
+#: templates/correlazioni.html:43
+msgid "15 Minuti"
+msgstr ""
+
+#: templates/correlazioni.html:44
+msgid "30 Minuti"
+msgstr ""
+
+#: templates/correlazioni.html:46
+msgid "1 Ora"
+msgstr ""
+
+#: templates/correlazioni.html:47
+msgid "4 Ore"
+msgstr ""
+
+#: templates/correlazioni.html:48
+msgid "Giornaliero"
+msgstr ""
+
+#: templates/correlazioni.html:49
+msgid "Settimanale"
+msgstr ""
+
+#: templates/correlazioni.html:50
+msgid "Mensile"
+msgstr ""
+
+#: templates/correlazioni.html:56
+msgid "Numero periodi:"
+msgstr ""
+
+#: templates/correlazioni.html:70
+msgid "Calcola"
+msgstr ""
+
+#: templates/correlazioni.html:79
+#, fuzzy
+msgid "Coppia"
+msgstr "Discover"
+
+#: templates/correlazioni.html:80
+#, fuzzy
+msgid "Correlazione"
+msgstr "Correlations"
+
+#: templates/correlazioni.html:91
+msgid "Caricamento..."
+msgstr ""
+
+#: templates/correlazioni.html:92 templates/forex_converter.html:70
+msgid "Errore"
+msgstr "Error"
+
+#: templates/correlazioni.html:153
+msgid "* Correlazione calcolata con indice di Pearson sui rendimenti"
+msgstr ""
 
 #: templates/dashboard.html:3 templates/dashboard.html:9
 #: templates/layout.html:192
@@ -175,10 +258,6 @@ msgstr "Live currency conversion"
 msgid "Recupero prezzo..."
 msgstr "Fetching price..."
 
-#: templates/forex_converter.html:70
-msgid "Errore"
-msgstr "Error"
-
 #: templates/laboratorio.html:56 templates/laboratorio.html:109
 msgid "Laboratorio Trading"
 msgstr "Trading Laboratory"
@@ -190,10 +269,6 @@ msgstr "Professional tools for traders"
 #: templates/laboratorio.html:76
 msgid "Strumenti"
 msgstr "Tools"
-
-#: templates/laboratorio.html:86
-msgid "Calcolatore Correlazioni"
-msgstr "Correlation Calculator"
 
 #: templates/laboratorio.html:87
 msgid "Risk Manager"

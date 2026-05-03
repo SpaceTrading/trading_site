@@ -1,19 +1,19 @@
 {% extends "layout.html" %}
 
-{% block title %}Correlazioni Forex{% endblock %}
+{% block title %}{{ _("Correlazioni Forex") }}{% endblock %}
 
 {% block content %}
 
 <div class="container">
 
-    <h1>Calcolatore Correlazioni</h1>
-    <p>Analisi correlazione tra coppie Forex</p>
+    <h1>{{ _("Calcolatore Correlazioni") }}</h1>
+    <p>{{ _("Analisi correlazione tra coppie Forex") }}</p>
 
     <div class="card" style="display:flex; flex-direction:column; gap:20px; max-width:600px; margin:auto;">
 
         <!-- COPPIA -->
         <div>
-            <label>Coppia principale:</label>
+            <label>{{ _("Coppia principale:") }}</label>
             <select id="pair">
                 <option>EURUSD</option>
                 <option>GBPUSD</option>
@@ -37,23 +37,23 @@
 
         <!-- TIMEFRAME -->
         <div>
-            <label>Timeframe:</label>
+            <label>{{ _("Timeframe:") }}</label>
             <select id="timeframe">
-                <option value="5m">5 Minuti</option>
-                <option value="15m">15 Minuti</option>
-                <option value="30m">30 Minuti</option>   
+                <option value="5m">{{ _("5 Minuti") }}</option>
+                <option value="15m">{{ _("15 Minuti") }}</option>
+                <option value="30m">{{ _("30 Minuti") }}</option>   
 
-                <option value="1h">1 Ora</option>
-                <option value="4h">4 Ore</option>
-                <option value="1d">Giornaliero</option>
-                <option value="1wk">Settimanale</option> 
-                <option value="1mo">Mensile</option>     
+                <option value="1h">{{ _("1 Ora") }}</option>
+                <option value="4h">{{ _("4 Ore") }}</option>
+                <option value="1d">{{ _("Giornaliero") }}</option>
+                <option value="1wk">{{ _("Settimanale") }}</option> 
+                <option value="1mo">{{ _("Mensile") }}</option>     
             </select>
         </div>
 
         <!-- PERIODI -->
         <div>
-            <label>Numero periodi:</label>
+            <label>{{ _("Numero periodi:") }}</label>
             <input 
                 type="number" 
                 id="periods" 
@@ -67,7 +67,7 @@
         </div>
 
         <!-- BUTTON -->
-        <button onclick="calculate()">Calcola</button>
+        <button onclick="calculate()">{{ _("Calcola") }}</button>
 
     </div>
 
@@ -76,8 +76,8 @@
         <table id="results" style="width:100%; border-collapse:collapse;">
             <thead>
                 <tr>
-                    <th style="text-align:left;">Coppia</th>
-                    <th style="text-align:right;">Correlazione</th>
+                    <th style="text-align:left;">{{ _("Coppia") }}</th>
+                    <th style="text-align:right;">{{ _("Correlazione") }}</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -88,6 +88,9 @@
 
 <script>
 
+const TEXT_CARICAMENTO = "{{ _('Caricamento...') }}";
+const TEXT_ERRORE = "{{ _('Errore') }}";
+
 async function calculate() {
 
     let pair = document.getElementById("pair").value;
@@ -95,14 +98,14 @@ async function calculate() {
     let periods = parseInt(document.getElementById("periods").value);
 
     let tbody = document.querySelector("#results tbody");
-    tbody.innerHTML = "<tr><td colspan='2'>Caricamento...</td></tr>";
+    tbody.innerHTML = `<tr><td colspan="2">${TEXT_CARICAMENTO}</td></tr>`;
 
     try {
         let res = await fetch(`/api/correlations?pair=${pair}&tf=${tf}&periods=${periods}`);
         let data = await res.json();
 
         if (!data || data.error) {
-            tbody.innerHTML = "<tr><td colspan='2'>Errore</td></tr>";
+            tbody.innerHTML = `<tr><td colspan="2">${TEXT_ERRORE}</td></tr>`;
             return;
         }
 
@@ -130,7 +133,7 @@ async function calculate() {
         });
 
     } catch {
-        tbody.innerHTML = "<tr><td colspan='2'>Errore</td></tr>";
+        tbody.innerHTML = `<tr><td colspan="2">${TEXT_ERRORE}</td></tr>`;
     }
 }
 
@@ -147,7 +150,7 @@ async function calculate() {
     line-height: 1.4;
     opacity: 0.8;
 ">
-    <div>* Correlazione calcolata con indice di Pearson sui rendimenti</div>
+    <div>{{ _("* Correlazione calcolata con indice di Pearson sui rendimenti") }}</div>
     <div style="font-size: 12px; margin-top:4px;">
         r = cov(X,Y) / (σ<sub>X</sub> · σ<sub>Y</sub>)
     </div>
