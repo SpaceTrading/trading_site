@@ -172,15 +172,15 @@ msgstr "Forex-Konverter"
 
 #: templates/forex_converter.html:10
 msgid "Conversione live valute"
-msgstr ""
+msgstr "Live-Währungsumrechnung"
 
 #: templates/forex_converter.html:69
 msgid "Recupero prezzo..."
-msgstr ""
+msgstr "Preis wird abgerufen..."
 
 #: templates/forex_converter.html:70
 msgid "Errore"
-msgstr ""
+msgstr "Fehler"
 
 #: templates/laboratorio.html:56 templates/laboratorio.html:109
 msgid "Laboratorio Trading"
