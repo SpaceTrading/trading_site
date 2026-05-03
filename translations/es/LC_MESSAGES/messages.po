@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Space-T 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 11:30+0200\n"
+"POT-Creation-Date: 2026-05-03 11:41+0200\n"
 "PO-Revision-Date: 2026-05-03 11:30+0200\n"
 "Last-Translator: Space-T\n"
 "Language: es\n"
@@ -163,6 +163,23 @@ msgstr "Operaciones rápidas en marcos temporales bajos"
 msgid "Algoritmo avanzato con logiche AI"
 msgstr "Algoritmo avanzado con lógica de IA"
 
+#: templates/forex_converter.html:3 templates/forex_converter.html:9
+#: templates/laboratorio.html:85
+msgid "Convertitore Forex"
+msgstr "Conversor Forex"
+
+#: templates/forex_converter.html:10
+msgid "Conversione live valute"
+msgstr ""
+
+#: templates/forex_converter.html:69
+msgid "Recupero prezzo..."
+msgstr ""
+
+#: templates/forex_converter.html:70
+msgid "Errore"
+msgstr ""
+
 #: templates/laboratorio.html:56 templates/laboratorio.html:109
 msgid "Laboratorio Trading"
 msgstr "Laboratorio de trading"
@@ -174,10 +191,6 @@ msgstr "Herramientas profesionales para traders"
 #: templates/laboratorio.html:76
 msgid "Strumenti"
 msgstr "Herramientas"
-
-#: templates/laboratorio.html:85
-msgid "Convertitore Forex"
-msgstr "Conversor Forex"
 
 #: templates/laboratorio.html:86
 msgid "Calcolatore Correlazioni"
@@ -254,3 +267,4 @@ msgstr "Repetir contraseña"
 #: templates/layout.html:288
 msgid "Registrati"
 msgstr "Registrarse"
+

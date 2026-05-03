@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Space-T 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 11:30+0200\n"
+"POT-Creation-Date: 2026-05-03 11:41+0200\n"
 "PO-Revision-Date: 2026-05-03 11:30+0200\n"
 "Last-Translator: Space-T\n"
 "Language: fr\n"
@@ -100,9 +100,9 @@ msgid ""
 "rendere la piattaforma un ambiente sempre più completo e adatto allo "
 "studio e alla ricerca quantitativa."
 msgstr ""
-"Nous travaillons constamment pour ajouter de nouvelles fonctionnalités "
-"et faire de la plateforme un environnement toujours plus complet, adapté "
-"à l’étude et à la recherche quantitative."
+"Nous travaillons constamment pour ajouter de nouvelles fonctionnalités et"
+" faire de la plateforme un environnement toujours plus complet, adapté à "
+"l’étude et à la recherche quantitative."
 
 #: templates/dashboard.html:48
 msgid "I miei prodotti"
@@ -163,6 +163,23 @@ msgstr "Opérations rapides sur des timeframes courts"
 msgid "Algoritmo avanzato con logiche AI"
 msgstr "Algorithme avancé avec logiques IA"
 
+#: templates/forex_converter.html:3 templates/forex_converter.html:9
+#: templates/laboratorio.html:85
+msgid "Convertitore Forex"
+msgstr "Convertisseur Forex"
+
+#: templates/forex_converter.html:10
+msgid "Conversione live valute"
+msgstr ""
+
+#: templates/forex_converter.html:69
+msgid "Recupero prezzo..."
+msgstr ""
+
+#: templates/forex_converter.html:70
+msgid "Errore"
+msgstr ""
+
 #: templates/laboratorio.html:56 templates/laboratorio.html:109
 msgid "Laboratorio Trading"
 msgstr "Laboratoire de trading"
@@ -174,10 +191,6 @@ msgstr "Outils professionnels pour traders"
 #: templates/laboratorio.html:76
 msgid "Strumenti"
 msgstr "Outils"
-
-#: templates/laboratorio.html:85
-msgid "Convertitore Forex"
-msgstr "Convertisseur Forex"
 
 #: templates/laboratorio.html:86
 msgid "Calcolatore Correlazioni"
@@ -254,3 +267,4 @@ msgstr "Répéter le mot de passe"
 #: templates/layout.html:288
 msgid "Registrati"
 msgstr "S’inscrire"
+

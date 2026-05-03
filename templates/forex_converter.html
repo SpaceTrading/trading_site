@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 
-{% block title %}Convertitore Forex{% endblock %}
+{% block title %}{{ _("Convertitore Forex") }}{% endblock %}
 
 {% block content %}
 
 <div class="container">
 
-    <h1>Convertitore Forex</h1>
-    <p>Conversione live valute</p>
+    <h1>{{ _("Convertitore Forex") }}</h1>
+    <p>{{ _("Conversione live valute") }}</p>
 
     <div class="card" style="display:flex; align-items:center; gap:20px; justify-content:center;">
 
@@ -66,6 +66,9 @@ let currentRequest = 0;
 
 const cryptoList = ["BTC", "ETH", "SOL", "XRP", "ADA"];
 
+const TEXT_RECUPERO_PREZZO = "{{ _('Recupero prezzo...') }}";
+const TEXT_ERRORE = "{{ _('Errore') }}";
+
 // ===== SAFE FETCH =====
 async function safeFetch(url) {
     try {
@@ -118,8 +121,8 @@ async function convert() {
 
             async function getCryptoPrice(coin) {
             
-                const maxAttempts = 6;        // ~6 tentativi
-                const delayMs = 300;         // 300ms tra tentativi
+                const maxAttempts = 6;
+                const delayMs = 300;
             
                 for (let i = 0; i < maxAttempts; i++) {
             
@@ -129,11 +132,10 @@ async function convert() {
             
                     if (price !== null) return price;
             
-                    // attesa prima del retry
                     await new Promise(r => setTimeout(r, delayMs));
                 }
             
-                return null; // fallito dopo tot tentativi
+                return null;
             }
             
             let [priceFrom, priceTo] = await Promise.all([
@@ -145,7 +147,7 @@ async function convert() {
 
             if (priceFrom === null || priceTo === null) {
                 console.warn("Crypto fetch failed:", { priceFrom, priceTo });
-                document.getElementById("result").value = "Recupero prezzo...";
+                document.getElementById("result").value = TEXT_RECUPERO_PREZZO;
                 return;
             }
 
@@ -161,7 +163,7 @@ async function convert() {
             if (requestId !== currentRequest) return;
 
             if (price === null) {
-                document.getElementById("result").value = "Errore";
+                document.getElementById("result").value = TEXT_ERRORE;
                 return;
             }
 
@@ -179,7 +181,7 @@ async function convert() {
             if (requestId !== currentRequest) return;
 
             if (forex === null || crypto === null) {
-                document.getElementById("result").value = "Errore";
+                document.getElementById("result").value = TEXT_ERRORE;
                 return;
             }
 
@@ -195,7 +197,7 @@ async function convert() {
             if (requestId !== currentRequest) return;
 
             if (result === null) {
-                document.getElementById("result").value = "Errore";
+                document.getElementById("result").value = TEXT_ERRORE;
                 return;
             }
 
@@ -204,7 +206,7 @@ async function convert() {
 
     } catch (err) {
         console.log("ERRORE:", err);
-        document.getElementById("result").value = "Errore";
+        document.getElementById("result").value = TEXT_ERRORE;
     }
 }
 
@@ -228,7 +230,7 @@ function swap() {
     from.value = to.value;
     to.value = temp;
 
-    currentRequest++; // invalida richieste in corso
+    currentRequest++;
     convert();
 }
 
