@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: Space-T 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 10:58+0200\n"
-"PO-Revision-Date: 2026-05-02 20:59+0200\n"
+"PO-Revision-Date: 2026-05-03 10:58+0200\n"
 "Last-Translator: Space-T\n"
 "Language: fr\n"
 "Language-Team: fr\n"
@@ -21,11 +21,11 @@ msgstr "Expert Advisor"
 
 #: templates/expert_advisor.html:35
 msgid "Automazione avanzata per il trading"
-msgstr ""
+msgstr "Automatisation avancée pour le trading"
 
 #: templates/expert_advisor.html:41
 msgid "Inizia ora"
-msgstr ""
+msgstr "Commencer maintenant"
 
 #: templates/expert_advisor.html:42 templates/layout.html:227
 #: templates/layout.html:256
@@ -33,26 +33,25 @@ msgid "Login"
 msgstr "Connexion"
 
 #: templates/expert_advisor.html:61
-#, fuzzy
 msgid "Scopri i nostri Expert Advisor"
-msgstr "Expert Advisor"
+msgstr "Découvrez nos Expert Advisors"
 
 #: templates/expert_advisor.html:92
 msgid "Strategia trend following automatizzata"
-msgstr ""
+msgstr "Stratégie de suivi de tendance automatisée"
 
 #: templates/expert_advisor.html:94 templates/expert_advisor.html:119
 #: templates/expert_advisor.html:144
 msgid "Scopri"
-msgstr ""
+msgstr "Découvrir"
 
 #: templates/expert_advisor.html:117
 msgid "Operazioni rapide su timeframe bassi"
-msgstr ""
+msgstr "Opérations rapides sur des timeframes courts"
 
 #: templates/expert_advisor.html:142
 msgid "Algoritmo avanzato con logiche AI"
-msgstr ""
+msgstr "Algorithme avancé avec logiques IA"
 
 #: templates/laboratorio.html:3 templates/laboratorio.html:97
 #: templates/layout.html:166
@@ -166,4 +165,3 @@ msgstr "Répéter le mot de passe"
 #: templates/layout.html:288
 msgid "Registrati"
 msgstr "S’inscrire"
-

@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: Space-T 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 10:58+0200\n"
-"PO-Revision-Date: 2026-05-02 20:59+0200\n"
+"PO-Revision-Date: 2026-05-03 10:58+0200\n"
 "Last-Translator: Space-T\n"
 "Language: pt\n"
 "Language-Team: pt\n"
@@ -21,38 +21,37 @@ msgstr "Expert Advisor"
 
 #: templates/expert_advisor.html:35
 msgid "Automazione avanzata per il trading"
-msgstr ""
+msgstr "Automatização avançada para trading"
 
 #: templates/expert_advisor.html:41
 msgid "Inizia ora"
-msgstr ""
+msgstr "Começar agora"
 
 #: templates/expert_advisor.html:42 templates/layout.html:227
 #: templates/layout.html:256
 msgid "Login"
-msgstr "Login"
+msgstr "Iniciar sessão"
 
 #: templates/expert_advisor.html:61
-#, fuzzy
 msgid "Scopri i nostri Expert Advisor"
-msgstr "Expert Advisor"
+msgstr "Descubra os nossos Expert Advisors"
 
 #: templates/expert_advisor.html:92
 msgid "Strategia trend following automatizzata"
-msgstr ""
+msgstr "Estratégia automatizada de seguimento de tendência"
 
 #: templates/expert_advisor.html:94 templates/expert_advisor.html:119
 #: templates/expert_advisor.html:144
 msgid "Scopri"
-msgstr ""
+msgstr "Descobrir"
 
 #: templates/expert_advisor.html:117
 msgid "Operazioni rapide su timeframe bassi"
-msgstr ""
+msgstr "Operações rápidas em timeframes baixos"
 
 #: templates/expert_advisor.html:142
 msgid "Algoritmo avanzato con logiche AI"
-msgstr ""
+msgstr "Algoritmo avançado com lógicas de IA"
 
 #: templates/laboratorio.html:3 templates/laboratorio.html:97
 #: templates/layout.html:166
@@ -101,7 +100,7 @@ msgstr "Selecione uma ferramenta no menu à esquerda"
 
 #: templates/laboratorio.html:110
 msgid "Accedi per utilizzare strumenti avanzati"
-msgstr "Faça login para usar ferramentas avançadas"
+msgstr "Inicie sessão para utilizar ferramentas avançadas"
 
 #: templates/layout.html:161
 msgid "Home"
@@ -125,7 +124,7 @@ msgstr "Conversor Forex"
 
 #: templates/layout.html:189
 msgid "Contatti"
-msgstr "Contato"
+msgstr "Contactos"
 
 #: templates/layout.html:192
 msgid "Dashboard"
@@ -137,11 +136,11 @@ msgstr "Sinais"
 
 #: templates/layout.html:210
 msgid "Logout"
-msgstr "Sair"
+msgstr "Terminar sessão"
 
 #: templates/layout.html:228 templates/layout.html:279
 msgid "Register"
-msgstr "Registrar"
+msgstr "Registar"
 
 #: templates/layout.html:260 templates/layout.html:282
 msgid "Email"
@@ -149,7 +148,7 @@ msgstr "Email"
 
 #: templates/layout.html:262 templates/layout.html:283
 msgid "Password"
-msgstr "Senha"
+msgstr "Palavra-passe"
 
 #: templates/layout.html:266
 msgid "Accedi"
@@ -157,13 +156,12 @@ msgstr "Entrar"
 
 #: templates/layout.html:270
 msgid "Hai dimenticato la password?"
-msgstr "Esqueceu a senha?"
+msgstr "Esqueceu-se da palavra-passe?"
 
 #: templates/layout.html:284
 msgid "Ripeti Password"
-msgstr "Repetir senha"
+msgstr "Repetir palavra-passe"
 
 #: templates/layout.html:288
 msgid "Registrati"
-msgstr "Registrar-se"
-
+msgstr "Registar-se"
