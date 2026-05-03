@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Expert Advisor{% endblock %}
+{% block title %}{{ _("Expert Advisor") }}{% endblock %}
 
 {% block content %}
 
@@ -28,19 +28,19 @@
         color:white;
     ">
         <div class="hero-box" id="heroBox">
-        
 
             <span class="hero-close" onclick="closeHero()">✖</span>
-            <h1 style="font-size:32px;">Expert Advisor</h1>
-            <p>Automazione avanzata per il trading</p>
+
+            <h1 style="font-size:32px;">{{ _("Expert Advisor") }}</h1>
+            <p>{{ _("Automazione avanzata per il trading") }}</p>
 
             <br>
 
             {% if not current_user.is_authenticated %}
 
-            <button onclick="openRegister()">Inizia ora</button>
-            <button onclick="openLogin()">Login</button>
-            
+            <button onclick="openRegister()">{{ _("Inizia ora") }}</button>
+            <button onclick="openLogin()">{{ _("Login") }}</button>
+
             {% endif %}
         </div>
     </div>
@@ -58,7 +58,7 @@
         font-size:32px;
         margin-bottom:40px;
     ">
-        Scopri i nostri Expert Advisor
+        {{ _("Scopri i nostri Expert Advisor") }}
     </h2>
 
     <!-- GRID -->
@@ -77,7 +77,7 @@
             padding:20px;
             width:300px;
         ">
-            <img src="{{ url_for('static', filename='images/ea_bronze.png') }}" 
+            <img src="{{ url_for('static', filename='images/ea_bronze.png') }}"
                 style="
                     width:90px;
                     margin-bottom:18px;
@@ -86,12 +86,12 @@
                     margin-right:auto;
                     opacity:0.9;
                     filter: contrast(1.15) brightness(1.1);
-                "
-                           
-           <h3>EA Pegasus</h3>
-            <p>Strategia trend following automatizzata</p>
+                ">
+
+            <h3>EA Pegasus</h3>
+            <p>{{ _("Strategia trend following automatizzata") }}</p>
             <br>
-            <button>Scopri</button>
+            <button>{{ _("Scopri") }}</button>
         </div>
 
         <!-- CARD 2 -->
@@ -102,7 +102,7 @@
             padding:20px;
             width:300px;
         ">
-            <img src="{{ url_for('static', filename='images/ea_silver.png') }}" 
+            <img src="{{ url_for('static', filename='images/ea_silver.png') }}"
                 style="
                     width:90px;
                     margin-bottom:18px;
@@ -111,12 +111,12 @@
                     margin-right:auto;
                     opacity:0.9;
                     filter: contrast(1.15) brightness(1.1);
-                "
-                           
-           <h3>EA Centaurus</h3>
-            <p>Operazioni rapide su timeframe bassi</p>
+                ">
+
+            <h3>EA Centaurus</h3>
+            <p>{{ _("Operazioni rapide su timeframe bassi") }}</p>
             <br>
-            <button>Scopri</button>
+            <button>{{ _("Scopri") }}</button>
         </div>
 
         <!-- CARD 3 -->
@@ -127,7 +127,7 @@
             padding:20px;
             width:300px;
         ">
-            <img src="{{ url_for('static', filename='images/ea_gold.png') }}" 
+            <img src="{{ url_for('static', filename='images/ea_gold.png') }}"
                 style="
                     width:90px;
                     margin-bottom:18px;
@@ -136,12 +136,12 @@
                     margin-right:auto;
                     opacity:0.9;
                     filter: contrast(1.15) brightness(1.1);
-                "
-           
-           <h3>EA Cassiopeia</h3>
-            <p>Algoritmo avanzato con logiche AI</p>
+                ">
+
+            <h3>EA Cassiopeia</h3>
+            <p>{{ _("Algoritmo avanzato con logiche AI") }}</p>
             <br>
-            <button>Scopri</button>
+            <button>{{ _("Scopri") }}</button>
         </div>
 
     </div>
@@ -149,4 +149,3 @@
 </div>
 
 {% endblock %}
-

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Space-T 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-02 20:59+0200\n"
+"POT-Creation-Date: 2026-05-03 10:58+0200\n"
 "PO-Revision-Date: 2026-05-02 20:59+0200\n"
 "Last-Translator: Space-T\n"
 "Language: es\n"
@@ -13,6 +13,46 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
+
+#: templates/expert_advisor.html:3 templates/expert_advisor.html:34
+#: templates/layout.html:162
+msgid "Expert Advisor"
+msgstr "Expert Advisor"
+
+#: templates/expert_advisor.html:35
+msgid "Automazione avanzata per il trading"
+msgstr ""
+
+#: templates/expert_advisor.html:41
+msgid "Inizia ora"
+msgstr ""
+
+#: templates/expert_advisor.html:42 templates/layout.html:227
+#: templates/layout.html:256
+msgid "Login"
+msgstr "Iniciar sesión"
+
+#: templates/expert_advisor.html:61
+#, fuzzy
+msgid "Scopri i nostri Expert Advisor"
+msgstr "Expert Advisor"
+
+#: templates/expert_advisor.html:92
+msgid "Strategia trend following automatizzata"
+msgstr ""
+
+#: templates/expert_advisor.html:94 templates/expert_advisor.html:119
+#: templates/expert_advisor.html:144
+msgid "Scopri"
+msgstr ""
+
+#: templates/expert_advisor.html:117
+msgid "Operazioni rapide su timeframe bassi"
+msgstr ""
+
+#: templates/expert_advisor.html:142
+msgid "Algoritmo avanzato con logiche AI"
+msgstr ""
 
 #: templates/laboratorio.html:3 templates/laboratorio.html:97
 #: templates/layout.html:166
@@ -67,10 +107,6 @@ msgstr "Inicia sesión para utilizar herramientas avanzadas"
 msgid "Home"
 msgstr "Inicio"
 
-#: templates/layout.html:162
-msgid "Expert Advisor"
-msgstr "Expert Advisor"
-
 #: templates/layout.html:172
 msgid "Trading Tools"
 msgstr "Herramientas de trading"
@@ -103,10 +139,6 @@ msgstr "Señales"
 msgid "Logout"
 msgstr "Cerrar sesión"
 
-#: templates/layout.html:227 templates/layout.html:256
-msgid "Login"
-msgstr "Iniciar sesión"
-
 #: templates/layout.html:228 templates/layout.html:279
 msgid "Register"
 msgstr "Registro"
@@ -134,3 +166,4 @@ msgstr "Repetir contraseña"
 #: templates/layout.html:288
 msgid "Registrati"
 msgstr "Registrarse"
+
