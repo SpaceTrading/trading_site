@@ -62,10 +62,13 @@
     </div>
 
     <!-- FRECCIA SCROLL FOUNDING 100 -->
-    <a href="#founding-100" class="home-scroll-arrow" aria-label="Vai al programma Founding 100">
-        <span>Scopri Founding 100</span>
-        <strong>↓</strong>
-    </a>
+    <a href="#founding-100"
+        class="home-scroll-arrow"
+        aria-label="Vai al programma Founding 100"
+        onclick="scrollToFounding(event)">
+         <span>Scopri Founding 100</span>
+         <strong>↓</strong>
+     </a>
 
 </div>
 
@@ -271,6 +274,19 @@
 </section>
 
 <script>
+
+  function scrollToFounding(event) {
+    event.preventDefault();
+  
+    const target = document.getElementById("founding-100");
+    if (!target) return;
+  
+    target.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+  
   document.addEventListener("DOMContentLoaded", function () {
     const countdown = document.querySelector(".founding-countdown");
     if (!countdown) return;

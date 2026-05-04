@@ -1097,3 +1097,56 @@ h2{font-size:18px; color:#d7deea}
     text-align: center !important;
   }
 }
+
+/* =========================
+   FOUNDING ARROW MOBILE FIX
+   Solo telefono - non tocca desktop
+========================= */
+
+@media (max-width: 768px) {
+
+  .home-scroll-arrow {
+    bottom: 115px !important;          /* più alta rispetto al fondo */
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 99999 !important;        /* sopra canvas/overlay */
+    pointer-events: auto !important;  /* rende il click attivo */
+    cursor: pointer !important;
+    text-align: center;
+    color: #ffffff !important;
+    opacity: 1 !important;
+    animation: foundingArrowMobileFloat 1.6s ease-in-out infinite !important;
+  }
+
+  .home-scroll-arrow span,
+  .home-scroll-arrow strong {
+    pointer-events: none !important;  /* il click resta sull'a principale */
+  }
+
+  .home-scroll-arrow span {
+    font-size: 10px !important;
+    letter-spacing: 0.06em !important;
+  }
+
+  .home-scroll-arrow strong {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 18px !important;
+    background: rgba(5,7,12,0.82) !important;
+    border: 1px solid rgba(78,161,255,0.75) !important;
+    box-shadow: 0 0 28px rgba(78,161,255,0.45) !important;
+  }
+
+  #founding-100 {
+    scroll-margin-top: 80px;
+  }
+
+  @keyframes foundingArrowMobileFloat {
+    0%, 100% {
+      transform: translateX(-50%) translateY(0);
+    }
+    50% {
+      transform: translateX(-50%) translateY(8px);
+    }
+  }
+}
