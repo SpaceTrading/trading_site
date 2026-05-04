@@ -13,15 +13,8 @@
     position: relative;
 ">
 
-    <!-- overlay -->
-    <div style="
-        position:absolute;
-        top:0;
-        left:0;
-        width:100%;
-        height:100%;
-        background: rgba(0,0,0,0.65);
-    "></div>
+    <!-- overlay scuro -->
+    <div class="hero-overlay" id="heroOverlay"></div>
 
     <!-- contenuto -->
     <div style="
@@ -32,13 +25,13 @@
         text-align:center;
         color:white;
     ">
-        <div style="
-            background: rgba(0,0,0,0.6);
-            padding:25px 30px;
-            border-radius:12px;
-        ">
+        <div class="hero-box" id="heroBox">
+
+            <span class="hero-close" onclick="closeHero()">✖</span>
+    
             <h1>{{ _("Contatti") }}</h1>
             <p>{{ _("Hai domande o richieste? Scrivici") }}</p>
+
         </div>
     </div>
 
