@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}{{ _("Monte Carlo") }}{% endblock %}
+{% block title %}Monte Carlo{% endblock %}
 
 {% block content %}
 
@@ -14,23 +14,23 @@
     <!-- CONTENUTO -->
     <div style="flex:1; padding:40px;">
 
-        <h1>{{ _("Simulatore Monte Carlo") }}</h1>
+        <h1>Simulatore Monte Carlo</h1>
 
         <br>
 
         <!-- UPLOAD -->
         <input type="file" id="fileInput" accept=".html,.xlsx,.csv">
-        <button onclick="uploadFile()" class="btn">{{ _("Carica Report") }}</button>
+        <button onclick="uploadFile()" class="btn">Carica Report</button>
         <p id="uploadStatus"></p>
 
         <hr>
 
         <!-- SIM -->
-        <label>{{ _("Simulazioni:") }}</label>
+        <label>Simulazioni:</label>
         <input type="number" id="sims" value="1000" min="10" max="10000" step="10">
 
         <button id="runBtn" onclick="runMonteCarlo()" class="btn primary">
-            {{ _("Avvia Simulazione") }}
+            Avvia Simulazione
         </button>
 
         <hr>
@@ -50,24 +50,27 @@
             color:#cbd5e1;
         ">
         
-            <h3 style="margin-top:0; color:#e5e7eb;">{{ _("Come leggere il grafico Monte Carlo") }}</h3>
+            <h3 style="margin-top:0; color:#e5e7eb;">Come leggere il grafico Monte Carlo</h3>
         
             <p>
-                {{ _("Il simulatore prende la lista dei trade del backtest e rimescola l’ordine delle operazioni centinaia o migliaia di volte. Ogni linea mostra una possibile evoluzione alternativa dell’equity curve.") }}
+                Il simulatore prende la lista dei trade del backtest e rimescola l’ordine delle operazioni
+                centinaia o migliaia di volte. Ogni linea mostra una possibile evoluzione alternativa
+                dell’equity curve.
             </p>
         
             <p>
-                <span style="color:#3b82f6;">● {{ _("Blu") }}</span> → {{ _("equity originale del backtest reale") }}<br>
-                <span style="color:#10b981;">● {{ _("Verde") }}</span> → {{ _("curva mediana delle simulazioni") }}<br>
-                <span style="color:#ef4444;">● {{ _("Rosso") }}</span> → {{ _("scenario peggiore tra il 5% finale delle simulazioni") }}<br>
-                <span style="color:#f59e0b;">● {{ _("Giallo") }}</span> → {{ _("scenario migliore tra il 5% finale delle simulazioni") }}<br>
-                <span style="color:#94a3b8;">● {{ _("Grigio") }}</span> → {{ _("campione di simulazioni casuali usate come nuvola statistica") }}
+                <span style="color:#3b82f6;">● Blu</span> → equity originale del backtest reale<br>
+                <span style="color:#10b981;">● Verde</span> → curva mediana delle simulazioni<br>
+                <span style="color:#ef4444;">● Rosso</span> → scenario peggiore tra il 5% finale delle simulazioni<br>
+                <span style="color:#f59e0b;">● Giallo</span> → scenario migliore tra il 5% finale delle simulazioni<br>
+                <span style="color:#94a3b8;">● Grigio</span> → campione di simulazioni casuali usate come nuvola statistica
             </p>
         
             <p style="margin-bottom:0;">
-                {{ _("Se la curva originale resta dentro la nuvola grigia, il backtest è coerente con gli scenari simulati. Se invece è molto fuori dalla nuvola, può indicare instabilità, fortuna statistica o overfitting.") }}
+                Se la curva originale resta dentro la nuvola grigia, il backtest è coerente con gli scenari simulati.
+                Se invece è molto fuori dalla nuvola, può indicare instabilità, fortuna statistica o overfitting.
             </p>
-                    
+        
         </div>
         
         <hr>
@@ -100,7 +103,7 @@
                     onclick="downloadMonteCarloCSV()"
                     class="btn primary"
                     style="display:none;">
-                {{ _("Download CSV") }}
+                Download CSV
             </button>
         </div>
         
@@ -109,7 +112,7 @@
 
     {% else %}
     <div style="width:100%; text-align:center; padding:100px 20px;">
-        <h1>{{ _("Accesso richiesto") }}</h1>
+        <h1>Accesso richiesto</h1>
     </div>
     {% endif %}
 
@@ -119,27 +122,6 @@
 
 let trades = []
 let lastMonteCarloData = null
-
-const TEXT_SELEZIONA_FILE = "{{ _('Seleziona un file') }}";
-const TEXT_TRADES_CARICATI = "{{ _('Trades caricati') }}";
-const TEXT_CARICA_PRIMA_FILE = "{{ _('Carica prima un file e attendi il caricamento') }}";
-const TEXT_NUMERO_VALIDO_SIM = "{{ _('Inserisci un numero valido (10 - 10.000)') }}";
-const TEXT_SIM_IN_CORSO = "{{ _('Simulazione in corso...') }}";
-const TEXT_AVVIA_SIM = "{{ _('Avvia Simulazione') }}";
-const TEXT_ERRORE_SERVER = "{{ _('Errore server') }}";
-const TEXT_ERRORE_CONN_SERVER = "{{ _('Errore di connessione server') }}";
-const TEXT_NESSUNA_METRICA = "{{ _('Nessuna metrica disponibile') }}";
-const TEXT_ESEGUI_PRIMA_MC = "{{ _('Esegui prima una simulazione Monte Carlo') }}";
-
-const TEXT_ADVANCED_METRICS = "{{ _('Advanced Metrics') }}";
-const TEXT_NUMERO_TRADE = "{{ _('Numero di Trade') }}";
-const TEXT_FREQUENZA = "{{ _('Frequenza') }}";
-const TEXT_NUMERO_TRADE_RECUPERO = "{{ _('Numero di trade per recupero') }}";
-
-const TEXT_DRAWDOWN_DISTRIBUTION = "{{ _('Drawdown Distribution') }}";
-const TEXT_TIME_TO_RECOVERY_DISTRIBUTION = "{{ _('Time to Recovery Distribution') }}";
-const TEXT_BOOTSTRAP_SIMULATION = "{{ _('Bootstrap Simulation') }}";
-const TEXT_MONTE_CARLO_SIMULATION = "{{ _('Monte Carlo Simulation') }}";
 
 // =========================
 // UPLOAD FILE
@@ -153,7 +135,7 @@ function uploadFile() {
     const file = document.getElementById("fileInput").files[0];
 
     if (!file) {
-        alert(TEXT_SELEZIONA_FILE);
+        alert("Seleziona un file");
         return;
     }
 
@@ -180,7 +162,7 @@ function uploadFile() {
         trades = data.trades;
 
         document.getElementById("uploadStatus").innerText =
-            TEXT_TRADES_CARICATI + ": " + trades.length;
+            "Trades caricati: " + trades.length;
     });
 }
 
@@ -190,7 +172,7 @@ function uploadFile() {
 function runMonteCarlo() {
 
     if (trades.length === 0) {
-        alert(TEXT_CARICA_PRIMA_FILE)
+        alert("Carica prima un file e attendi il caricamento")
         return
     }
 
@@ -199,13 +181,13 @@ function runMonteCarlo() {
     const sims = parseInt(simsInput.value)
 
     if (isNaN(sims) || sims < 10 || sims > 10000) {
-        alert(TEXT_NUMERO_VALIDO_SIM)
+        alert("Inserisci un numero valido (10 - 10.000)")
         return
     }
 
     // UX: blocca bottone
     btn.disabled = true
-    btn.innerText = TEXT_SIM_IN_CORSO
+    btn.innerText = "Simulazione in corso..."
 
     fetch("/api/montecarlo/run", {
         method: "POST",
@@ -217,7 +199,7 @@ function runMonteCarlo() {
         credentials: "include"  //
     })
     .then(res => {
-        if (!res.ok) throw new Error(TEXT_ERRORE_SERVER)
+        if (!res.ok) throw new Error("Errore server")
         return res.json()
     })
     .then(data => {
@@ -242,11 +224,11 @@ function runMonteCarlo() {
     })
     .catch(err => {
         console.error(err)
-        alert(TEXT_ERRORE_CONN_SERVER)
+        alert("Errore di connessione server")
     })
     .finally(() => {
         btn.disabled = false
-        btn.innerText = TEXT_AVVIA_SIM
+        btn.innerText = "Avvia Simulazione"
     })
 }
 
@@ -261,7 +243,7 @@ function drawDrawdownChart(data) {
     }
 
     Plotly.newPlot("drawdown-chart", [trace], {
-        title: TEXT_DRAWDOWN_DISTRIBUTION,
+        title: "Drawdown Distribution",
         paper_bgcolor: "#0f172a",
         plot_bgcolor: "#0f172a",
         font: {color: "#e5e7eb"}
@@ -279,16 +261,16 @@ function drawTTRChart(data) {
     }
 
     const layout = {
-        title: TEXT_TIME_TO_RECOVERY_DISTRIBUTION,
+        title: "Time to Recovery Distribution",
         paper_bgcolor: "#0f172a",
         plot_bgcolor: "#0f172a",
         font: {color: "#e5e7eb"},
         xaxis: {
-            title: TEXT_NUMERO_TRADE_RECUPERO,
+            title: "Numero di trade per recupero",
             gridcolor: "#1e293b"
         },
         yaxis: {
-            title: TEXT_FREQUENZA,
+            title: "Frequenza",
             gridcolor: "#1e293b"
         }
     }
@@ -311,7 +293,7 @@ function drawBootstrapChart(data) {
     })
 
     Plotly.newPlot("bootstrap-chart", traces, {
-        title: TEXT_BOOTSTRAP_SIMULATION,
+        title: "Bootstrap Simulation",
         paper_bgcolor: "#0f172a",
         plot_bgcolor: "#0f172a",
         font: {color: "#e5e7eb"}
@@ -329,7 +311,7 @@ function drawRiskTable(data) {
     const m = data.advanced_metrics
 
     if (!m) {
-        document.getElementById("risk-table").innerHTML = TEXT_NESSUNA_METRICA;
+        document.getElementById("risk-table").innerHTML = "Nessuna metrica disponibile";
         return;
     }
     
@@ -348,7 +330,7 @@ function drawRiskTable(data) {
     }
 
     const html = `
-        <h3>${TEXT_ADVANCED_METRICS}</h3>
+        <h3>Advanced Metrics</h3>
 
         <table style="width:100%; margin-top:10px; border-collapse: collapse;">
 
@@ -442,7 +424,7 @@ Esempio: ${m.robustness_ratio.toFixed(1)} → valori bassi indicano rischio di o
 function downloadMonteCarloCSV() {
 
     if (!lastMonteCarloData) {
-        alert(TEXT_ESEGUI_PRIMA_MC)
+        alert("Esegui prima una simulazione Monte Carlo")
         return
     }
 
@@ -600,12 +582,12 @@ function drawChart(data) {
     })
 
     const layout = {
-        title: TEXT_MONTE_CARLO_SIMULATION,
+        title: "Monte Carlo Simulation",
         paper_bgcolor: "#0f172a",
         plot_bgcolor: "#0f172a",
         font: {color: "#e5e7eb"},
         xaxis: {
-            title: TEXT_NUMERO_TRADE,
+            title: "Numero di Trade",
             gridcolor: "#1e293b"
         },
         yaxis: {
