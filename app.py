@@ -1714,15 +1714,21 @@ def register():
 
 @app.route("/forgot-password", methods=["GET", "POST"])
 def forgot_password():
+
+    # GET: mostra solo la pagina dove inserire l'email
+    if request.method == "GET":
+        return render_template("forgot_password.html")
+
+    # POST: processa l'email inserita dall'utente
     email = request.form.get("email", "").strip().lower()
 
-    if not email:
+    if not email or "@" not in email or "." not in email:
         flash("Inserisci una email valida.", "error")
-        return redirect(url_for("home"))
+        return redirect(url_for("forgot_password"))
 
     user = User.query.filter_by(email=email).first()
 
-    # NON riveliamo se email esiste (anti enumeration)
+    # NON riveliamo se l'email esiste davvero, per evitare enumerazione account
     if user:
         token = secrets.token_urlsafe(32)
 
@@ -1735,7 +1741,6 @@ def forgot_password():
         db.session.add(reset)
         db.session.commit()
 
-        # link reset
         reset_link = url_for("reset_password", token=token, _external=True)
 
         try:
@@ -1753,7 +1758,7 @@ def forgot_password():
         except Exception as e:
             print("EMAIL RESET ERROR:", e)
 
-    flash("Presto riceverai un link per il reset della password.", "success")
+    flash("Se l'email è registrata, riceverai un link per il reset della password.", "success")
     return redirect(url_for("home"))
 
 @app.route("/reset-password/<token>", methods=["GET", "POST"])
