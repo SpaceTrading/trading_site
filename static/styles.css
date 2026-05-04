@@ -608,3 +608,70 @@ h2{font-size:18px; color:#d7deea}
   font-size: 22px;
   cursor: pointer;
 }
+
+/* =========================
+   RISK DISCLAIMER / LEGAL NOTICE
+========================= */
+
+.risk-disclaimer {
+  background: #05070c;
+  padding: 60px 20px;
+  border-top: 1px solid #22304a;
+}
+
+.risk-disclaimer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: rgba(18, 24, 38, 0.78);
+  border: 1px solid #22304a;
+  border-radius: 16px;
+  padding: 34px 38px;
+  color: #cbd5e1;
+  box-shadow: 0 18px 45px rgba(0,0,0,0.35);
+  line-height: 1.65;
+}
+
+.risk-disclaimer h2 {
+  font-size: 20px;
+  color: #e6e9ef;
+  margin: 0 0 18px 0;
+}
+
+.risk-disclaimer h3 {
+  font-size: 15px;
+  color: #e6e9ef;
+  margin: 26px 0 10px 0;
+  border-left: 3px solid #4ea1ff;
+  padding-left: 10px;
+}
+
+.risk-disclaimer p {
+  font-size: 13px;
+  color: #9aa3b2;
+  margin: 0 0 12px 0;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .risk-disclaimer {
+    padding: 35px 14px;
+  }
+
+  .risk-disclaimer-inner {
+    padding: 24px 18px;
+    border-radius: 12px;
+  }
+
+  .risk-disclaimer h2 {
+    font-size: 18px;
+  }
+
+  .risk-disclaimer h3 {
+    font-size: 14px;
+  }
+
+  .risk-disclaimer p {
+    font-size: 12px;
+    line-height: 1.6;
+  }
+}
