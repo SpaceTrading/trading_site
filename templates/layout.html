@@ -96,15 +96,36 @@
         textEl.style.opacity = 1;
       }, 250);
     }
+    
+    function getLoaderMessageDuration(message) {
+      const cleanText = (message || "").replace(/\s+/g, " ").trim();
+      const lineCount = (message.match(/\n/g) || []).length + 1;
+    
+      // Frasi lunghe o multilinea: almeno 5 secondi
+      if (cleanText.length >= 120 || lineCount >= 3) {
+        return 5000;
+      }
+    
+      // Frasi corte: tempo attuale
+      return 2500;
+    }
   
     document.addEventListener("DOMContentLoaded", () => {
       let i = Math.floor(Math.random() * loaderMessages.length);
       setLoaderMessage(i);
-  
-      window.spaceTLoaderInterval = setInterval(() => {
-        i++;
-        setLoaderMessage(i);
-      }, 2500);
+    
+      function scheduleNextLoaderMessage() {
+        const currentMessage = loaderMessages[i % loaderMessages.length];
+        const delay = getLoaderMessageDuration(currentMessage);
+    
+        window.spaceTLoaderTimeout = setTimeout(() => {
+          i++;
+          setLoaderMessage(i);
+          scheduleNextLoaderMessage();
+        }, delay);
+      }
+    
+      scheduleNextLoaderMessage();
     });
   
     window.addEventListener("load", () => {
@@ -116,8 +137,8 @@
       const remaining = Math.max(0, minVisibleMs - elapsed);
   
       setTimeout(() => {
-        if (window.spaceTLoaderInterval) {
-          clearInterval(window.spaceTLoaderInterval);
+        if (window.spaceTLoaderTimeout) {
+          clearTimeout(window.spaceTLoaderTimeout);
         }
   
         loader.style.opacity = "0";
