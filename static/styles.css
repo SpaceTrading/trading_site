@@ -961,3 +961,139 @@ h2{font-size:18px; color:#d7deea}
     padding: 24px 20px;
   }
 }
+
+/* =========================
+   FOUNDING 100 MOBILE OVERRIDE
+   Solo telefono - non tocca desktop
+========================= */
+
+@media (max-width: 768px) {
+
+  .home-scroll-arrow {
+    bottom: 22px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 50 !important;
+    font-size: 10px !important;
+    max-width: 90%;
+    text-align: center;
+  }
+
+  .home-scroll-arrow span {
+    display: block;
+    font-size: 10px !important;
+    letter-spacing: 0.06em;
+  }
+
+  .home-scroll-arrow strong {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 17px !important;
+    background: rgba(5,7,12,0.72) !important;
+  }
+
+  .founding-section {
+    padding: 44px 14px !important;
+    background:
+      radial-gradient(circle at top left, rgba(78,161,255,0.20), transparent 42%),
+      #05070c !important;
+  }
+
+  .founding-wrap {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    max-width: 100% !important;
+  }
+
+  .founding-main,
+  .founding-side {
+    width: 100% !important;
+    border-radius: 16px !important;
+  }
+
+  .founding-main {
+    padding: 24px 18px !important;
+  }
+
+  .founding-badge {
+    font-size: 10px !important;
+    padding: 6px 9px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .founding-main h2 {
+    font-size: 26px !important;
+    line-height: 1.12 !important;
+    margin-bottom: 14px !important;
+  }
+
+  .founding-lead {
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+    margin-bottom: 22px !important;
+  }
+
+  .founding-countdown {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+    margin-bottom: 22px !important;
+  }
+
+  .founding-countdown div {
+    padding: 14px 8px !important;
+    border-radius: 14px !important;
+  }
+
+  .founding-countdown strong {
+    font-size: 25px !important;
+  }
+
+  .founding-countdown span {
+    font-size: 10px !important;
+  }
+
+  .founding-cta-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+
+  .founding-cta {
+    width: 100% !important;
+    text-align: center !important;
+    padding: 13px 14px !important;
+  }
+
+  .founding-micro {
+    max-width: 100% !important;
+    text-align: center !important;
+    font-size: 11px !important;
+  }
+
+  .founding-side {
+    padding: 22px 18px !important;
+  }
+
+  .founding-side h3 {
+    font-size: 16px !important;
+  }
+
+  .founding-benefit {
+    padding: 13px 0 !important;
+  }
+
+  .founding-benefit strong {
+    font-size: 13px !important;
+  }
+
+  .founding-benefit span {
+    font-size: 12px !important;
+  }
+
+  .founding-note {
+    font-size: 12px !important;
+    text-align: center !important;
+  }
+}
