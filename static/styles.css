@@ -344,14 +344,14 @@ h2{font-size:18px; color:#d7deea}
     display: none !important;
   }
 
-  /* ===== LANGUAGE SWITCHER MOBILE ENABLED ===== */
+  /* ===== LANGUAGE SWITCHER MOBILE ENABLED / COLLAPSIBLE ===== */
   .lang-switcher {
     width: 100%;
     padding-bottom: 0 !important;
     margin-bottom: 0 !important;
     text-align: center;
   }
-
+  
   .lang-switcher .dropbtn {
     display: flex !important;
     justify-content: center;
@@ -360,9 +360,10 @@ h2{font-size:18px; color:#d7deea}
     padding: 12px 0;
     border-bottom: 1px solid #1e2a3a;
   }
-
+  
+  /* da mobile la lista lingue resta chiusa */
   .lang-switcher .dropdown-content {
-    display: flex !important;
+    display: none !important;
     flex-direction: column;
     position: static !important;
     background: transparent !important;
@@ -373,7 +374,12 @@ h2{font-size:18px; color:#d7deea}
     min-width: 0 !important;
     width: 100% !important;
   }
-
+  
+  /* si apre solo quando JS aggiunge .lang-open */
+  .lang-switcher.lang-open .dropdown-content {
+    display: flex !important;
+  }
+  
   .lang-switcher .dropdown-content a {
     display: flex !important;
     justify-content: center;
@@ -384,7 +390,7 @@ h2{font-size:18px; color:#d7deea}
     font-size: 14px !important;
     color: #cbd5e1 !important;
   }
-
+  
   .lang-switcher .dropdown-content a:hover {
     background: transparent !important;
     color: white !important;
