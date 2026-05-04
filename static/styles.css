@@ -1106,7 +1106,7 @@ h2{font-size:18px; color:#d7deea}
 @media (max-width: 768px) {
 
   .home-scroll-arrow {
-    bottom: 130px !important;          /* più alta rispetto al fondo */
+    bottom: 150px !important;          /* più alta rispetto al fondo */
     left: 50% !important;
     transform: translateX(-50%) !important;
     z-index: 99999 !important;        /* sopra canvas/overlay */
