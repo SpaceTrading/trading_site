@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-05-03 12:50+0200\n"
+"POT-Creation-Date: 2026-05-04 08:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -272,7 +272,7 @@ msgstr ""
 msgid "Risk Manager"
 msgstr ""
 
-#: templates/laboratorio.html:88
+#: templates/laboratorio.html:88 templates/montecarlo.html:17
 msgid "Simulatore Monte Carlo"
 msgstr ""
 
@@ -338,6 +338,158 @@ msgstr ""
 
 #: templates/layout.html:288
 msgid "Registrati"
+msgstr ""
+
+#: templates/montecarlo.html:3
+msgid "Monte Carlo"
+msgstr ""
+
+#: templates/montecarlo.html:23
+msgid "Carica Report"
+msgstr ""
+
+#: templates/montecarlo.html:29
+msgid "Simulazioni:"
+msgstr ""
+
+#: templates/montecarlo.html:33 templates/montecarlo.html:128
+msgid "Avvia Simulazione"
+msgstr ""
+
+#: templates/montecarlo.html:53
+msgid "Come leggere il grafico Monte Carlo"
+msgstr ""
+
+#: templates/montecarlo.html:56
+msgid ""
+"Il simulatore prende la lista dei trade del backtest e rimescola l’ordine"
+" delle operazioni centinaia o migliaia di volte. Ogni linea mostra una "
+"possibile evoluzione alternativa dell’equity curve."
+msgstr ""
+
+#: templates/montecarlo.html:60
+msgid "Blu"
+msgstr ""
+
+#: templates/montecarlo.html:60
+msgid "equity originale del backtest reale"
+msgstr ""
+
+#: templates/montecarlo.html:61
+msgid "Verde"
+msgstr ""
+
+#: templates/montecarlo.html:61
+msgid "curva mediana delle simulazioni"
+msgstr ""
+
+#: templates/montecarlo.html:62
+msgid "Rosso"
+msgstr ""
+
+#: templates/montecarlo.html:62
+#, python-format
+msgid "scenario peggiore tra il 5% finale delle simulazioni"
+msgstr ""
+
+#: templates/montecarlo.html:63
+msgid "Giallo"
+msgstr ""
+
+#: templates/montecarlo.html:63
+#, python-format
+msgid "scenario migliore tra il 5% finale delle simulazioni"
+msgstr ""
+
+#: templates/montecarlo.html:64
+msgid "Grigio"
+msgstr ""
+
+#: templates/montecarlo.html:64
+msgid "campione di simulazioni casuali usate come nuvola statistica"
+msgstr ""
+
+#: templates/montecarlo.html:68
+msgid ""
+"Se la curva originale resta dentro la nuvola grigia, il backtest è "
+"coerente con gli scenari simulati. Se invece è molto fuori dalla nuvola, "
+"può indicare instabilità, fortuna statistica o overfitting."
+msgstr ""
+
+#: templates/montecarlo.html:103
+msgid "Download CSV"
+msgstr ""
+
+#: templates/montecarlo.html:112
+msgid "Accesso richiesto"
+msgstr ""
+
+#: templates/montecarlo.html:123
+msgid "Seleziona un file"
+msgstr ""
+
+#: templates/montecarlo.html:124
+msgid "Trades caricati"
+msgstr ""
+
+#: templates/montecarlo.html:125
+msgid "Carica prima un file e attendi il caricamento"
+msgstr ""
+
+#: templates/montecarlo.html:126
+msgid "Inserisci un numero valido (10 - 10.000)"
+msgstr ""
+
+#: templates/montecarlo.html:127
+msgid "Simulazione in corso..."
+msgstr ""
+
+#: templates/montecarlo.html:129
+msgid "Errore server"
+msgstr ""
+
+#: templates/montecarlo.html:130
+msgid "Errore di connessione server"
+msgstr ""
+
+#: templates/montecarlo.html:131
+msgid "Nessuna metrica disponibile"
+msgstr ""
+
+#: templates/montecarlo.html:132
+msgid "Esegui prima una simulazione Monte Carlo"
+msgstr ""
+
+#: templates/montecarlo.html:134
+msgid "Advanced Metrics"
+msgstr ""
+
+#: templates/montecarlo.html:135
+msgid "Numero di Trade"
+msgstr ""
+
+#: templates/montecarlo.html:136
+msgid "Frequenza"
+msgstr ""
+
+#: templates/montecarlo.html:137
+msgid "Numero di trade per recupero"
+msgstr ""
+
+#: templates/montecarlo.html:139
+msgid "Drawdown Distribution"
+msgstr ""
+
+#: templates/montecarlo.html:140
+msgid "Time to Recovery Distribution"
+msgstr ""
+
+#: templates/montecarlo.html:141
+msgid "Bootstrap Simulation"
+msgstr ""
+
+#: templates/montecarlo.html:142
+msgid "Monte Carlo Simulation"
 msgstr ""
 
 #: templates/risk_manager.html:9
