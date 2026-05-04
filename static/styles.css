@@ -203,6 +203,9 @@ h2{font-size:18px; color:#d7deea}
   border: 1px solid #22304a;
   border-radius: 10px;
   padding: 10px;
+
+  /* IMPORTANTE:
+     niente margin-top, altrimenti si crea un vuoto tra bottone e menu */
   margin-top: 0;
 
   z-index: 999;
@@ -212,6 +215,15 @@ h2{font-size:18px; color:#d7deea}
 /* hover */
 .dropdown:hover .dropdown-content {
   display: block;
+}
+
+.dropdown::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
+  height: 8px;
 }
 
 /* sezioni */
@@ -451,7 +463,7 @@ h2{font-size:18px; color:#d7deea}
     border-radius: 10px;
   }
 
-  /* sposta tutto più in alto */
+  /* sposta tutto pi  in alto */
   .hero-box {
     margin-top: -40px;
   }
@@ -461,7 +473,7 @@ h2{font-size:18px; color:#d7deea}
     background: rgba(0,0,0,0.55) !important;
   }
 
-  /* testo più compatto */
+  /* testo pi  compatto */
   .hero-box h1 {
     font-size: 22px !important;
   }
