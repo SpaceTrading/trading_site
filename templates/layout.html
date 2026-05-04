@@ -135,6 +135,14 @@
 </head>
 
 <body>
+  {% set language_flags = {
+    "it": "🇮🇹",
+    "en": "🇬🇧",
+    "fr": "🇫🇷",
+    "es": "🇪🇸",
+    "de": "🇩🇪",
+    "pt": "🇵🇹"
+  } %}
 
   <!-- LOADER -->
   <div id="appLoader">
@@ -195,13 +203,13 @@
       
         <div class="dropdown lang-switcher">
           <a href="javascript:void(0)" class="dropbtn">
-            🌐 {{ current_language|upper }} <span class="lab-arrow">▾</span>
+            {{ language_flags.get(current_language, "🌐") }} {{ current_language|upper }} <span class="lab-arrow">▾</span>
           </a>
-      
+        
           <div class="dropdown-content lang-menu">
             {% for code, label in supported_languages.items() %}
               <a href="{{ url_for('set_language', lang_code=code) }}">
-                {{ code|upper }} — {{ label }}
+                {{ language_flags.get(code, "🌐") }} {{ code|upper }} — {{ label }}
               </a>
             {% endfor %}
           </div>
@@ -212,13 +220,13 @@
       
         <div class="dropdown lang-switcher">
           <a href="javascript:void(0)" class="dropbtn">
-            🌐 {{ current_language|upper }} <span class="lab-arrow">▾</span>
+            {{ language_flags.get(current_language, "🌐") }} {{ current_language|upper }} <span class="lab-arrow">▾</span>
           </a>
-      
+        
           <div class="dropdown-content lang-menu">
             {% for code, label in supported_languages.items() %}
               <a href="{{ url_for('set_language', lang_code=code) }}">
-                {{ code|upper }} — {{ label }}
+                {{ language_flags.get(code, "🌐") }} {{ code|upper }} — {{ label }}
               </a>
             {% endfor %}
           </div>
