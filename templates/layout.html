@@ -135,13 +135,13 @@
 </head>
 
 <body>
-  {% set language_flags = {
-    "it": "🇮🇹",
-    "en": "🇬🇧",
-    "fr": "🇫🇷",
-    "es": "🇪🇸",
-    "de": "🇩🇪",
-    "pt": "🇵🇹"
+  {% set language_flag_codes = {
+    "it": "it",
+    "en": "gb",
+    "fr": "fr",
+    "es": "es",
+    "de": "de",
+    "pt": "pt"
   } %}
 
   <!-- LOADER -->
@@ -202,14 +202,22 @@
         <!-- <a href="{{ url_for('licensing.my_products') }}">I miei prodotti</a> -->
       
         <div class="dropdown lang-switcher">
-          <a href="javascript:void(0)" class="dropbtn">
-            {{ language_flags.get(current_language, "🌐") }} {{ current_language|upper }} <span class="lab-arrow">▾</span>
+          <a href="javascript:void(0)" class="dropbtn" style="display:flex; align-items:center; gap:6px;">
+            <img src="https://flagcdn.com/w20/{{ language_flag_codes.get(current_language, 'it') }}.png"
+                 alt="{{ current_language|upper }}"
+                 style="width:20px; height:14px; object-fit:cover; border-radius:2px;">
+            <span>{{ current_language|upper }}</span>
+            <span class="lab-arrow">▾</span>
           </a>
         
           <div class="dropdown-content lang-menu">
             {% for code, label in supported_languages.items() %}
-              <a href="{{ url_for('set_language', lang_code=code) }}">
-                {{ language_flags.get(code, "🌐") }} {{ code|upper }} — {{ label }}
+              <a href="{{ url_for('set_language', lang_code=code) }}"
+                 style="display:flex; align-items:center; gap:8px;">
+                <img src="https://flagcdn.com/w20/{{ language_flag_codes.get(code, 'it') }}.png"
+                     alt="{{ code|upper }}"
+                     style="width:20px; height:14px; object-fit:cover; border-radius:2px;">
+                <span>{{ code|upper }} — {{ label }}</span>
               </a>
             {% endfor %}
           </div>
