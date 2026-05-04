@@ -14,7 +14,7 @@ from sicurezza.ip_tracker import register_failure, register_success
 from sicurezza.turnstile import verify_turnstile
 from flask_babel import Babel, gettext as _
 
-resend.api_key = os.environ.get("re_XmoZNh36_7KGpqnEDDKxH3PwUHKmVC8Ko")
+resend.api_key = os.environ.get("RESEND_API_KEY")
 
 from flask import Flask, render_template, redirect, url_for, request, flash, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
@@ -1756,7 +1756,7 @@ def forgot_password():
                 """
             })
         except Exception as e:
-            print("EMAIL RESET ERROR:", e)
+            print("EMAIL RESET ERROR:", repr(e))
 
     flash("Se l'email è registrata, riceverai un link per il reset della password.", "success")
     return redirect(url_for("home"))
