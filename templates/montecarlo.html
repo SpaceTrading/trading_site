@@ -414,102 +414,51 @@ function drawBootstrapChart(data) {
     })
 }
 
-function showMetricInfo(event, htmlText) {
+// =========================
+// METRIC INFO POPUP - MINIMAL DIRECT CLICK
+// =========================
+
+function openMetricInfo(event, el) {
     event.preventDefault()
     event.stopPropagation()
 
     const box = document.getElementById("metric-info-box")
-    if (!box) return
-
-    box.innerHTML = htmlText
-    box.style.display = "block"
-
-    const rect = event.currentTarget.getBoundingClientRect()
-
-    let left = rect.left + window.scrollX + 18
-    let top = rect.top + window.scrollY + 22
-
-    // evita uscita laterale su schermi piccoli
-    if (left + 380 > window.scrollX + window.innerWidth) {
-        left = window.scrollX + window.innerWidth - 390
-    }
-
-    if (left < 10) {
-        left = 10
-    }
-
-    box.style.left = left + "px"
-    box.style.top = top + "px"
-}
-
-function hideMetricInfo() {
-    const box = document.getElementById("metric-info-box")
-    if (!box) return
-    box.style.display = "none"
-}
-
-document.addEventListener("click", function () {
-    hideMetricInfo()
-})
-
-window.addEventListener("scroll", function () {
-    hideMetricInfo()
-}, true)
-
-function metricInfoIcon(htmlText) {
-    return `<span class="metric-info" data-info="${encodeURIComponent(htmlText)}" style="
-        cursor:pointer;
-        color:#60a5fa;
-        margin-left:6px;
-        font-weight:bold;
-        user-select:none;
-    ">(i)</span>`
-}
-
-function bindMetricInfoIcons() {
-    document.querySelectorAll(".metric-info").forEach(el => {
-        el.onclick = function (event) {
-            const text = decodeURIComponent(this.getAttribute("data-info"))
-            showMetricInfo(event, text)
-        }
-    })
-}
-
-// =========================
-// METRIC INFO POPUP
-// =========================
-
-function showMetricInfo(event, htmlText) {
-    if (event) {
-        event.preventDefault()
-        event.stopPropagation()
-    }
-
-    const box = document.getElementById("metric-info-box")
     if (!box) {
         console.error("metric-info-box non trovato")
-        return
+        return false
     }
+
+    const raw = el.getAttribute("data-info") || ""
+    const htmlText = decodeURIComponent(raw)
 
     box.innerHTML = htmlText
     box.style.display = "block"
 
-    const target = event.currentTarget || event.target
-    const rect = target.getBoundingClientRect()
+    const rect = el.getBoundingClientRect()
 
-    let left = rect.left + window.scrollX + 18
-    let top = rect.top + window.scrollY + 22
-
-    if (left + 380 > window.scrollX + window.innerWidth) {
-        left = window.scrollX + window.innerWidth - 390
+    let left = rect.left + 18
+    let top = rect.bottom + 8
+    
+    if (left + 380 > window.innerWidth) {
+        left = window.innerWidth - 390
     }
-
+    
     if (left < 10) {
         left = 10
     }
-
+    
+    if (top + 260 > window.innerHeight) {
+        top = rect.top - 260
+    }
+    
+    if (top < 10) {
+        top = 10
+    }
+    
     box.style.left = left + "px"
     box.style.top = top + "px"
+
+    return false
 }
 
 function hideMetricInfo() {
@@ -519,30 +468,34 @@ function hideMetricInfo() {
 }
 
 function metricInfoIcon(htmlText) {
-    return `<span class="metric-info" data-info="${encodeURIComponent(htmlText)}" style="
-        cursor:pointer;
-        color:#60a5fa;
-        margin-left:6px;
-        font-weight:bold;
-        user-select:none;
-    ">(i)</span>`
+    return `<button type="button"
+        class="metric-info"
+        data-info="${encodeURIComponent(htmlText)}"
+        onclick="return openMetricInfo(event, this)"
+        style="
+            cursor:pointer;
+            color:#60a5fa;
+            margin-left:6px;
+            font-weight:bold;
+            user-select:none;
+            background:transparent;
+            border:none;
+            padding:0;
+            font:inherit;
+        ">(i)</button>`
 }
 
+// Manteniamo la funzione perché drawRiskTable/drawEquityRiskTable la chiamano.
+// Ora non serve più fare binding manuale.
 function bindMetricInfoIcons() {
-    document.querySelectorAll(".metric-info").forEach(el => {
-        el.onclick = function (event) {
-            const text = decodeURIComponent(this.getAttribute("data-info") || "")
-            showMetricInfo(event, text)
-            return false
-        }
-    })
+    return
 }
 
 document.addEventListener("click", function (event) {
     const box = document.getElementById("metric-info-box")
     if (!box) return
 
-    if (event.target.classList && event.target.classList.contains("metric-info")) {
+    if (event.target.closest && event.target.closest(".metric-info")) {
         return
     }
 
