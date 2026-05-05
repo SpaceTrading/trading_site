@@ -1864,14 +1864,24 @@ def login():
         return redirect(url_for("dashboard"))
 
     if request.method == "POST":
+        ip = request.remote_addr
+        status = check_request(ip)
+
+        if status == "blocked":
+            flash("Troppi tentativi. Riprova più tardi.", "error")
+            return render_template("login.html")
+
         email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "")
 
         u = User.query.filter_by(email=email).first()
+
         if not u or not u.check_password(password):
+            register_failure(ip)
             flash("Credenziali non valide.", "error")
             return render_template("login.html")
 
+        register_success(ip)
         login_user(u)
         return redirect(url_for("dashboard"))
 
