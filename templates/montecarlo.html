@@ -26,20 +26,92 @@
         <hr>
 
         <!-- SIM -->
-        <label>Simulazioni:</label>
-        <input type="number" id="sims" value="1000" min="10" max="10000" step="10">
-
+        <div style="
+            background:#111827;
+            border:1px solid #22304a;
+            border-radius:12px;
+            padding:20px;
+            margin-top:10px;
+            max-width:720px;
+        ">
+        
+            <h3 style="margin-top:0; color:#e5e7eb;">Parametri simulazione</h3>
+        
+            <div style="
+                display:grid;
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                gap:15px;
+                align-items:end;
+            ">
+        
+                <div>
+                    <label style="display:block; margin-bottom:6px;">Simulazioni:</label>
+                    <input type="number" id="sims" value="1000" min="10" max="10000" step="10"
+                        style="
+                            width:100%;
+                            padding:10px;
+                            border-radius:8px;
+                            border:1px solid #22304a;
+                            background:#0b1220;
+                            color:white;
+                        ">
+                </div>
+        
+                <div>
+                    <label style="display:block; margin-bottom:6px;">Capitale iniziale:</label>
+                    <input type="number" id="initialCapital" value="10000" min="100" step="100"
+                        style="
+                            width:100%;
+                            padding:10px;
+                            border-radius:8px;
+                            border:1px solid #22304a;
+                            background:#0b1220;
+                            color:white;
+                        ">
+                </div>
+        
+                <div>
+                    <label style="display:block; margin-bottom:6px;">Soglia rovina %:</label>
+                    <input type="number" id="ruinPct" value="30" min="1" max="95" step="1"
+                        style="
+                            width:100%;
+                            padding:10px;
+                            border-radius:8px;
+                            border:1px solid #22304a;
+                            background:#0b1220;
+                            color:white;
+                        ">
+                </div>
+        
+            </div>
+        
+            <p style="
+                margin-top:14px;
+                margin-bottom:0;
+                color:#9ca3af;
+                font-size:13px;
+                line-height:1.5;
+            ">
+                Usa lo stesso capitale iniziale del backtest per valutare il rischio reale del report caricato.
+                Modifica questo valore solo se vuoi simulare uno scenario “what-if” con un capitale diverso.
+            </p>
+        
+        </div>
+        
+        <br>
+        
         <button id="runBtn" onclick="runMonteCarlo()" class="btn primary">
             Avvia Simulazione
         </button>
-
+        
         <hr>
 
         <!-- GRAFICO -->
         <div id="mc-chart" style="width:100%; height:600px;"></div>
         
         <!-- SPIEGAZIONE GRAFICO -->
-        <div style="
+        <div id="mcLegendBox" style="
+            display:none;
             margin-top:20px;
             background:#111827;
             border:1px solid #22304a;
@@ -53,22 +125,22 @@
             <h3 style="margin-top:0; color:#e5e7eb;">Come leggere il grafico Monte Carlo</h3>
         
             <p>
-                Il simulatore prende la lista dei trade del backtest e rimescola l’ordine delle operazioni
+                Il simulatore prende la lista dei trade del backtest e rimescola lâ€™ordine delle operazioni
                 centinaia o migliaia di volte. Ogni linea mostra una possibile evoluzione alternativa
-                dell’equity curve.
+                dellâ€™equity curve.
             </p>
         
             <p>
-                <span style="color:#3b82f6;">● Blu</span> → equity originale del backtest reale<br>
-                <span style="color:#10b981;">● Verde</span> → curva mediana delle simulazioni<br>
-                <span style="color:#ef4444;">● Rosso</span> → scenario peggiore tra il 5% finale delle simulazioni<br>
-                <span style="color:#f59e0b;">● Giallo</span> → scenario migliore tra il 5% finale delle simulazioni<br>
-                <span style="color:#94a3b8;">● Grigio</span> → campione di simulazioni casuali usate come nuvola statistica
+                <span style="color:#3b82f6;">â—� Blu</span> â†’ equity originale del backtest reale<br>
+                <span style="color:#10b981;">â—� Verde</span> â†’ curva mediana delle simulazioni<br>
+                <span style="color:#ef4444;">â—� Rosso</span> â†’ scenario peggiore tra il 5% finale delle simulazioni<br>
+                <span style="color:#f59e0b;">â—� Giallo</span> â†’ scenario migliore tra il 5% finale delle simulazioni<br>
+                <span style="color:#94a3b8;">â—� Grigio</span> â†’ campione di simulazioni casuali usate come nuvola statistica
             </p>
         
             <p style="margin-bottom:0;">
-                Se la curva originale resta dentro la nuvola grigia, il backtest è coerente con gli scenari simulati.
-                Se invece è molto fuori dalla nuvola, può indicare instabilità, fortuna statistica o overfitting.
+                Se la curva originale resta dentro la nuvola grigia, il backtest Ã¨ coerente con gli scenari simulati.
+                Se invece Ã¨ molto fuori dalla nuvola, puÃ² indicare instabilitÃ , fortuna statistica o overfitting.
             </p>
         
         </div>
@@ -81,6 +153,15 @@
         <div id="ttr-chart" style="height:400px;"></div>
         
         <div id="risk-table" style="
+            margin-top:20px;
+            background:#111827;
+            border:1px solid #22304a;
+            border-radius:12px;
+            padding:20px;
+        "></div>
+        
+        <div id="equity-risk-table" style="
+            display:none;
             margin-top:20px;
             background:#111827;
             border:1px solid #22304a;
@@ -178,10 +259,25 @@ function runMonteCarlo() {
 
     const btn = document.getElementById("runBtn")
     const simsInput = document.getElementById("sims")
+    const initialCapitalInput = document.getElementById("initialCapital")
+    const ruinPctInput = document.getElementById("ruinPct")
+    
     const sims = parseInt(simsInput.value)
-
+    const initialCapital = parseFloat(initialCapitalInput.value)
+    const ruinPct = parseFloat(ruinPctInput.value)
+    
     if (isNaN(sims) || sims < 10 || sims > 10000) {
-        alert("Inserisci un numero valido (10 - 10.000)")
+        alert("Inserisci un numero valido di simulazioni (10 - 10.000)")
+        return
+    }
+    
+    if (isNaN(initialCapital) || initialCapital < 100) {
+        alert("Inserisci un capitale iniziale valido")
+        return
+    }
+    
+    if (isNaN(ruinPct) || ruinPct < 1 || ruinPct > 95) {
+        alert("Inserisci una soglia di rovina valida (1% - 95%)")
         return
     }
 
@@ -194,7 +290,9 @@ function runMonteCarlo() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             trades: trades,
-            simulations: sims
+            simulations: sims,
+            initial_capital: initialCapital,
+            ruin_pct: ruinPct
         }),
         credentials: "include"  //
     })
@@ -216,7 +314,13 @@ function runMonteCarlo() {
         drawTTRChart(data)
         drawBootstrapChart(data)
         drawRiskTable(data)
+        drawEquityRiskTable(data)
         
+        const legendBox = document.getElementById("mcLegendBox")
+        if (legendBox) {
+            legendBox.style.display = "block"
+        }
+                
         const downloadBtn = document.getElementById("downloadCsvBtn")
         if (downloadBtn) {
             downloadBtn.style.display = "inline-flex"
@@ -335,74 +439,74 @@ function drawRiskTable(data) {
         <table style="width:100%; margin-top:10px; border-collapse: collapse;">
 
             <tr>
-                <td>Sharpe ${info(`Sharpe Ratio: misura il rapporto tra profitto medio e variabilità dei trade.
-Esempio: ${m.sharpe.toFixed(3)} → il sistema genera in media ${m.sharpe.toFixed(3)} unità di profitto per unità di variabilità.`)}</td>
+                <td>Sharpe ${info(`Sharpe Ratio: misura il rapporto tra profitto medio e variabilitÃ  dei trade.
+Esempio: ${m.sharpe.toFixed(3)} â†’ il sistema genera in media ${m.sharpe.toFixed(3)} unitÃ  di profitto per unitÃ  di variabilitÃ .`)}</td>
                 <td>${m.sharpe.toFixed(3)}</td>
             </tr>
 
             <tr>
-                <td>Sortino ${info(`Sortino Ratio: misura il rendimento rispetto alla sola volatilità negativa.
-Esempio: ${m.sortino.toFixed(3)} → il sistema è ${m.sortino.toFixed(3)} volte efficiente considerando solo il rischio di perdita.`)}</td>
+                <td>Sortino ${info(`Sortino Ratio: misura il rendimento rispetto alla sola volatilitÃ  negativa.
+Esempio: ${m.sortino.toFixed(3)} â†’ il sistema Ã¨ ${m.sortino.toFixed(3)} volte efficiente considerando solo il rischio di perdita.`)}</td>
                 <td>${m.sortino.toFixed(3)}</td>
             </tr>
 
             <tr>
                 <td>Calmar ${info(`Calmar Ratio: rapporto tra profitto totale e massimo drawdown.
-Esempio: ${m.calmar.toFixed(3)} → il sistema genera ${m.calmar.toFixed(3)} unità di profitto per ogni unità di drawdown subito.`)}</td>
+Esempio: ${m.calmar.toFixed(3)} â†’ il sistema genera ${m.calmar.toFixed(3)} unitÃ  di profitto per ogni unitÃ  di drawdown subito.`)}</td>
                 <td>${m.calmar.toFixed(3)}</td>
             </tr>
 
             <tr>
-                <td>Ulcer Index ${info(`Ulcer Index: misura intensità e durata dei drawdown.
-Esempio: ${m.ulcer_index.toFixed(2)} → più è alto, più la strategia resta a lungo in perdita.`)}</td>
+                <td>Ulcer Index ${info(`Ulcer Index: misura intensitÃ  e durata dei drawdown.
+Esempio: ${m.ulcer_index.toFixed(2)} â†’ piÃ¹ Ã¨ alto, piÃ¹ la strategia resta a lungo in perdita.`)}</td>
                 <td>${m.ulcer_index.toFixed(3)}</td>
             </tr>
 
             <tr>
                 <td>CDaR ${info(`Conditional Drawdown at Risk: media dei peggiori drawdown (worst 5%).
-Esempio: ${m.cdar.toFixed(2)} → nei peggiori scenari, il drawdown medio è circa ${m.cdar.toFixed(2)}.`)}</td>
+Esempio: ${m.cdar.toFixed(2)} â†’ nei peggiori scenari, il drawdown medio Ã¨ circa ${m.cdar.toFixed(2)}.`)}</td>
                 <td>${m.cdar.toFixed(3)}</td>
             </tr>
 
             <tr>
-                <td>Probability of Ruin ${info(`Probability of Ruin: probabilità che l’equity scenda sotto la soglia critica durante la simulazione.
-Esempio: ${(m.probability_of_ruin*100).toFixed(2)}% → circa ${(m.probability_of_ruin*100).toFixed(0)} simulazioni su 1000 hanno raggiunto la soglia di rovina.`)}</td>
+                <td>Probability of Ruin ${info(`Probability of Ruin: probabilitÃ  che lâ€™equity scenda sotto la soglia critica durante la simulazione.
+Esempio: ${(m.probability_of_ruin*100).toFixed(2)}% â†’ circa ${(m.probability_of_ruin*100).toFixed(0)} simulazioni su 1000 hanno raggiunto la soglia di rovina.`)}</td>
                 <td>${(m.probability_of_ruin*100).toFixed(2)}%</td>
             </tr>
             
             <tr>
                 <td>Terminal Wealth Volatility ${info(`Terminal Wealth Volatility: dispersione dei risultati finali delle simulazioni.
-Esempio: ${m.twv.toFixed(2)} → più è alto, più i risultati finali sono incerti e variabili.`)}</td>
+Esempio: ${m.twv.toFixed(2)} â†’ piÃ¹ Ã¨ alto, piÃ¹ i risultati finali sono incerti e variabili.`)}</td>
                 <td>${m.twv.toFixed(2)}</td>
             </tr>
 
             <tr>
                 <td>VaR 95% ${info(`Value at Risk 95%: soglia sotto la quale cadono i peggiori risultati (5% dei casi).
-Esempio: ${m.var_95.toFixed(2)} → nel 5% dei casi, il risultato finale è inferiore a ${m.var_95.toFixed(2)}.`)}</td>
+Esempio: ${m.var_95.toFixed(2)} â†’ nel 5% dei casi, il risultato finale Ã¨ inferiore a ${m.var_95.toFixed(2)}.`)}</td>
                 <td>${m.var_95.toFixed(2)}</td>
             </tr>
 
             <tr>
                 <td>CVaR ${info(`CVaR: media delle perdite nei peggiori scenari (oltre il VaR).
-Esempio: ${m.cvar.toFixed(2)} → nei casi estremi, la perdita media è circa ${m.cvar.toFixed(2)}.`)}</td>
+Esempio: ${m.cvar.toFixed(2)} â†’ nei casi estremi, la perdita media Ã¨ circa ${m.cvar.toFixed(2)}.`)}</td>
                 <td>${m.cvar.toFixed(2)}</td>
             </tr>
             
             <tr>
                 <td>Noise Sensitivity ${info(`Noise Sensitivity: misura quanto la strategia cambia sotto piccoli disturbi casuali.
-Esempio: ${m.noise_sensitivity.toFixed(2)} → valori vicini a 1 indicano stabilità, valori molto bassi indicano possibile fragilità.`)}</td>
+Esempio: ${m.noise_sensitivity.toFixed(2)} â†’ valori vicini a 1 indicano stabilitÃ , valori molto bassi indicano possibile fragilitÃ .`)}</td>
                 <td>${m.noise_sensitivity.toFixed(2)}</td>
             </tr>
 
             <tr>
                 <td>Sharpe Haircut ${info(`Sharpe Haircut: versione prudenziale dello Sharpe, ridotta per considerare overfitting.
-Esempio: ${m.sharpe_haircut.toFixed(2)} → valori bassi indicano che l’edge potrebbe ridursi in condizioni reali.`)}</td>
+Esempio: ${m.sharpe_haircut.toFixed(2)} â†’ valori bassi indicano che lâ€™edge potrebbe ridursi in condizioni reali.`)}</td>
                 <td>${m.sharpe_haircut.toFixed(2)}</td>
             </tr>
 
             <tr>
-                <td>Robustness Ratio ${info(`Robustness Ratio: rapporto tra numero di trade e complessità stimata della strategia.
-Esempio: ${m.robustness_ratio.toFixed(1)} → valori bassi indicano rischio di overfitting, valori alti maggiore affidabilità statistica.`)}</td>
+                <td>Robustness Ratio ${info(`Robustness Ratio: rapporto tra numero di trade e complessitÃ  stimata della strategia.
+Esempio: ${m.robustness_ratio.toFixed(1)} â†’ valori bassi indicano rischio di overfitting, valori alti maggiore affidabilitÃ  statistica.`)}</td>
                 <td>${m.robustness_ratio.toFixed(1)}</td>
             </tr>
 
@@ -419,6 +523,109 @@ Esempio: ${m.robustness_ratio.toFixed(1)} → valori bassi indicano rischio di o
             })
         })
     }, 0)
+}
+
+function drawEquityRiskTable(data) {
+
+    const box = document.getElementById("equity-risk-table")
+    if (!box) return
+
+    const m = data.equity_based_metrics
+
+    // Il backend non è ancora stato aggiornato:
+    // in questo caso la card resta semplicemente nascosta.
+    if (!m) {
+        box.style.display = "none"
+        box.innerHTML = ""
+        return
+    }
+
+    function safeNumber(value, decimals = 2) {
+        const n = Number(value)
+        if (!Number.isFinite(n)) return "-"
+        return n.toFixed(decimals)
+    }
+
+    function safeMoney(value) {
+        const n = Number(value)
+        if (!Number.isFinite(n)) return "-"
+        return n.toLocaleString("it-IT", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        })
+    }
+
+    const html = `
+        <h3 style="margin-top:0;">Equity-Based Risk Analysis</h3>
+
+        <p style="
+            color:#9ca3af;
+            font-size:13px;
+            line-height:1.5;
+            margin-top:0;
+            margin-bottom:15px;
+        ">
+            Metriche calcolate partendo dal capitale iniziale inserito.
+            Sono utili per stimare drawdown percentuale, rischio di rovina e impatto reale sul conto.
+        </p>
+
+        <table style="width:100%; margin-top:10px; border-collapse: collapse;">
+
+            <tr>
+                <td>Initial Capital</td>
+                <td>${safeMoney(m.initial_capital)}</td>
+            </tr>
+
+            <tr>
+                <td>Ruin Threshold</td>
+                <td>${safeNumber(m.ruin_pct, 2)}%</td>
+            </tr>
+
+            <tr>
+                <td>Original Max Drawdown %</td>
+                <td>${safeNumber(m.original_max_drawdown_pct, 2)}%</td>
+            </tr>
+
+            <tr>
+                <td>Median Max Drawdown %</td>
+                <td>${safeNumber(m.median_max_drawdown_pct, 2)}%</td>
+            </tr>
+
+            <tr>
+                <td>Worst 5% Max Drawdown %</td>
+                <td>${safeNumber(m.worst_95_max_drawdown_pct, 2)}%</td>
+            </tr>
+
+            <tr>
+                <td>Ulcer Index %</td>
+                <td>${safeNumber(m.ulcer_index_pct, 2)}%</td>
+            </tr>
+
+            <tr>
+                <td>Probability of Ruin %</td>
+                <td>${safeNumber(m.probability_of_ruin_pct * 100, 2)}%</td>
+            </tr>
+
+            <tr>
+                <td>Median Final Equity</td>
+                <td>${safeMoney(m.median_final_equity)}</td>
+            </tr>
+
+            <tr>
+                <td>Worst 5% Final Equity</td>
+                <td>${safeMoney(m.worst_5_final_equity)}</td>
+            </tr>
+
+            <tr>
+                <td>Return Stability Ratio</td>
+                <td>${safeNumber(m.return_stability_ratio, 3)}</td>
+            </tr>
+
+        </table>
+    `
+
+    box.innerHTML = html
+    box.style.display = "block"
 }
 
 function downloadMonteCarloCSV() {
