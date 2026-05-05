@@ -1213,3 +1213,30 @@ h2{font-size:18px; color:#d7deea}
   }
 
 }
+
+/* =========================
+   EXPERT ADVISOR HERO CLOSE MOBILE FIX
+   Solo pagina Expert Advisor: X dentro la finestra nera
+========================= */
+
+@media (max-width: 768px) {
+
+  .expert-hero-box .hero-close {
+    top: 10px !important;
+    right: 12px !important;
+    width: auto !important;
+    height: auto !important;
+
+    display: block !important;
+
+    font-size: 18px !important;
+    line-height: 1 !important;
+    color: white !important;
+
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+}
