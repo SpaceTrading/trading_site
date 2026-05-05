@@ -1221,15 +1221,21 @@ h2{font-size:18px; color:#d7deea}
 
 @media (max-width: 768px) {
 
+  .expert-hero-box {
+    width: min(340px, 88vw) !important;
+    max-width: 340px !important;
+    padding: 34px 22px 18px 22px !important;
+  }
+
   .expert-hero-box .hero-close {
     top: 10px !important;
-    right: 4px !important;
+    right: 14px !important;
     width: auto !important;
     height: auto !important;
 
     display: block !important;
 
-    font-size: 18px !important;
+    font-size: 20px !important;
     line-height: 1 !important;
     color: white !important;
 
