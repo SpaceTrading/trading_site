@@ -475,9 +475,15 @@ function bindMetricInfoIcons() {
     })
 }
 
+// =========================
+// METRIC INFO POPUP
+// =========================
+
 function showMetricInfo(event, htmlText) {
-    event.preventDefault()
-    event.stopPropagation()
+    if (event) {
+        event.preventDefault()
+        event.stopPropagation()
+    }
 
     const box = document.getElementById("metric-info-box")
     if (!box) {
@@ -488,7 +494,8 @@ function showMetricInfo(event, htmlText) {
     box.innerHTML = htmlText
     box.style.display = "block"
 
-    const rect = event.currentTarget.getBoundingClientRect()
+    const target = event.currentTarget || event.target
+    const rect = target.getBoundingClientRect()
 
     let left = rect.left + window.scrollX + 18
     let top = rect.top + window.scrollY + 22
@@ -526,11 +533,23 @@ function bindMetricInfoIcons() {
         el.onclick = function (event) {
             const text = decodeURIComponent(this.getAttribute("data-info") || "")
             showMetricInfo(event, text)
+            return false
         }
     })
 }
 
-document.addEventListener("click", function () {
+document.addEventListener("click", function (event) {
+    const box = document.getElementById("metric-info-box")
+    if (!box) return
+
+    if (event.target.classList && event.target.classList.contains("metric-info")) {
+        return
+    }
+
+    if (box.contains(event.target)) {
+        return
+    }
+
     hideMetricInfo()
 })
 
