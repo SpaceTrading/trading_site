@@ -94,6 +94,11 @@
             ">
                 Usa lo stesso capitale iniziale del backtest per valutare il rischio reale del report caricato.
                 Modifica questo valore solo se vuoi simulare uno scenario “what-if” con un capitale diverso.
+                
+                <br>
+                La soglia di rovina indica la perdita massima tollerata sul capitale iniziale.
+                Valori più bassi rendono il test più severo; valori più alti lo rendono più permissivo.
+                Default consigliato: 30%.
             </p>
         
         </div>
@@ -170,13 +175,18 @@
         "></div>
         
         <div id="metric-info-box" style="
-            margin-top:10px;
+            display:none;
+            position:fixed;
+            z-index:999999;
+            max-width:360px;
             background:#0f172a;
             border:1px solid #334155;
-            border-radius:10px;
-            padding:15px;
+            border-radius:12px;
+            padding:14px 16px;
             color:#e5e7eb;
-            display:none;
+            font-size:13px;
+            line-height:1.5;
+            box-shadow:0 18px 45px rgba(0,0,0,0.55);
         "></div>
         
         <div style="margin-top:25px; text-align:center;">
@@ -404,10 +414,65 @@ function drawBootstrapChart(data) {
     })
 }
 
-function showMetricInfo(text) {
+function showMetricInfo(event, htmlText) {
+    event.preventDefault()
+    event.stopPropagation()
+
     const box = document.getElementById("metric-info-box")
+    if (!box) return
+
+    box.innerHTML = htmlText
     box.style.display = "block"
-    box.innerText = text
+
+    const rect = event.currentTarget.getBoundingClientRect()
+
+    let left = rect.left + window.scrollX + 18
+    let top = rect.top + window.scrollY + 22
+
+    // evita uscita laterale su schermi piccoli
+    if (left + 380 > window.scrollX + window.innerWidth) {
+        left = window.scrollX + window.innerWidth - 390
+    }
+
+    if (left < 10) {
+        left = 10
+    }
+
+    box.style.left = left + "px"
+    box.style.top = top + "px"
+}
+
+function hideMetricInfo() {
+    const box = document.getElementById("metric-info-box")
+    if (!box) return
+    box.style.display = "none"
+}
+
+document.addEventListener("click", function () {
+    hideMetricInfo()
+})
+
+window.addEventListener("scroll", function () {
+    hideMetricInfo()
+}, true)
+
+function metricInfoIcon(htmlText) {
+    return `<span class="metric-info" data-info="${encodeURIComponent(htmlText)}" style="
+        cursor:pointer;
+        color:#60a5fa;
+        margin-left:6px;
+        font-weight:bold;
+        user-select:none;
+    ">(i)</span>`
+}
+
+function bindMetricInfoIcons() {
+    document.querySelectorAll(".metric-info").forEach(el => {
+        el.onclick = function (event) {
+            const text = decodeURIComponent(this.getAttribute("data-info"))
+            showMetricInfo(event, text)
+        }
+    })
 }
 
 function drawRiskTable(data) {
@@ -418,20 +483,11 @@ function drawRiskTable(data) {
         document.getElementById("risk-table").innerHTML = "Nessuna metrica disponibile";
         return;
     }
-    
+
     // fallback sicurezza
     m.noise_sensitivity = m.noise_sensitivity ?? 0
     m.sharpe_haircut = m.sharpe_haircut ?? 0
     m.robustness_ratio = m.robustness_ratio ?? 0
-
-    function info(text) {
-        return `<span class="metric-info" data-info="${encodeURIComponent(text)}" style="
-            cursor:pointer;
-            color:#60a5fa;
-            margin-left:6px;
-            font-weight:bold;
-        ">(i)</span>`
-    }
 
     const html = `
         <h3>Advanced Metrics</h3>
@@ -439,74 +495,153 @@ function drawRiskTable(data) {
         <table style="width:100%; margin-top:10px; border-collapse: collapse;">
 
             <tr>
-                <td>Sharpe ${info(`Sharpe Ratio: misura il rapporto tra profitto medio e variabilitÃ  dei trade.
-Esempio: ${m.sharpe.toFixed(3)} â†’ il sistema genera in media ${m.sharpe.toFixed(3)} unitÃ  di profitto per unitÃ  di variabilitÃ .`)}</td>
+                <td>
+                    Sharpe
+                    ${metricInfoIcon(`
+                        <strong>Sharpe</strong><br>
+                        Misura il rapporto tra profitto medio e variabilit&agrave; dei trade.<br><br>
+                        In questa versione &egrave; uno Sharpe-like per trade basato sul PnL assoluto, non uno Sharpe Ratio annualizzato accademico.<br><br>
+                        Range orientativi: sotto 0.05 = debole; 0.05-0.15 = discreto; 0.15-0.30 = buono; oltre 0.30 = molto forte.
+                    `)}
+                </td>
                 <td>${m.sharpe.toFixed(3)}</td>
             </tr>
 
             <tr>
-                <td>Sortino ${info(`Sortino Ratio: misura il rendimento rispetto alla sola volatilitÃ  negativa.
-Esempio: ${m.sortino.toFixed(3)} â†’ il sistema Ã¨ ${m.sortino.toFixed(3)} volte efficiente considerando solo il rischio di perdita.`)}</td>
+                <td>
+                    Sortino
+                    ${metricInfoIcon(`
+                        <strong>Sortino</strong><br>
+                        Misura il rendimento rispetto alla sola variabilit&agrave; negativa, cio&egrave; considera soprattutto i trade sfavorevoli.<br><br>
+                        Valori pi&ugrave; alti indicano maggiore efficienza rispetto al rischio di perdita.<br><br>
+                        Range orientativi: sotto 0.10 = debole; 0.10-0.30 = discreto; 0.30-0.70 = buono; oltre 0.70 = molto forte.
+                    `)}
+                </td>
                 <td>${m.sortino.toFixed(3)}</td>
             </tr>
 
             <tr>
-                <td>Calmar ${info(`Calmar Ratio: rapporto tra profitto totale e massimo drawdown.
-Esempio: ${m.calmar.toFixed(3)} â†’ il sistema genera ${m.calmar.toFixed(3)} unitÃ  di profitto per ogni unitÃ  di drawdown subito.`)}</td>
+                <td>
+                    Calmar
+                    ${metricInfoIcon(`
+                        <strong>Calmar</strong><br>
+                        Rapporto tra profitto totale e massimo drawdown cash.<br><br>
+                        Misura quante unit&agrave; di profitto vengono generate per ogni unit&agrave; di drawdown subito.<br><br>
+                        Range orientativi: sotto 1 = fragile; 1-2 = discreto; 2-4 = buono; oltre 4 = molto forte.
+                    `)}
+                </td>
                 <td>${m.calmar.toFixed(3)}</td>
             </tr>
 
             <tr>
-                <td>Ulcer Index ${info(`Ulcer Index: misura intensitÃ  e durata dei drawdown.
-Esempio: ${m.ulcer_index.toFixed(2)} â†’ piÃ¹ Ã¨ alto, piÃ¹ la strategia resta a lungo in perdita.`)}</td>
+                <td>
+                    Ulcer Index
+                    ${metricInfoIcon(`
+                        <strong>Ulcer Index</strong><br>
+                        Misura intensit&agrave; e durata dei drawdown.<br><br>
+                        Non guarda solo quanto la curva scende, ma anche per quanto tempo resta sotto i massimi precedenti.<br><br>
+                        Valori pi&ugrave; bassi indicano una curva meno stressante. Questa versione &egrave; cash-based; per la lettura percentuale usa anche Ulcer Index % nella sezione Equity-Based.
+                    `)}
+                </td>
                 <td>${m.ulcer_index.toFixed(3)}</td>
             </tr>
 
             <tr>
-                <td>CDaR ${info(`Conditional Drawdown at Risk: media dei peggiori drawdown (worst 5%).
-Esempio: ${m.cdar.toFixed(2)} â†’ nei peggiori scenari, il drawdown medio Ã¨ circa ${m.cdar.toFixed(2)}.`)}</td>
+                <td>
+                    CDaR
+                    ${metricInfoIcon(`
+                        <strong>CDaR</strong><br>
+                        Conditional Drawdown at Risk: media dei drawdown peggiori nelle simulazioni.<br><br>
+                        Serve a stimare la gravit&agrave; degli scenari estremi, non solo il drawdown medio.<br><br>
+                        Valori pi&ugrave; alti indicano code negative pi&ugrave; pesanti.
+                    `)}
+                </td>
                 <td>${m.cdar.toFixed(3)}</td>
             </tr>
 
             <tr>
-                <td>Probability of Ruin ${info(`Probability of Ruin: probabilitÃ  che lâ€™equity scenda sotto la soglia critica durante la simulazione.
-Esempio: ${(m.probability_of_ruin*100).toFixed(2)}% â†’ circa ${(m.probability_of_ruin*100).toFixed(0)} simulazioni su 1000 hanno raggiunto la soglia di rovina.`)}</td>
-                <td>${(m.probability_of_ruin*100).toFixed(2)}%</td>
+                <td>
+                    Probability of Ruin
+                    ${metricInfoIcon(`
+                        <strong>Probability of Ruin</strong><br>
+                        Stima la probabilit&agrave; che la simulazione raggiunga una soglia critica.<br><br>
+                        Questa &egrave; la metrica storica PnL-based del simulatore. Per una lettura pi&ugrave; realistica, guarda anche Probability of Ruin % nella sezione Equity-Based, che usa capitale iniziale e soglia di rovina impostata.
+                    `)}
+                </td>
+                <td>${(m.probability_of_ruin * 100).toFixed(2)}%</td>
             </tr>
-            
+
             <tr>
-                <td>Terminal Wealth Volatility ${info(`Terminal Wealth Volatility: dispersione dei risultati finali delle simulazioni.
-Esempio: ${m.twv.toFixed(2)} â†’ piÃ¹ Ã¨ alto, piÃ¹ i risultati finali sono incerti e variabili.`)}</td>
+                <td>
+                    Terminal Wealth Volatility
+                    ${metricInfoIcon(`
+                        <strong>Terminal Wealth Volatility</strong><br>
+                        Misura quanto sono dispersi i risultati finali delle simulazioni bootstrap.<br><br>
+                        Valori alti indicano maggiore incertezza sul risultato finale; valori bassi indicano risultati pi&ugrave; concentrati.
+                    `)}
+                </td>
                 <td>${m.twv.toFixed(2)}</td>
             </tr>
 
             <tr>
-                <td>VaR 95% ${info(`Value at Risk 95%: soglia sotto la quale cadono i peggiori risultati (5% dei casi).
-Esempio: ${m.var_95.toFixed(2)} â†’ nel 5% dei casi, il risultato finale Ã¨ inferiore a ${m.var_95.toFixed(2)}.`)}</td>
+                <td>
+                    VaR 95%
+                    ${metricInfoIcon(`
+                        <strong>VaR 95%</strong><br>
+                        Indica la soglia sotto cui cade il peggior 5% dei risultati finali.<br><br>
+                        Serve a capire quale risultato finale sfavorevole pu&ograve; verificarsi nella coda negativa delle simulazioni.<br><br>
+                        Va letto insieme al CVaR, che misura quanto sono gravi gli scenari oltre quella soglia.
+                    `)}
+                </td>
                 <td>${m.var_95.toFixed(2)}</td>
             </tr>
 
             <tr>
-                <td>CVaR ${info(`CVaR: media delle perdite nei peggiori scenari (oltre il VaR).
-Esempio: ${m.cvar.toFixed(2)} â†’ nei casi estremi, la perdita media Ã¨ circa ${m.cvar.toFixed(2)}.`)}</td>
+                <td>
+                    CVaR
+                    ${metricInfoIcon(`
+                        <strong>CVaR</strong><br>
+                        Media degli scenari peggiori oltre il VaR.<br><br>
+                        &Egrave; pi&ugrave; severo del VaR perch&eacute; non dice solo dove inizia la coda negativa, ma quanto sono gravi mediamente gli scenari peggiori.
+                    `)}
+                </td>
                 <td>${m.cvar.toFixed(2)}</td>
             </tr>
-            
+
             <tr>
-                <td>Noise Sensitivity ${info(`Noise Sensitivity: misura quanto la strategia cambia sotto piccoli disturbi casuali.
-Esempio: ${m.noise_sensitivity.toFixed(2)} â†’ valori vicini a 1 indicano stabilitÃ , valori molto bassi indicano possibile fragilitÃ .`)}</td>
+                <td>
+                    Noise Sensitivity
+                    ${metricInfoIcon(`
+                        <strong>Noise Sensitivity</strong><br>
+                        Misura quanto la strategia cambia quando i trade vengono disturbati da piccolo rumore casuale.<br><br>
+                        Range orientativi: vicino a 1 = comportamento stabile; molto sotto 1 = possibile fragilit&agrave;; molto sopra 1 = risultato da interpretare con cautela.
+                    `)}
+                </td>
                 <td>${m.noise_sensitivity.toFixed(2)}</td>
             </tr>
 
             <tr>
-                <td>Sharpe Haircut ${info(`Sharpe Haircut: versione prudenziale dello Sharpe, ridotta per considerare overfitting.
-Esempio: ${m.sharpe_haircut.toFixed(2)} â†’ valori bassi indicano che lâ€™edge potrebbe ridursi in condizioni reali.`)}</td>
+                <td>
+                    Sharpe Haircut
+                    ${metricInfoIcon(`
+                        <strong>Sharpe Haircut</strong><br>
+                        Versione prudenziale dello Sharpe, ridotta per tenere conto del rischio di overfitting e deterioramento fuori campione.<br><br>
+                        Non &egrave; una metrica accademica pura, ma un indicatore conservativo.
+                    `)}
+                </td>
                 <td>${m.sharpe_haircut.toFixed(2)}</td>
             </tr>
 
             <tr>
-                <td>Robustness Ratio ${info(`Robustness Ratio: rapporto tra numero di trade e complessitÃ  stimata della strategia.
-Esempio: ${m.robustness_ratio.toFixed(1)} â†’ valori bassi indicano rischio di overfitting, valori alti maggiore affidabilitÃ  statistica.`)}</td>
+                <td>
+                    Robustness Ratio
+                    ${metricInfoIcon(`
+                        <strong>Robustness Ratio</strong><br>
+                        Rapporto tra numero di trade e complessit&agrave; stimata della strategia.<br><br>
+                        Range orientativi: sotto 10 = campione debole; 10-30 = accettabile; 30-100 = buono; oltre 100 = molto solido, se i trade sono realmente indipendenti.<br><br>
+                        Valori alti indicano maggiore supporto statistico; valori bassi aumentano il rischio di overfitting.
+                    `)}
+                </td>
                 <td>${m.robustness_ratio.toFixed(1)}</td>
             </tr>
 
@@ -514,15 +649,7 @@ Esempio: ${m.robustness_ratio.toFixed(1)} â†’ valori bassi indicano rischio
     `
 
     document.getElementById("risk-table").innerHTML = html
-
-    setTimeout(() => {
-        document.querySelectorAll(".metric-info").forEach(el => {
-            el.addEventListener("click", function () {
-                const text = decodeURIComponent(this.getAttribute("data-info"))
-                showMetricInfo(text)
-            })
-        })
-    }, 0)
+    bindMetricInfoIcons()
 }
 
 function drawEquityRiskTable(data) {
@@ -532,8 +659,7 @@ function drawEquityRiskTable(data) {
 
     const m = data.equity_based_metrics
 
-    // Il backend non è ancora stato aggiornato:
-    // in questo caso la card resta semplicemente nascosta.
+    // Se il backend non restituisce ancora equity_based_metrics, resta nascosta.
     if (!m) {
         box.style.display = "none"
         box.innerHTML = ""
@@ -572,52 +698,133 @@ function drawEquityRiskTable(data) {
         <table style="width:100%; margin-top:10px; border-collapse: collapse;">
 
             <tr>
-                <td>Initial Capital</td>
+                <td>
+                    Initial Capital
+                    ${metricInfoIcon(`
+                        <strong>Initial Capital</strong><br>
+                        Capitale iniziale usato per trasformare il PnL assoluto dei trade in una vera equity curve.<br><br>
+                        Per valutare il report caricato, usa lo stesso capitale iniziale presente nel backtest MT5.<br><br>
+                        Se modifichi questo valore, stai facendo una simulazione what-if con un capitale diverso.
+                    `)}
+                </td>
                 <td>${safeMoney(m.initial_capital)}</td>
             </tr>
 
             <tr>
-                <td>Ruin Threshold</td>
+                <td>
+                    Ruin Threshold
+                    ${metricInfoIcon(`
+                        <strong>Ruin Threshold</strong><br>
+                        Indica la perdita massima tollerata sul capitale iniziale.<br><br>
+                        Con soglia 30%, un conto da 10.000 viene considerato in rovina se scende a 7.000 o meno.<br><br>
+                        Range orientativi: 10-15% = molto severo; 20-30% = prudente; 40-50% = permissivo.
+                    `)}
+                </td>
                 <td>${safeNumber(m.ruin_pct, 2)}%</td>
             </tr>
 
             <tr>
-                <td>Original Max Drawdown %</td>
+                <td>
+                    Original Max Drawdown %
+                    ${metricInfoIcon(`
+                        <strong>Original Max Drawdown %</strong><br>
+                        Massimo drawdown percentuale della curva originale del backtest, calcolato usando il capitale iniziale inserito.<br><br>
+                        Range orientativi: sotto 5% = contenuto; 5-15% = moderato; 15-25% = importante; oltre 25% = elevato.<br><br>
+                        La valutazione dipende da asset, durata del test, leva e obiettivo della strategia.
+                    `)}
+                </td>
                 <td>${safeNumber(m.original_max_drawdown_pct, 2)}%</td>
             </tr>
 
             <tr>
-                <td>Median Max Drawdown %</td>
+                <td>
+                    Median Max Drawdown %
+                    ${metricInfoIcon(`
+                        <strong>Median Max Drawdown %</strong><br>
+                        Drawdown percentuale mediano tra le simulazioni Monte Carlo.<br><br>
+                        Rappresenta uno scenario centrale, non estremo.<br><br>
+                        Se &egrave; vicino al drawdown originale, il backtest &egrave; coerente con gli scenari simulati.
+                        Se &egrave; molto pi&ugrave; alto, la sequenza reale potrebbe essere stata favorevole.
+                    `)}
+                </td>
                 <td>${safeNumber(m.median_max_drawdown_pct, 2)}%</td>
             </tr>
 
             <tr>
-                <td>Worst 5% Max Drawdown %</td>
+                <td>
+                    Worst 5% Max Drawdown %
+                    ${metricInfoIcon(`
+                        <strong>Worst 5% Max Drawdown %</strong><br>
+                        Drawdown percentuale associato alla coda peggiore delle simulazioni.<br><br>
+                        &Egrave; spesso pi&ugrave; utile del drawdown originale per valutare la robustezza, perch&eacute; mostra cosa pu&ograve; accadere in scenari sfavorevoli.<br><br>
+                        Range orientativi: sotto 10% = gestibile; 10-25% = rilevante; oltre 25-30% = molto impegnativo.
+                    `)}
+                </td>
                 <td>${safeNumber(m.worst_95_max_drawdown_pct, 2)}%</td>
             </tr>
 
             <tr>
-                <td>Ulcer Index %</td>
+                <td>
+                    Ulcer Index %
+                    ${metricInfoIcon(`
+                        <strong>Ulcer Index %</strong><br>
+                        Misura profondit&agrave; e durata dei drawdown in percentuale.<br><br>
+                        A differenza del Max Drawdown, considera anche per quanto tempo la curva resta sotto i massimi precedenti.<br><br>
+                        Range orientativi: sotto 2% = molto basso; 2-5% = contenuto; 5-10% = moderato; oltre 10% = stressante.
+                    `)}
+                </td>
                 <td>${safeNumber(m.ulcer_index_pct, 2)}%</td>
             </tr>
 
             <tr>
-                <td>Probability of Ruin %</td>
+                <td>
+                    Probability of Ruin %
+                    ${metricInfoIcon(`
+                        <strong>Probability of Ruin %</strong><br>
+                        Probabilit&agrave; che una simulazione scenda sotto la soglia di rovina impostata.<br><br>
+                        Dipende fortemente dal capitale iniziale e dalla soglia scelta.<br><br>
+                        Range orientativi: 0% = ottimo sul campione simulato; 0-1% = basso; 1-5% = da monitorare; oltre 5% = critico.
+                    `)}
+                </td>
                 <td>${safeNumber(m.probability_of_ruin_pct * 100, 2)}%</td>
             </tr>
 
             <tr>
-                <td>Median Final Equity</td>
+                <td>
+                    Median Final Equity
+                    ${metricInfoIcon(`
+                        <strong>Median Final Equity</strong><br>
+                        Valore finale mediano del conto nelle simulazioni bootstrap.<br><br>
+                        Se &egrave; sopra il capitale iniziale, lo scenario centrale &egrave; profittevole.
+                        Se &egrave; vicino o sotto il capitale iniziale, la strategia pu&ograve; avere aspettativa fragile nel bootstrap.
+                    `)}
+                </td>
                 <td>${safeMoney(m.median_final_equity)}</td>
             </tr>
 
             <tr>
-                <td>Worst 5% Final Equity</td>
+                <td>
+                    Worst 5% Final Equity
+                    ${metricInfoIcon(`
+                        <strong>Worst 5% Final Equity</strong><br>
+                        Valore finale sotto cui cade il peggior 5% degli scenari bootstrap.<br><br>
+                        Se resta sopra il capitale iniziale, anche la coda sfavorevole chiude positiva.
+                        Se scende sotto, nei peggiori scenari il sistema pu&ograve; finire in perdita.
+                    `)}
+                </td>
                 <td>${safeMoney(m.worst_5_final_equity)}</td>
             </tr>
 
             <tr>
-                <td>Return Stability Ratio</td>
+                <td>
+                    Return Stability Ratio
+                    ${metricInfoIcon(`
+                        <strong>Return Stability Ratio</strong><br>
+                        Rapporto tra rendimento medio per trade e variabilit&agrave; dei rendimenti rispetto al capitale iniziale.<br><br>
+                        &Egrave; simile allo Sharpe, ma calcolato sui ritorni percentuali per trade e non annualizzato.<br><br>
+                        Range orientativi: sotto 0.05 = debole; 0.05-0.15 = discreto; 0.15-0.30 = buono; oltre 0.30 = molto forte.
+                    `)}
+                </td>
                 <td>${safeNumber(m.return_stability_ratio, 3)}</td>
             </tr>
 
@@ -626,6 +833,7 @@ function drawEquityRiskTable(data) {
 
     box.innerHTML = html
     box.style.display = "block"
+    bindMetricInfoIcons()
 }
 
 function downloadMonteCarloCSV() {
@@ -671,6 +879,15 @@ function downloadMonteCarloCSV() {
     if (data.advanced_metrics) {
         Object.keys(data.advanced_metrics).forEach(key => {
             addRow("advanced_metrics", key, data.advanced_metrics[key])
+        })
+    }
+    
+    // =========================
+    // EQUITY-BASED METRICS
+    // =========================
+    if (data.equity_based_metrics) {
+        Object.keys(data.equity_based_metrics).forEach(key => {
+            addRow("equity_based_metrics", key, data.equity_based_metrics[key])
         })
     }
 
