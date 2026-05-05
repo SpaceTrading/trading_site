@@ -2,7 +2,7 @@ import requests
 import os
 
 #  SECRET KEY
-TURNSTILE_SECRET_KEY = os.environ.get("0x4AAAAAADEMHrMbbdwbbE4vI1xQ4vqvtUk", "")
+TURNSTILE_SECRET_KEY = os.environ.get("TURNSTILE_SECRET_KEY", "")
 
 
 def verify_turnstile(token, ip=None):
