@@ -68,6 +68,21 @@ login_manager.login_view = "login"
 login_manager.init_app(app)
 
 # =========================================================
+# SECURITY HEADERS
+# =========================================================
+@app.after_request
+def add_security_headers(response):
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+
+    if os.environ.get("RENDER"):
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+
+    return response
+
+# =========================================================
 # I18N / MULTILINGUA
 # =========================================================
 SUPPORTED_LANGUAGES = {
