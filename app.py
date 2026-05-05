@@ -435,8 +435,15 @@ def montecarlo_upload():
         if file.filename == "":
             print("DEBUG: empty filename")
             return jsonify({"error": "empty filename"}), 400
-
-        print("DEBUG filename:", file.filename)
+        
+        filename = file.filename.lower().strip()
+        allowed_extensions = (".html", ".htm", ".xlsx", ".csv")
+        
+        if not filename.endswith(allowed_extensions):
+            print("DEBUG: unsupported file extension:", filename)
+            return jsonify({"error": "unsupported file type"}), 400
+        
+        print("DEBUG filename:", filename)
 
         # =========================
         # PARSING

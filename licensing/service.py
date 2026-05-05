@@ -1,5 +1,7 @@
 from datetime import datetime
 import sys
+import hashlib
+import re
 
 def get_app_models():
     """
@@ -21,6 +23,75 @@ def get_app_models():
 def _now():
     return datetime.utcnow()
 
+def _license_key_for_audit(license_key):
+    """
+    Non salviamo mai la license_key in chiaro nei log.
+    Salviamo hash SHA-256 + ultimi 6 caratteri per audit/debug.
+    """
+    key = (license_key or "").strip()
+
+    if not key:
+        return ""
+
+    digest = hashlib.sha256(key.encode("utf-8")).hexdigest()
+    tail = key[-6:] if len(key) >= 6 else key
+
+    return f"sha256:{digest}|tail:{tail}"
+
+
+def _valid_license_key_format(license_key):
+    """
+    Formato prudenziale:
+    - 8-255 caratteri
+    - lettere, numeri, underscore, trattino, punto
+    Non blocca formati normali tipo ABC-123_x.y
+    """
+    key = (license_key or "").strip()
+
+    if len(key) < 8 or len(key) > 255:
+        return False
+
+    return re.fullmatch(r"[A-Za-z0-9_.-]+", key) is not None
+
+
+def _valid_product_slug(product_slug):
+    """
+    Slug prodotto sicuro: strategy_pegasus, ea_v1, ecc.
+    """
+    slug = (product_slug or "").strip()
+
+    if len(slug) < 2 or len(slug) > 120:
+        return False
+
+    return re.fullmatch(r"[A-Za-z0-9_-]+", slug) is not None
+
+
+def _valid_mt5_account(mt5_account):
+    """
+    Account MT5: di norma numerico.
+    Manteniamo range ampio per broker diversi.
+    """
+    account = str(mt5_account or "").strip()
+
+    if len(account) < 3 or len(account) > 40:
+        return False
+
+    return re.fullmatch(r"[0-9]+", account) is not None
+
+
+def _valid_mt5_server(mt5_server):
+    """
+    Server broker opzionale, ma se presente deve essere ragionevole.
+    """
+    server = (mt5_server or "").strip()
+
+    if not server:
+        return True
+
+    if len(server) > 180:
+        return False
+
+    return re.fullmatch(r"[A-Za-z0-9_.\- ]+", server) is not None
 
 def log_license_check(
     license_obj=None,
@@ -43,13 +114,14 @@ def log_license_check(
         row = LicenseCheckLog(
             license_id=license_obj.id if license_obj else None,
             product_slug=product_slug,
-            license_key=license_key,
+            license_key=_license_key_for_audit(license_key),
             mt5_account=mt5_account,
             mt5_server=mt5_server,
             ip_address=ip_address,
             result=result,
             reason=reason,
         )
+        
         db.session.add(row)
         db.session.commit()
     except Exception as e:
@@ -120,6 +192,96 @@ def check_license_payload(payload, ip_address=None):
             "reason": reason,
             "message": "Product mancante."
         }
+    
+    if not _valid_license_key_format(license_key):
+        reason = "INVALID_LICENSE_KEY_FORMAT"
+        log_license_check(
+            product_slug=product_slug,
+            license_key=license_key,
+            mt5_account=mt5_account,
+            mt5_server=mt5_server,
+            ip_address=ip_address,
+            result="BLOCK",
+            reason=reason,
+        )
+        return {
+            "ok": False,
+            "status": "blocked",
+            "reason": reason,
+            "message": "Formato license key non valido."
+        }
+
+    if not _valid_product_slug(product_slug):
+        reason = "INVALID_PRODUCT_FORMAT"
+        log_license_check(
+            product_slug=product_slug,
+            license_key=license_key,
+            mt5_account=mt5_account,
+            mt5_server=mt5_server,
+            ip_address=ip_address,
+            result="BLOCK",
+            reason=reason,
+        )
+        return {
+            "ok": False,
+            "status": "blocked",
+            "reason": reason,
+            "message": "Formato prodotto non valido."
+        }
+
+    if not mt5_account:
+        reason = "MISSING_MT5_ACCOUNT"
+        log_license_check(
+            product_slug=product_slug,
+            license_key=license_key,
+            mt5_account=mt5_account,
+            mt5_server=mt5_server,
+            ip_address=ip_address,
+            result="BLOCK",
+            reason=reason,
+        )
+        return {
+            "ok": False,
+            "status": "blocked",
+            "reason": reason,
+            "message": "Account MT5 mancante."
+        }
+
+    if not _valid_mt5_account(mt5_account):
+        reason = "INVALID_MT5_ACCOUNT_FORMAT"
+        log_license_check(
+            product_slug=product_slug,
+            license_key=license_key,
+            mt5_account=mt5_account,
+            mt5_server=mt5_server,
+            ip_address=ip_address,
+            result="BLOCK",
+            reason=reason,
+        )
+        return {
+            "ok": False,
+            "status": "blocked",
+            "reason": reason,
+            "message": "Formato account MT5 non valido."
+        }
+
+    if not _valid_mt5_server(mt5_server):
+        reason = "INVALID_MT5_SERVER_FORMAT"
+        log_license_check(
+            product_slug=product_slug,
+            license_key=license_key,
+            mt5_account=mt5_account,
+            mt5_server=mt5_server,
+            ip_address=ip_address,
+            result="BLOCK",
+            reason=reason,
+        )
+        return {
+            "ok": False,
+            "status": "blocked",
+            "reason": reason,
+            "message": "Formato server MT5 non valido."
+        }    
 
     # =========================
     # PRODUCT CHECK
@@ -224,9 +386,9 @@ def check_license_payload(payload, ip_address=None):
     # MT5 ACCOUNT CHECK
     # =========================
     # Se la licenza ha già un account associato, deve combaciare.
-    # Se invece è vuota, per ora la associamo al primo account che la usa.
+    # Se è vuota, la prima richiesta valida la lega al conto MT5.
     if license_obj.mt5_account:
-        if mt5_account and str(license_obj.mt5_account) != str(mt5_account):
+        if str(license_obj.mt5_account) != str(mt5_account):
             reason = "ACCOUNT_MISMATCH"
             log_license_check(
                 license_obj=license_obj,
@@ -245,13 +407,36 @@ def check_license_payload(payload, ip_address=None):
                 "message": "Account MT5 non autorizzato."
             }
     else:
-        # Auto-bind controllato: prima esecuzione lega la licenza al conto.
-        if mt5_account:
-            license_obj.mt5_account = mt5_account
-
-    # Broker/server opzionale: se già settato, controlla match.
+        # Auto-bind controllato: prima esecuzione valida lega la licenza al conto.
+        license_obj.mt5_account = mt5_account
+    
+    
+    # =========================
+    # MT5 SERVER CHECK
+    # =========================
+    # Il server è opzionale finché non viene valorizzato.
+    # Se la licenza ha già un server associato, deve combaciare.
     if license_obj.mt5_server:
-        if mt5_server and license_obj.mt5_server != mt5_server:
+        if not mt5_server:
+            reason = "MISSING_MT5_SERVER"
+            log_license_check(
+                license_obj=license_obj,
+                product_slug=product_slug,
+                license_key=license_key,
+                mt5_account=mt5_account,
+                mt5_server=mt5_server,
+                ip_address=ip_address,
+                result="BLOCK",
+                reason=reason,
+            )
+            return {
+                "ok": False,
+                "status": "blocked",
+                "reason": reason,
+                "message": "Server broker mancante."
+            }
+    
+        if license_obj.mt5_server != mt5_server:
             reason = "SERVER_MISMATCH"
             log_license_check(
                 license_obj=license_obj,
