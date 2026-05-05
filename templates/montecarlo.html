@@ -475,6 +475,69 @@ function bindMetricInfoIcons() {
     })
 }
 
+function showMetricInfo(event, htmlText) {
+    event.preventDefault()
+    event.stopPropagation()
+
+    const box = document.getElementById("metric-info-box")
+    if (!box) {
+        console.error("metric-info-box non trovato")
+        return
+    }
+
+    box.innerHTML = htmlText
+    box.style.display = "block"
+
+    const rect = event.currentTarget.getBoundingClientRect()
+
+    let left = rect.left + window.scrollX + 18
+    let top = rect.top + window.scrollY + 22
+
+    if (left + 380 > window.scrollX + window.innerWidth) {
+        left = window.scrollX + window.innerWidth - 390
+    }
+
+    if (left < 10) {
+        left = 10
+    }
+
+    box.style.left = left + "px"
+    box.style.top = top + "px"
+}
+
+function hideMetricInfo() {
+    const box = document.getElementById("metric-info-box")
+    if (!box) return
+    box.style.display = "none"
+}
+
+function metricInfoIcon(htmlText) {
+    return `<span class="metric-info" data-info="${encodeURIComponent(htmlText)}" style="
+        cursor:pointer;
+        color:#60a5fa;
+        margin-left:6px;
+        font-weight:bold;
+        user-select:none;
+    ">(i)</span>`
+}
+
+function bindMetricInfoIcons() {
+    document.querySelectorAll(".metric-info").forEach(el => {
+        el.onclick = function (event) {
+            const text = decodeURIComponent(this.getAttribute("data-info") || "")
+            showMetricInfo(event, text)
+        }
+    })
+}
+
+document.addEventListener("click", function () {
+    hideMetricInfo()
+})
+
+window.addEventListener("scroll", function () {
+    hideMetricInfo()
+}, true)
+
 function drawRiskTable(data) {
 
     const m = data.advanced_metrics
