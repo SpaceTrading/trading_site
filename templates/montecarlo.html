@@ -109,10 +109,10 @@
             Avvia Simulazione
         </button>
         
-        <hr>
-
+        <hr id="mcTopHr" style="display:none;">
+        
         <!-- GRAFICO -->
-        <div id="mc-chart" style="width:100%; height:600px;"></div>
+        <div id="mc-chart" style="width:100%; height:600px; display:none;"></div>
         
         <!-- SPIEGAZIONE GRAFICO -->
         <div id="mcLegendBox" style="
@@ -149,22 +149,23 @@
             </p>
                     
         </div>
-        
-        <hr>
 
+        <hr id="mcBottomHr" style="display:none;">
+        
         <!-- <div id="percentile-chart" style="height:400px;"></div> -->
-        <div id="bootstrap-chart" style="height:400px;"></div>
-        <div id="drawdown-chart" style="height:400px;"></div>
-        <div id="ttr-chart" style="height:400px;"></div>
+        <div id="bootstrap-chart" style="height:400px; display:none;"></div>
+        <div id="drawdown-chart" style="height:400px; display:none;"></div>
+        <div id="ttr-chart" style="height:400px; display:none;"></div>
         
         <div id="risk-table" style="
+            display:none;
             margin-top:20px;
             background:#111827;
             border:1px solid #22304a;
             border-radius:12px;
             padding:20px;
         "></div>
-        
+                
         <div id="equity-risk-table" style="
             display:none;
             margin-top:20px;
@@ -318,6 +319,21 @@ function runMonteCarlo() {
         }
 
         lastMonteCarloData = data
+        
+        const mcChart = document.getElementById("mc-chart")
+        const bootstrapChart = document.getElementById("bootstrap-chart")
+        const drawdownChart = document.getElementById("drawdown-chart")
+        const ttrChart = document.getElementById("ttr-chart")
+        const mcTopHr = document.getElementById("mcTopHr")
+        const mcBottomHr = document.getElementById("mcBottomHr")
+        
+        if (mcTopHr) mcTopHr.style.display = "block"
+        if (mcBottomHr) mcBottomHr.style.display = "block"
+        
+        if (mcChart) mcChart.style.display = "block"
+        if (bootstrapChart) bootstrapChart.style.display = "block"
+        if (drawdownChart) drawdownChart.style.display = "block"
+        if (ttrChart) ttrChart.style.display = "block"
 
         drawChart(data)
         drawDrawdownChart(data)
@@ -683,7 +699,10 @@ function drawRiskTable(data) {
         </table>
     `
 
-    document.getElementById("risk-table").innerHTML = html
+    const riskBox = document.getElementById("risk-table")
+    riskBox.innerHTML = html
+    riskBox.style.display = "block"
+    
     bindMetricInfoIcons()
 }
 
