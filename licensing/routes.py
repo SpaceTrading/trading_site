@@ -1,6 +1,8 @@
 import os
 import sys
 from datetime import datetime
+from sicurezza.firewall import check_request
+from sicurezza.ip_tracker import register_failure, register_success
 
 from flask import (
     Blueprint,
@@ -71,13 +73,27 @@ def api_license_check():
     """
 
     try:
-        payload = request.get_json(silent=True) or {}
-
         ip_address = request.headers.get("X-Forwarded-For", request.remote_addr)
         if ip_address and "," in ip_address:
             ip_address = ip_address.split(",")[0].strip()
 
+        status = check_request(ip_address)
+        if status == "blocked":
+            return jsonify({
+                "ok": False,
+                "status": "blocked",
+                "reason": "RATE_LIMIT_BLOCK",
+                "message": "Troppi tentativi. Riprova più tardi."
+            }), 429
+        
+        payload = request.get_json(silent=True) or {}
+
         result = check_license_payload(payload, ip_address=ip_address)
+        
+        if result.get("ok"):
+            register_success(ip_address)
+        else:
+            register_failure(ip_address)        
 
         status_code = 200 if result.get("ok") else 403
 
@@ -114,6 +130,9 @@ def my_products():
 
     for lic in licenses:
         product = lic.product
+        
+        if not product:
+            continue        
 
         latest_version = (
             ProductVersion.query
@@ -200,7 +219,9 @@ def download_product_file(slug, version, filename):
     absolute_path = os.path.abspath(os.path.join(private_root, selected_path))
 
     # sicurezza anti path traversal
-    if not absolute_path.startswith(os.path.abspath(private_root)):
+    private_root_abs = os.path.abspath(private_root)
+
+    if os.path.commonpath([private_root_abs, absolute_path]) != private_root_abs:
         abort(403)
 
     if not os.path.exists(absolute_path):
