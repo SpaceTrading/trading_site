@@ -29,7 +29,17 @@ def register_success(ip):
 
 def is_blocked(ip):
     info = get_ip_info(ip)
-    return time.time() < info["blocked_until"]
+
+    # Se il blocco è ancora attivo
+    if time.time() < info["blocked_until"]:
+        return True
+
+    # Se il blocco era scaduto, resetta lo stato
+    if info["blocked_until"] > 0:
+        info["blocked_until"] = 0
+        info["failures"] = 0
+
+    return False
 
 
 def block_ip(ip, seconds=600):

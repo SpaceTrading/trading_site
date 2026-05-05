@@ -40,6 +40,14 @@ app = Flask(__name__, template_folder="templates", static_folder="static")
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-change-me")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(INSTANCE_DIR, "app.db")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+# Limite massimo upload file: 20 MB
+app.config["MAX_CONTENT_LENGTH"] = 20 * 1024 * 1024
+
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+
+if os.environ.get("RENDER"):
+    app.config["SESSION_COOKIE_SECURE"] = True
 
 db = SQLAlchemy(app)
 
@@ -377,6 +385,7 @@ def rolling_analysis_page():
 # =========================================================
 
 @app.route("/api/montecarlo/upload", methods=["POST"])
+@login_required
 def montecarlo_upload():
 
     print("AUTH:", current_user.is_authenticated)
@@ -1517,7 +1526,9 @@ def insider_flow():
 
     import requests
 
-    API_KEY = "d7pm839r01qosaap4ii0d7pm839r01qosaap4iig"  # tua key
+    API_KEY = os.environ.get("FINNHUB_API_KEY", "")
+    if not API_KEY:
+        return jsonify({"error": "missing api key"}), 500  # tua key finhub
 
     tickers = ["AAPL", "TSLA", "MSFT", "NVDA", "AMZN"]
 
@@ -1719,12 +1730,24 @@ def forgot_password():
     if request.method == "GET":
         return render_template("forgot_password.html")
 
+    ip = request.remote_addr
+    status = check_request(ip)
+
+    if status == "blocked":
+        flash("Troppi tentativi. Riprova più tardi.", "error")
+        return redirect(url_for("forgot_password"))
+
     # POST: processa l'email inserita dall'utente
     email = request.form.get("email", "").strip().lower()
 
     if not email or "@" not in email or "." not in email:
+        register_failure(ip)
         flash("Inserisci una email valida.", "error")
         return redirect(url_for("forgot_password"))
+
+    # Conta ogni richiesta reset valida come tentativo sensibile.
+    # Non usiamo register_success qui, altrimenti un bot potrebbe inviare richieste illimitate.
+    register_failure(ip)
 
     user = User.query.filter_by(email=email).first()
 
@@ -1788,7 +1811,7 @@ def reset_password(token):
         
         captcha_token = request.form.get("cf-turnstile-response")
         
-        if not token or not verify_turnstile(token, ip):
+        if not captcha_token or not verify_turnstile(captcha_token, ip):
             register_failure(ip)
             flash("Verifica anti-bot fallita.", "error")
             return render_template("login.html")  
