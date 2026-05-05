@@ -389,7 +389,7 @@ msgstr ""
 
 #: templates/montecarlo.html:101
 msgid "Default consigliato: 30%."
-msgstr "Recommended default: 30%."
+msgstr "Recommended default: 30%%."
 
 #: templates/montecarlo.html:109 templates/montecarlo.html:225
 msgid "Avvia Simulazione"
@@ -493,7 +493,7 @@ msgstr "Enter a valid initial capital"
 
 #: templates/montecarlo.html:223
 msgid "Inserisci una soglia di rovina valida (1% - 95%)"
-msgstr "Enter a valid ruin threshold (1% - 95%)"
+msgstr "Enter a valid ruin threshold (1%% - 95%%)"
 
 #: templates/montecarlo.html:224
 msgid "Simulazione in corso..."

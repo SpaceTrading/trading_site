@@ -390,7 +390,7 @@ msgstr ""
 #: templates/montecarlo.html:101
 #, no-python-format
 msgid "Default consigliato: 30%."
-msgstr "Valeur par défaut recommandée : 30 %."
+msgstr "Valeur par défaut recommandée : 30 %%."
 
 #: templates/montecarlo.html:109 templates/montecarlo.html:225
 msgid "Avvia Simulazione"
@@ -497,7 +497,7 @@ msgstr "Saisissez un capital initial valide"
 #: templates/montecarlo.html:223
 #, no-python-format
 msgid "Inserisci una soglia di rovina valida (1% - 95%)"
-msgstr "Saisissez un seuil de ruine valide (1 % - 95 %)"
+msgstr "Saisissez un seuil de ruine valide (1 %% - 95 %%)"
 
 #: templates/montecarlo.html:224
 msgid "Simulazione in corso..."
