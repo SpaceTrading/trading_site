@@ -38,10 +38,17 @@ INSTANCE_DIR = os.path.join(BASE_DIR, "instance")
 os.makedirs(INSTANCE_DIR, exist_ok=True)
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
+
+# SECRET_KEY:
+# - su Render/produzione deve essere obbligatoria
+# - in locale usiamo un fallback dev per non bloccare python app.py
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
 if not app.config["SECRET_KEY"]:
-    raise RuntimeError("SECRET_KEY mancante: impostala nelle variabili ambiente.")
+    if os.environ.get("RENDER"):
+        raise RuntimeError("SECRET_KEY mancante su Render: impostala nelle variabili ambiente.")
+    else:
+        app.config["SECRET_KEY"] = "dev-local-secret-change-me"
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(INSTANCE_DIR, "app.db")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
