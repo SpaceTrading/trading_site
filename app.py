@@ -9,6 +9,7 @@ import numpy as np
 import re
 import resend
 import secrets
+import html
 from sicurezza.firewall import check_request
 from sicurezza.ip_tracker import register_failure, register_success
 from sicurezza.turnstile import verify_turnstile
@@ -37,7 +38,11 @@ INSTANCE_DIR = os.path.join(BASE_DIR, "instance")
 os.makedirs(INSTANCE_DIR, exist_ok=True)
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-change-me")
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
+
+if not app.config["SECRET_KEY"]:
+    raise RuntimeError("SECRET_KEY mancante: impostala nelle variabili ambiente.")
+
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(INSTANCE_DIR, "app.db")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # Limite massimo upload file: 20 MB
@@ -114,16 +119,20 @@ def contatti():
 
 def send_email(email, oggetto, messaggio):
 
+    safe_email = html.escape(email or "")
+    safe_oggetto = html.escape(oggetto or "")
+    safe_messaggio = html.escape(messaggio or "").replace("\n", "<br>")
+
     try:
         resend.Emails.send({
             "from": "onboarding@resend.dev",
             "to": ["andrea.pic2018@libero.it"],
-            "subject": f"[Contatti] {oggetto}",
+            "subject": f"[Contatti] {safe_oggetto}",
             "html": f"""
                 <h3>Nuovo messaggio dal sito</h3>
-                <p><strong>Email:</strong> {email}</p>
-                <p><strong>Oggetto:</strong> {oggetto}</p>
-                <p><strong>Messaggio:</strong><br>{messaggio}</p>
+                <p><strong>Email:</strong> {safe_email}</p>
+                <p><strong>Oggetto:</strong> {safe_oggetto}</p>
+                <p><strong>Messaggio:</strong><br>{safe_messaggio}</p>
             """
         })
 
@@ -1778,6 +1787,7 @@ def forgot_password():
                     <p>Valido per 30 minuti.</p>
                 """
             })
+            
         except Exception as e:
             print("EMAIL RESET ERROR:", repr(e))
 
