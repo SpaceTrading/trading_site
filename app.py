@@ -493,6 +493,23 @@ def montecarlo_run():
 
         sims = int(data.get("simulations", 1000))
         sims = max(10, min(sims, 10000))
+        
+        # =========================
+        # EQUITY-BASED INPUTS
+        # =========================
+        try:
+            initial_capital = float(data.get("initial_capital", 10000))
+        except:
+            initial_capital = 10000.0
+        
+        try:
+            ruin_pct = float(data.get("ruin_pct", 30))
+        except:
+            ruin_pct = 30.0
+        
+        # clamp prudenziale
+        initial_capital = max(100.0, min(initial_capital, 1_000_000_000.0))
+        ruin_pct = max(1.0, min(ruin_pct, 95.0))        
 
         # =========================
         # ORIGINAL EQUITY
@@ -655,6 +672,18 @@ def montecarlo_run():
         # 3. Robustness Ratio (trade vs parametri)
         estimated_params = 10  # default prudenziale
         robustness_ratio = len(trades) / estimated_params if estimated_params > 0 else 0.0        
+        
+        # =========================
+        # EQUITY-BASED METRICS
+        # =========================
+        equity_based_metrics = build_equity_based_metrics(
+            trades=trades,
+            original_equity=original_equity,
+            all_equities=all_equities,
+            bootstrap_equities=bootstrap_equities,
+            initial_capital=initial_capital,
+            ruin_pct=ruin_pct
+        )        
 
         # =========================
         # OUTPUT
@@ -673,6 +702,9 @@ def montecarlo_run():
             "bootstrap_samples": [b.tolist() for b in bootstrap_equities[:50]],
             "drawdowns": drawdowns,
             "recovery_times": recovery_times,
+        
+            # NUOVA ESTENSIONE EQUITY-BASED
+            "equity_based_metrics": equity_based_metrics,
         
             "advanced_metrics": {
                 "sharpe": float(sharpe),
@@ -722,6 +754,157 @@ def max_drawdown(equity):
             max_dd = dd
 
     return max_dd
+
+def max_drawdown_pct(equity):
+    """
+    Max drawdown percentuale su una equity curve reale.
+    Esempio: equity = capitale iniziale + PnL cumulato.
+    Ritorna percentuale, es. 12.5 = 12.5%.
+    """
+    if equity is None or len(equity) == 0:
+        return 0.0
+
+    peak = float(equity[0])
+    max_dd_pct = 0.0
+
+    for x in equity:
+        x = float(x)
+
+        if x > peak:
+            peak = x
+
+        if peak <= 0:
+            continue
+
+        dd_pct = ((peak - x) / peak) * 100.0
+
+        if dd_pct > max_dd_pct:
+            max_dd_pct = dd_pct
+
+    return float(max_dd_pct)
+
+
+def ulcer_index_pct(equity):
+    """
+    Ulcer Index percentuale:
+    misura profondità e durata dei drawdown in percentuale.
+    """
+    if equity is None or len(equity) == 0:
+        return 0.0
+
+    peak = float(equity[0])
+    dd_pct_points = []
+
+    for x in equity:
+        x = float(x)
+
+        if x > peak:
+            peak = x
+
+        if peak <= 0:
+            dd_pct_points.append(0.0)
+            continue
+
+        dd_pct = ((peak - x) / peak) * 100.0
+        dd_pct_points.append(dd_pct)
+
+    return float(np.sqrt(np.mean(np.square(dd_pct_points)))) if dd_pct_points else 0.0
+
+
+def build_equity_based_metrics(
+    trades,
+    original_equity,
+    all_equities,
+    bootstrap_equities,
+    initial_capital,
+    ruin_pct
+):
+    """
+    Estensione Equity-Based:
+    usa capitale iniziale reale/ipotetico per calcolare rischio percentuale,
+    drawdown %, final equity e probability of ruin.
+    Non modifica le metriche PnL-based esistenti.
+    """
+
+    initial_capital = float(initial_capital)
+    ruin_pct = float(ruin_pct)
+
+    # Protezioni minime
+    if initial_capital <= 0:
+        initial_capital = 10000.0
+
+    ruin_pct = max(1.0, min(95.0, ruin_pct))
+
+    # =========================
+    # ORIGINAL EQUITY CAPITAL-BASED
+    # =========================
+    original_capital_curve = initial_capital + np.array(original_equity, dtype=float)
+
+    original_max_dd_pct = max_drawdown_pct(original_capital_curve)
+
+    # =========================
+    # SHUFFLE EQUITY-BASED DD
+    # =========================
+    shuffle_dd_pct = []
+    shuffle_ulcers_pct = []
+
+    for eq in all_equities:
+        capital_curve = initial_capital + np.array(eq, dtype=float)
+        shuffle_dd_pct.append(max_drawdown_pct(capital_curve))
+        shuffle_ulcers_pct.append(ulcer_index_pct(capital_curve))
+
+    median_max_dd_pct = float(np.median(shuffle_dd_pct)) if shuffle_dd_pct else 0.0
+    worst_95_max_dd_pct = float(np.percentile(shuffle_dd_pct, 95)) if shuffle_dd_pct else 0.0
+    avg_ulcer_pct = float(np.mean(shuffle_ulcers_pct)) if shuffle_ulcers_pct else 0.0
+
+    # =========================
+    # BOOTSTRAP FINAL EQUITY + RUIN
+    # =========================
+    final_equities = []
+    ruin_count = 0
+
+    ruin_level = initial_capital * (1.0 - ruin_pct / 100.0)
+
+    for eq in bootstrap_equities:
+        capital_curve = initial_capital + np.array(eq, dtype=float)
+
+        final_equities.append(float(capital_curve[-1]))
+
+        # rovina se in qualunque punto scende sotto la soglia capitale
+        if np.any(capital_curve <= ruin_level):
+            ruin_count += 1
+
+    probability_of_ruin = ruin_count / len(bootstrap_equities) if bootstrap_equities else 0.0
+
+    median_final_equity = float(np.median(final_equities)) if final_equities else initial_capital
+    worst_5_final_equity = float(np.percentile(final_equities, 5)) if final_equities else initial_capital
+
+    # =========================
+    # RETURN STABILITY RATIO
+    # =========================
+    trade_returns_pct = np.array(trades, dtype=float) / initial_capital
+
+    mean_return = float(np.mean(trade_returns_pct)) if len(trade_returns_pct) else 0.0
+    std_return = float(np.std(trade_returns_pct)) if len(trade_returns_pct) else 0.0
+
+    return_stability_ratio = mean_return / std_return if std_return != 0 else 0.0
+
+    return {
+        "initial_capital": float(initial_capital),
+        "ruin_pct": float(ruin_pct),
+
+        "original_max_drawdown_pct": float(original_max_dd_pct),
+        "median_max_drawdown_pct": float(median_max_dd_pct),
+        "worst_95_max_drawdown_pct": float(worst_95_max_dd_pct),
+        "ulcer_index_pct": float(avg_ulcer_pct),
+
+        # Nota: frontend moltiplica per 100
+        "probability_of_ruin_pct": float(probability_of_ruin),
+
+        "median_final_equity": float(median_final_equity),
+        "worst_5_final_equity": float(worst_5_final_equity),
+        "return_stability_ratio": float(return_stability_ratio),
+    }
 
 def extract_trades_from_file(file):
     file.seek(0)
