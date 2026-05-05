@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Space-T 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-04 08:58+0200\n"
+"POT-Creation-Date: 2026-05-05 16:16+0200\n"
 "PO-Revision-Date: 2026-05-03 11:30+0200\n"
 "Last-Translator: Space-T\n"
 "Language: es\n"
@@ -14,45 +14,45 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: templates/contatti.html:3 templates/contatti.html:40
-#: templates/layout.html:189
+#: templates/contatti.html:3 templates/contatti.html:32
+#: templates/layout.html:218
 msgid "Contatti"
 msgstr "Contacto"
 
-#: templates/contatti.html:41
+#: templates/contatti.html:33
 msgid "Hai domande o richieste? Scrivici"
 msgstr "¿Tienes preguntas o solicitudes? Escríbenos"
 
-#: templates/contatti.html:66
+#: templates/contatti.html:59
 msgid "Invia un messaggio"
 msgstr "Enviar un mensaje"
 
-#: templates/contatti.html:78
+#: templates/contatti.html:71
 msgid "Grazie per averci contattato!"
 msgstr "¡Gracias por contactarnos!"
 
-#: templates/contatti.html:79
+#: templates/contatti.html:72
 msgid "Ti risponderemo entro 3-4 ore."
 msgstr "Te responderemos en un plazo de 3 a 4 horas."
 
-#: templates/contatti.html:80
+#: templates/contatti.html:73
 msgid "Controlla anche la cartella spam."
 msgstr "Revisa también la carpeta de spam."
 
-#: templates/contatti.html:86 templates/layout.html:260
-#: templates/layout.html:282
+#: templates/contatti.html:79 templates/layout.html:310
+#: templates/layout.html:332
 msgid "Email"
 msgstr "Email"
 
-#: templates/contatti.html:95
+#: templates/contatti.html:88
 msgid "Oggetto"
 msgstr "Asunto"
 
-#: templates/contatti.html:104
+#: templates/contatti.html:97
 msgid "Messaggio"
 msgstr "Mensaje"
 
-#: templates/contatti.html:115
+#: templates/contatti.html:108
 msgid "Invia"
 msgstr "Enviar"
 
@@ -139,7 +139,7 @@ msgstr ""
 "rendimientos"
 
 #: templates/dashboard.html:3 templates/dashboard.html:9
-#: templates/layout.html:192
+#: templates/layout.html:221
 msgid "Dashboard"
 msgstr "Panel"
 
@@ -172,7 +172,7 @@ msgid "Puoi già iniziare ad utilizzare gli strumenti disponibili all'interno de
 msgstr "Ya puedes empezar a utilizar las herramientas disponibles dentro del"
 
 #: templates/dashboard.html:31 templates/laboratorio.html:3
-#: templates/laboratorio.html:97 templates/layout.html:166
+#: templates/laboratorio.html:97 templates/layout.html:195
 msgid "Laboratorio"
 msgstr "Laboratorio"
 
@@ -202,12 +202,12 @@ msgstr "los manuales PDF, los archivos SET y controla el estado de tus licencias
 msgid "Apri i miei prodotti"
 msgstr "Abrir mis productos"
 
-#: templates/dashboard.html:61 templates/layout.html:210
+#: templates/dashboard.html:61 templates/layout.html:252
 msgid "Logout"
 msgstr "Cerrar sesión"
 
 #: templates/expert_advisor.html:3 templates/expert_advisor.html:34
-#: templates/layout.html:162
+#: templates/layout.html:191
 msgid "Expert Advisor"
 msgstr "Expert Advisor"
 
@@ -219,8 +219,8 @@ msgstr "Automatización avanzada para el trading"
 msgid "Inizia ora"
 msgstr "Empieza ahora"
 
-#: templates/expert_advisor.html:42 templates/layout.html:227
-#: templates/layout.html:256
+#: templates/expert_advisor.html:42 templates/layout.html:277
+#: templates/layout.html:306
 msgid "Login"
 msgstr "Iniciar sesión"
 
@@ -242,8 +242,8 @@ msgid "Operazioni rapide su timeframe bassi"
 msgstr "Operaciones rápidas en marcos temporales bajos"
 
 #: templates/expert_advisor.html:142
-msgid "Algoritmo avanzato con logiche AI"
-msgstr "Algoritmo avanzado con lógica de IA"
+msgid "Infrastruttura avanzata con AI agent e reti neurali."
+msgstr ""
 
 #: templates/forex_converter.html:3 templates/forex_converter.html:9
 #: templates/laboratorio.html:85
@@ -282,7 +282,7 @@ msgstr "Simulador Monte Carlo"
 msgid "Rolling Forward Analysis"
 msgstr "Rolling Forward Analysis"
 
-#: templates/laboratorio.html:90 templates/layout.html:183
+#: templates/laboratorio.html:90 templates/layout.html:212
 msgid "Mappa Azionariato"
 msgstr "Mapa de accionariado"
 
@@ -294,209 +294,536 @@ msgstr "Selecciona una herramienta en el menú de la izquierda"
 msgid "Accedi per utilizzare strumenti avanzati"
 msgstr "Inicia sesión para utilizar herramientas avanzadas"
 
-#: templates/layout.html:161
+#: templates/layout.html:190
 msgid "Home"
 msgstr "Inicio"
 
-#: templates/layout.html:172
+#: templates/layout.html:201
 msgid "Trading Tools"
 msgstr "Herramientas de trading"
 
-#: templates/layout.html:180
+#: templates/layout.html:209
 msgid "Market Tools"
 msgstr "Herramientas de mercado"
 
-#: templates/layout.html:181
+#: templates/layout.html:210
 msgid "Correlazioni"
 msgstr "Correlaciones"
 
-#: templates/layout.html:182
+#: templates/layout.html:211
 msgid "Forex Converter"
 msgstr "Conversor Forex"
 
-#: templates/layout.html:193
-msgid "Segnali"
-msgstr "Señales"
-
-#: templates/layout.html:228 templates/layout.html:279
+#: templates/layout.html:278 templates/layout.html:329
 msgid "Register"
 msgstr "Registro"
 
-#: templates/layout.html:262 templates/layout.html:283
+#: templates/layout.html:312 templates/layout.html:333
 msgid "Password"
 msgstr "Contraseña"
 
-#: templates/layout.html:266
+#: templates/layout.html:316
 msgid "Accedi"
 msgstr "Acceder"
 
-#: templates/layout.html:270
+#: templates/layout.html:320
 msgid "Hai dimenticato la password?"
 msgstr "¿Has olvidado la contraseña?"
 
-#: templates/layout.html:284
+#: templates/layout.html:334
 msgid "Ripeti Password"
 msgstr "Repetir contraseña"
 
-#: templates/layout.html:288
+#: templates/layout.html:338
 msgid "Registrati"
 msgstr "Registrarse"
 
-#: templates/montecarlo.html:3
-#, fuzzy
-msgid "Monte Carlo"
-msgstr "Simulador Monte Carlo"
-
 #: templates/montecarlo.html:23
 msgid "Carica Report"
-msgstr ""
+msgstr "Cargar informe"
 
-#: templates/montecarlo.html:29
-msgid "Simulazioni:"
-msgstr ""
+#: templates/montecarlo.html:38
+msgid "Parametri simulazione"
+msgstr "Parámetros de simulación"
 
-#: templates/montecarlo.html:33 templates/montecarlo.html:128
+#: templates/montecarlo.html:48
+msgid "Simulazioni"
+msgstr "Simulaciones"
+
+#: templates/montecarlo.html:61
+msgid "Capitale iniziale"
+msgstr "Capital inicial"
+
+#: templates/montecarlo.html:74
+msgid "Soglia rovina"
+msgstr "Umbral de ruina"
+
+#: templates/montecarlo.html:95
+msgid ""
+"Usa lo stesso capitale iniziale del backtest per valutare il rischio "
+"reale del report caricato."
+msgstr ""
+"Usa el mismo capital inicial del backtest para evaluar el riesgo real del "
+"informe cargado."
+
+#: templates/montecarlo.html:96
+msgid ""
+"Modifica questo valore solo se vuoi simulare uno scenario “what-if” con "
+"un capitale diverso."
+msgstr ""
+"Modifica este valor solo si quieres simular un escenario “what-if” con un "
+"capital diferente."
+
+#: templates/montecarlo.html:99
+msgid ""
+"La soglia di rovina indica la perdita massima tollerata sul capitale "
+"iniziale."
+msgstr ""
+"El umbral de ruina indica la pérdida máxima tolerada sobre el capital "
+"inicial."
+
+#: templates/montecarlo.html:100
+msgid ""
+"Valori più bassi rendono il test più severo; valori più alti lo rendono "
+"più permissivo."
+msgstr ""
+"Valores más bajos hacen que la prueba sea más estricta; valores más altos "
+"la hacen más permisiva."
+
+#: templates/montecarlo.html:101
+#, no-python-format
+msgid "Default consigliato: 30%."
+msgstr "Valor predeterminado recomendado: 30%."
+
+#: templates/montecarlo.html:109 templates/montecarlo.html:225
 msgid "Avvia Simulazione"
-msgstr ""
-
-#: templates/montecarlo.html:53
-msgid "Come leggere il grafico Monte Carlo"
-msgstr ""
-
-#: templates/montecarlo.html:56
-msgid ""
-"Il simulatore prende la lista dei trade del backtest e rimescola l’ordine"
-" delle operazioni centinaia o migliaia di volte. Ogni linea mostra una "
-"possibile evoluzione alternativa dell’equity curve."
-msgstr ""
-
-#: templates/montecarlo.html:60
-msgid "Blu"
-msgstr ""
-
-#: templates/montecarlo.html:60
-msgid "equity originale del backtest reale"
-msgstr ""
-
-#: templates/montecarlo.html:61
-msgid "Verde"
-msgstr ""
-
-#: templates/montecarlo.html:61
-msgid "curva mediana delle simulazioni"
-msgstr ""
-
-#: templates/montecarlo.html:62
-msgid "Rosso"
-msgstr ""
-
-#: templates/montecarlo.html:62
-#, python-format
-msgid "scenario peggiore tra il 5% finale delle simulazioni"
-msgstr ""
-
-#: templates/montecarlo.html:63
-msgid "Giallo"
-msgstr ""
-
-#: templates/montecarlo.html:63
-#, python-format
-msgid "scenario migliore tra il 5% finale delle simulazioni"
-msgstr ""
-
-#: templates/montecarlo.html:64
-msgid "Grigio"
-msgstr ""
-
-#: templates/montecarlo.html:64
-msgid "campione di simulazioni casuali usate come nuvola statistica"
-msgstr ""
-
-#: templates/montecarlo.html:68
-msgid ""
-"Se la curva originale resta dentro la nuvola grigia, il backtest è "
-"coerente con gli scenari simulati. Se invece è molto fuori dalla nuvola, "
-"può indicare instabilità, fortuna statistica o overfitting."
-msgstr ""
-
-#: templates/montecarlo.html:103
-msgid "Download CSV"
-msgstr ""
-
-#: templates/montecarlo.html:112
-msgid "Accesso richiesto"
-msgstr ""
-
-#: templates/montecarlo.html:123
-msgid "Seleziona un file"
-msgstr ""
-
-#: templates/montecarlo.html:124
-msgid "Trades caricati"
-msgstr ""
-
-#: templates/montecarlo.html:125
-msgid "Carica prima un file e attendi il caricamento"
-msgstr ""
-
-#: templates/montecarlo.html:126
-msgid "Inserisci un numero valido (10 - 10.000)"
-msgstr ""
-
-#: templates/montecarlo.html:127
-msgid "Simulazione in corso..."
-msgstr ""
-
-#: templates/montecarlo.html:129
-#, fuzzy
-msgid "Errore server"
-msgstr "Error"
+msgstr "Iniciar simulación"
 
 #: templates/montecarlo.html:130
-msgid "Errore di connessione server"
-msgstr ""
+msgid "Come leggere il grafico Monte Carlo"
+msgstr "Cómo leer el gráfico Monte Carlo"
 
-#: templates/montecarlo.html:131
-msgid "Nessuna metrica disponibile"
+#: templates/montecarlo.html:133
+msgid ""
+"Il simulatore prende la lista dei trade del backtest e rimescola l’ordine"
+" delle operazioni centinaia o migliaia di volte."
 msgstr ""
-
-#: templates/montecarlo.html:132
-#, fuzzy
-msgid "Esegui prima una simulazione Monte Carlo"
-msgstr "Simulador Monte Carlo"
+"El simulador toma la lista de trades del backtest y mezcla el orden de las "
+"operaciones cientos o miles de veces."
 
 #: templates/montecarlo.html:134
-msgid "Advanced Metrics"
-msgstr ""
+msgid "Ogni linea mostra una possibile evoluzione alternativa dell’equity curve."
+msgstr "Cada línea muestra una posible evolución alternativa de la equity curve."
 
-#: templates/montecarlo.html:135
-#, fuzzy
-msgid "Numero di Trade"
-msgstr "Número de periodos:"
+#: templates/montecarlo.html:138
+msgid "Blu"
+msgstr "Azul"
 
-#: templates/montecarlo.html:136
-msgid "Frequenza"
-msgstr ""
-
-#: templates/montecarlo.html:137
-msgid "Numero di trade per recupero"
-msgstr ""
+#: templates/montecarlo.html:138
+msgid "equity originale del backtest reale"
+msgstr "equity curve original del backtest real"
 
 #: templates/montecarlo.html:139
-msgid "Drawdown Distribution"
-msgstr ""
+msgid "Verde"
+msgstr "Verde"
+
+#: templates/montecarlo.html:139
+msgid "curva mediana delle simulazioni"
+msgstr "curva mediana de las simulaciones"
 
 #: templates/montecarlo.html:140
-msgid "Time to Recovery Distribution"
-msgstr ""
+#, no-python-format
+msgid "scenario peggiore tra il 5% finale delle simulazioni"
+msgstr "peor escenario entre el 5% final de las simulaciones"
 
 #: templates/montecarlo.html:141
-msgid "Bootstrap Simulation"
-msgstr ""
+msgid "Giallo"
+msgstr "Amarillo"
+
+#: templates/montecarlo.html:141
+#, no-python-format
+msgid "scenario migliore tra il 5% finale delle simulazioni"
+msgstr "mejor escenario entre el 5% final de las simulaciones"
 
 #: templates/montecarlo.html:142
-msgid "Monte Carlo Simulation"
+msgid "Grigio"
+msgstr "Gris"
+
+#: templates/montecarlo.html:142
+msgid "campione di simulazioni casuali usate come nuvola statistica"
+msgstr "muestra de simulaciones aleatorias usada como nube estadística"
+
+#: templates/montecarlo.html:146
+msgid ""
+"Se la curva originale resta dentro la nuvola grigia, il backtest è "
+"coerente con gli scenari simulati."
 msgstr ""
+"Si la curva original permanece dentro de la nube gris, el backtest es "
+"coherente con los escenarios simulados."
+
+#: templates/montecarlo.html:147
+msgid ""
+"Se invece è molto fuori dalla nuvola, può indicare instabilità, fortuna "
+"statistica o overfitting."
+msgstr ""
+"Si, en cambio, queda muy fuera de la nube, puede indicar inestabilidad, "
+"suerte estadística u overfitting."
+
+#: templates/montecarlo.html:197
+msgid "Download CSV"
+msgstr "Descargar CSV"
+
+#: templates/montecarlo.html:206
+msgid "Accesso richiesto"
+msgstr "Acceso requerido"
+
+#: templates/montecarlo.html:218
+msgid "Seleziona un file"
+msgstr "Selecciona un archivo"
+
+#: templates/montecarlo.html:219
+msgid "Trades caricati"
+msgstr "Trades cargados"
+
+#: templates/montecarlo.html:220
+msgid "Carica prima un file e attendi il caricamento"
+msgstr "Carga primero un archivo y espera a que termine la carga"
+
+#: templates/montecarlo.html:221
+msgid "Inserisci un numero valido di simulazioni (10 - 10.000)"
+msgstr "Introduce un número válido de simulaciones (10 - 10.000)"
+
+#: templates/montecarlo.html:222
+msgid "Inserisci un capitale iniziale valido"
+msgstr "Introduce un capital inicial válido"
+
+#: templates/montecarlo.html:223
+#, no-python-format
+msgid "Inserisci una soglia di rovina valida (1% - 95%)"
+msgstr "Introduce un umbral de ruina válido (1% - 95%)"
+
+#: templates/montecarlo.html:224
+msgid "Simulazione in corso..."
+msgstr "Simulación en curso..."
+
+#: templates/montecarlo.html:226
+msgid "Errore server"
+msgstr "Error del servidor"
+
+#: templates/montecarlo.html:227
+msgid "Errore di connessione server"
+msgstr "Error de conexión con el servidor"
+
+#: templates/montecarlo.html:228
+msgid "Esegui prima una simulazione Monte Carlo"
+msgstr "Ejecuta primero una simulación Monte Carlo"
+
+#: templates/montecarlo.html:229
+msgid "Nessuna metrica disponibile"
+msgstr "No hay métricas disponibles"
+
+#: templates/montecarlo.html:230
+msgid ""
+"Metriche calcolate partendo dal capitale iniziale inserito. Sono utili "
+"per stimare drawdown percentuale, rischio di rovina e impatto reale sul "
+"conto."
+msgstr ""
+"Métricas calculadas a partir del capital inicial introducido. Son útiles "
+"para estimar el drawdown porcentual, el riesgo de ruina y el impacto real "
+"en la cuenta."
+
+#: templates/montecarlo.html:232
+msgid "Numero di trade per recupero"
+msgstr "Número de trades para recuperación"
+
+#: templates/montecarlo.html:233
+msgid "Frequenza"
+msgstr "Frecuencia"
+
+#: templates/montecarlo.html:234
+msgid "Numero di Trade"
+msgstr "Número de trades"
+
+#: templates/montecarlo.html:236
+msgid ""
+"Misura il rapporto tra profitto medio e variabilità dei trade. In questa "
+"versione è uno Sharpe-like per trade basato sul PnL assoluto, non uno "
+"Sharpe Ratio annualizzato accademico. Range orientativi: sotto 0.05 = "
+"debole; 0.05-0.15 = discreto; 0.15-0.30 = buono; oltre 0.30 = molto "
+"forte."
+msgstr ""
+"Mide la relación entre el beneficio medio y la variabilidad de los trades. "
+"En esta versión es una métrica tipo Sharpe por trade basada en el PnL "
+"absoluto, no un Sharpe Ratio académico anualizado. Rangos orientativos: "
+"por debajo de 0.05 = débil; 0.05-0.15 = aceptable; 0.15-0.30 = bueno; por "
+"encima de 0.30 = muy fuerte."
+
+#: templates/montecarlo.html:237
+msgid ""
+"Misura il rendimento rispetto alla sola variabilità negativa, cioè "
+"considera soprattutto i trade sfavorevoli. Valori più alti indicano "
+"maggiore efficienza rispetto al rischio di perdita. Range orientativi: "
+"sotto 0.10 = debole; 0.10-0.30 = discreto; 0.30-0.70 = buono; oltre 0.70 "
+"= molto forte."
+msgstr ""
+"Mide el rendimiento respecto únicamente a la variabilidad negativa, es "
+"decir, considera sobre todo los trades desfavorables. Valores más altos "
+"indican mayor eficiencia frente al riesgo de pérdida. Rangos orientativos: "
+"por debajo de 0.10 = débil; 0.10-0.30 = aceptable; 0.30-0.70 = bueno; por "
+"encima de 0.70 = muy fuerte."
+
+#: templates/montecarlo.html:238
+msgid ""
+"Rapporto tra profitto totale e massimo drawdown cash. Misura quante unità"
+" di profitto vengono generate per ogni unità di drawdown subito. Range "
+"orientativi: sotto 1 = fragile; 1-2 = discreto; 2-4 = buono; oltre 4 = "
+"molto forte."
+msgstr ""
+"Relación entre el beneficio total y el máximo drawdown en efectivo. Mide "
+"cuántas unidades de beneficio se generan por cada unidad de drawdown "
+"sufrida. Rangos orientativos: por debajo de 1 = frágil; 1-2 = aceptable; "
+"2-4 = bueno; por encima de 4 = muy fuerte."
+
+#: templates/montecarlo.html:239
+#, no-python-format
+msgid ""
+"Misura intensità e durata dei drawdown. Non guarda solo quanto la curva "
+"scende, ma anche per quanto tempo resta sotto i massimi precedenti. "
+"Valori più bassi indicano una curva meno stressante. Questa versione è "
+"cash-based; per la lettura percentuale usa anche Ulcer Index % nella "
+"sezione Equity-Based."
+msgstr ""
+"Mide la intensidad y la duración de los drawdowns. No analiza solo cuánto "
+"cae la curva, sino también durante cuánto tiempo permanece por debajo de "
+"sus máximos anteriores. Valores más bajos indican una curva menos "
+"estresante. Esta versión está basada en efectivo; para una lectura "
+"porcentual, usa también Ulcer Index % en la sección Equity-Based."
+
+#: templates/montecarlo.html:240
+msgid ""
+"Conditional Drawdown at Risk: media dei drawdown peggiori nelle "
+"simulazioni. Serve a stimare la gravità degli scenari estremi, non solo "
+"il drawdown medio. Valori più alti indicano code negative più pesanti."
+msgstr ""
+"Conditional Drawdown at Risk: media de los peores drawdowns en las "
+"simulaciones. Sirve para estimar la gravedad de los escenarios extremos, "
+"no solo el drawdown medio. Valores más altos indican colas negativas más "
+"pesadas."
+
+#: templates/montecarlo.html:241
+#, no-python-format
+msgid ""
+"Stima la probabilità che la simulazione raggiunga una soglia critica. "
+"Questa è la metrica storica PnL-based del simulatore. Per una lettura più"
+" realistica, guarda anche Probability of Ruin % nella sezione Equity-"
+"Based, che usa capitale iniziale e soglia di rovina impostata."
+msgstr ""
+"Estima la probabilidad de que la simulación alcance un umbral crítico. "
+"Esta es la métrica histórica del simulador basada en PnL. Para una lectura "
+"más realista, consulta también Probability of Ruin % en la sección "
+"Equity-Based, que utiliza el capital inicial y el umbral de ruina definido."
+
+#: templates/montecarlo.html:242
+msgid ""
+"Misura quanto sono dispersi i risultati finali delle simulazioni "
+"bootstrap. Valori alti indicano maggiore incertezza sul risultato finale;"
+" valori bassi indicano risultati più concentrati."
+msgstr ""
+"Mide qué tan dispersos están los resultados finales de las simulaciones "
+"bootstrap. Valores altos indican mayor incertidumbre sobre el resultado "
+"final; valores bajos indican resultados más concentrados."
+
+#: templates/montecarlo.html:243
+#, no-python-format
+msgid ""
+"Indica la soglia sotto cui cade il peggior 5% dei risultati finali. Serve"
+" a capire quale risultato finale sfavorevole può verificarsi nella coda "
+"negativa delle simulazioni. Va letto insieme al CVaR, che misura quanto "
+"sono gravi gli scenari oltre quella soglia."
+msgstr ""
+"Indica el umbral por debajo del cual cae el peor 5% de los resultados "
+"finales. Sirve para entender qué resultado final desfavorable puede "
+"producirse en la cola negativa de las simulaciones. Debe leerse junto con "
+"el CVaR, que mide la gravedad de los escenarios más allá de ese umbral."
+
+#: templates/montecarlo.html:244
+msgid ""
+"Media degli scenari peggiori oltre il VaR. È più severo del VaR perché "
+"non dice solo dove inizia la coda negativa, ma quanto sono gravi "
+"mediamente gli scenari peggiori."
+msgstr ""
+"Media de los peores escenarios más allá del VaR. Es más severo que el VaR "
+"porque no solo indica dónde empieza la cola negativa, sino también qué tan "
+"graves son de media los peores escenarios."
+
+#: templates/montecarlo.html:245
+msgid ""
+"Misura quanto la strategia cambia quando i trade vengono disturbati da "
+"piccolo rumore casuale. Range orientativi: vicino a 1 = comportamento "
+"stabile; molto sotto 1 = possibile fragilità; molto sopra 1 = risultato "
+"da interpretare con cautela."
+msgstr ""
+"Mide cuánto cambia la estrategia cuando los trades se alteran con un "
+"pequeño ruido aleatorio. Rangos orientativos: cerca de 1 = comportamiento "
+"estable; muy por debajo de 1 = posible fragilidad; muy por encima de 1 = "
+"resultado que debe interpretarse con cautela."
+
+#: templates/montecarlo.html:246
+msgid ""
+"Versione prudenziale dello Sharpe, ridotta per tenere conto del rischio "
+"di overfitting e deterioramento fuori campione. Non è una metrica "
+"accademica pura, ma un indicatore conservativo."
+msgstr ""
+"Versión prudencial del Sharpe, reducida para tener en cuenta el riesgo de "
+"overfitting y deterioro fuera de muestra. No es una métrica académica pura, "
+"sino un indicador conservador."
+
+#: templates/montecarlo.html:247
+msgid ""
+"Rapporto tra numero di trade e complessità stimata della strategia. Range"
+" orientativi: sotto 10 = campione debole; 10-30 = accettabile; 30-100 = "
+"buono; oltre 100 = molto solido, se i trade sono realmente indipendenti. "
+"Valori alti indicano maggiore supporto statistico; valori bassi aumentano"
+" il rischio di overfitting."
+msgstr ""
+"Relación entre el número de trades y la complejidad estimada de la "
+"estrategia. Rangos orientativos: por debajo de 10 = muestra débil; 10-30 = "
+"aceptable; 30-100 = bueno; por encima de 100 = muy sólido, si los trades "
+"son realmente independientes. Valores altos indican mayor soporte "
+"estadístico; valores bajos aumentan el riesgo de overfitting."
+
+#: templates/montecarlo.html:249
+msgid ""
+"Capitale iniziale usato per trasformare il PnL assoluto dei trade in una "
+"vera equity curve. Per valutare il report caricato, usa lo stesso "
+"capitale iniziale presente nel backtest MT5. Se modifichi questo valore, "
+"stai facendo una simulazione what-if con un capitale diverso."
+msgstr ""
+"Capital inicial usado para transformar el PnL absoluto de los trades en una "
+"verdadera equity curve. Para evaluar el informe cargado, usa el mismo "
+"capital inicial presente en el backtest MT5. Si modificas este valor, estás "
+"realizando una simulación what-if con un capital diferente."
+
+#: templates/montecarlo.html:250
+#, no-python-format
+msgid ""
+"Indica la perdita massima tollerata sul capitale iniziale. Con soglia "
+"30%, un conto da 10.000 viene considerato in rovina se scende a 7.000 o "
+"meno. Range orientativi: 10-15% = molto severo; 20-30% = prudente; 40-50%"
+" = permissivo."
+msgstr ""
+"Indica la pérdida máxima tolerada sobre el capital inicial. Con un umbral "
+"del 30%, una cuenta de 10.000 se considera en ruina si baja a 7.000 o "
+"menos. Rangos orientativos: 10-15% = muy estricto; 20-30% = prudente; "
+"40-50% = permisivo."
+
+#: templates/montecarlo.html:251
+#, no-python-format
+msgid ""
+"Massimo drawdown percentuale della curva originale del backtest, "
+"calcolato usando il capitale iniziale inserito. Range orientativi: sotto "
+"5% = contenuto; 5-15% = moderato; 15-25% = importante; oltre 25% = "
+"elevato. La valutazione dipende da asset, durata del test, leva e "
+"obiettivo della strategia."
+msgstr ""
+"Máximo drawdown porcentual de la curva original del backtest, calculado "
+"usando el capital inicial introducido. Rangos orientativos: por debajo de "
+"5% = contenido; 5-15% = moderado; 15-25% = importante; por encima de 25% = "
+"elevado. La evaluación depende del activo, la duración de la prueba, el "
+"apalancamiento y el objetivo de la estrategia."
+
+#: templates/montecarlo.html:252
+msgid ""
+"Drawdown percentuale mediano tra le simulazioni Monte Carlo. Rappresenta "
+"uno scenario centrale, non estremo. Se è vicino al drawdown originale, il"
+" backtest è coerente con gli scenari simulati. Se è molto più alto, la "
+"sequenza reale potrebbe essere stata favorevole."
+msgstr ""
+"Drawdown porcentual mediano entre las simulaciones Monte Carlo. Representa "
+"un escenario central, no extremo. Si está cerca del drawdown original, el "
+"backtest es coherente con los escenarios simulados. Si es mucho más alto, "
+"la secuencia real podría haber sido favorable."
+
+#: templates/montecarlo.html:253
+#, no-python-format
+msgid ""
+"Drawdown percentuale associato alla coda peggiore delle simulazioni. È "
+"spesso più utile del drawdown originale per valutare la robustezza, "
+"perché mostra cosa può accadere in scenari sfavorevoli. Range "
+"orientativi: sotto 10% = gestibile; 10-25% = rilevante; oltre 25-30% = "
+"molto impegnativo."
+msgstr ""
+"Drawdown porcentual asociado a la peor cola de las simulaciones. A menudo "
+"es más útil que el drawdown original para evaluar la robustez, porque "
+"muestra lo que puede ocurrir en escenarios desfavorables. Rangos "
+"orientativos: por debajo de 10% = gestionable; 10-25% = relevante; por "
+"encima de 25-30% = muy exigente."
+
+#: templates/montecarlo.html:254
+#, no-python-format
+msgid ""
+"Misura profondità e durata dei drawdown in percentuale. A differenza del "
+"Max Drawdown, considera anche per quanto tempo la curva resta sotto i "
+"massimi precedenti. Range orientativi: sotto 2% = molto basso; 2-5% = "
+"contenuto; 5-10% = moderato; oltre 10% = stressante."
+msgstr ""
+"Mide la profundidad y la duración de los drawdowns en porcentaje. A "
+"diferencia del Max Drawdown, también considera durante cuánto tiempo la "
+"curva permanece por debajo de sus máximos anteriores. Rangos orientativos: "
+"por debajo de 2% = muy bajo; 2-5% = contenido; 5-10% = moderado; por encima "
+"de 10% = estresante."
+
+#: templates/montecarlo.html:255
+#, no-python-format
+msgid ""
+"Probabilità che una simulazione scenda sotto la soglia di rovina "
+"impostata. Dipende fortemente dal capitale iniziale e dalla soglia "
+"scelta. Range orientativi: 0% = ottimo sul campione simulato; 0-1% = "
+"basso; 1-5% = da monitorare; oltre 5% = critico."
+msgstr ""
+"Probabilidad de que una simulación caiga por debajo del umbral de ruina "
+"definido. Depende fuertemente del capital inicial y del umbral elegido. "
+"Rangos orientativos: 0% = excelente en la muestra simulada; 0-1% = bajo; "
+"1-5% = a vigilar; por encima de 5% = crítico."
+
+#: templates/montecarlo.html:256
+msgid ""
+"Valore finale mediano del conto nelle simulazioni bootstrap. Se è sopra "
+"il capitale iniziale, lo scenario centrale è profittevole. Se è vicino o "
+"sotto il capitale iniziale, la strategia può avere aspettativa fragile "
+"nel bootstrap."
+msgstr ""
+"Valor final mediano de la cuenta en las simulaciones bootstrap. Si está "
+"por encima del capital inicial, el escenario central es rentable. Si está "
+"cerca o por debajo del capital inicial, la estrategia puede tener una "
+"expectativa frágil en el bootstrap."
+
+#: templates/montecarlo.html:257
+#, no-python-format
+msgid ""
+"Valore finale sotto cui cade il peggior 5% degli scenari bootstrap. Se "
+"resta sopra il capitale iniziale, anche la coda sfavorevole chiude "
+"positiva. Se scende sotto, nei peggiori scenari il sistema può finire in "
+"perdita."
+msgstr ""
+"Valor final por debajo del cual cae el peor 5% de los escenarios "
+"bootstrap. Si permanece por encima del capital inicial, incluso la cola "
+"desfavorable cierra en positivo. Si baja por debajo, en los peores "
+"escenarios el sistema puede terminar en pérdida."
+
+#: templates/montecarlo.html:258
+msgid ""
+"Rapporto tra rendimento medio per trade e variabilità dei rendimenti "
+"rispetto al capitale iniziale. È simile allo Sharpe, ma calcolato sui "
+"ritorni percentuali per trade e non annualizzato. Range orientativi: "
+"sotto 0.05 = debole; 0.05-0.15 = discreto; 0.15-0.30 = buono; oltre 0.30 "
+"= molto forte."
+msgstr ""
+"Relación entre el rendimiento medio por trade y la variabilidad de los "
+"rendimientos respecto al capital inicial. Es similar al Sharpe, pero "
+"calculado sobre retornos porcentuales por trade y no anualizado. Rangos "
+"orientativos: por debajo de 0.05 = débil; 0.05-0.15 = aceptable; "
+"0.15-0.30 = bueno; por encima de 0.30 = muy fuerte."
 
 #: templates/risk_manager.html:9
 msgid "Risk Manager PRO"
@@ -558,3 +885,50 @@ msgstr "Rentabilidad %"
 msgid "R/R"
 msgstr "R/R"
 
+#~ msgid "Algoritmo avanzato con logiche AI"
+#~ msgstr "Algoritmo avanzado con lógica de IA"
+
+#~ msgid "Segnali"
+#~ msgstr "Señales"
+
+#~ msgid "Monte Carlo"
+#~ msgstr "Simulador Monte Carlo"
+
+#~ msgid "Simulazioni:"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Il simulatore prende la lista dei "
+#~ "trade del backtest e rimescola l’ordine"
+#~ " delle operazioni centinaia o migliaia "
+#~ "di volte. Ogni linea mostra una "
+#~ "possibile evoluzione alternativa dell’equity "
+#~ "curve."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Se la curva originale resta dentro "
+#~ "la nuvola grigia, il backtest è "
+#~ "coerente con gli scenari simulati. Se"
+#~ " invece è molto fuori dalla nuvola,"
+#~ " può indicare instabilità, fortuna "
+#~ "statistica o overfitting."
+#~ msgstr ""
+
+#~ msgid "Inserisci un numero valido (10 - 10.000)"
+#~ msgstr ""
+
+#~ msgid "Advanced Metrics"
+#~ msgstr ""
+
+#~ msgid "Drawdown Distribution"
+#~ msgstr ""
+
+#~ msgid "Time to Recovery Distribution"
+#~ msgstr ""
+
+#~ msgid "Bootstrap Simulation"
+#~ msgstr ""
+
+#~ msgid "Monte Carlo Simulation"
+#~ msgstr ""
