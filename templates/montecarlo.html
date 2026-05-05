@@ -215,6 +215,21 @@
 let trades = []
 let lastMonteCarloData = null
 
+const secondaryPlotlyConfig = {
+    responsive: true,
+    displaylogo: false,
+    modeBarButtonsToRemove: [
+        "zoom2d",
+        "select2d",
+        "lasso2d",
+        "autoScale2d",
+        "hoverClosestCartesian",
+        "toggleSpikelines",
+        "sendDataToCloud",
+        "editInChartStudio"
+    ]
+}
+
 // =========================
 // UPLOAD FILE
 // =========================
@@ -377,7 +392,7 @@ function drawDrawdownChart(data) {
         paper_bgcolor: "#0f172a",
         plot_bgcolor: "#0f172a",
         font: {color: "#e5e7eb"}
-    })
+    }, secondaryPlotlyConfig)
 }
 
 function drawTTRChart(data) {
@@ -405,7 +420,7 @@ function drawTTRChart(data) {
         }
     }
 
-    Plotly.newPlot("ttr-chart", [trace], layout)
+    Plotly.newPlot("ttr-chart", [trace], layout, secondaryPlotlyConfig)
 }
 
 function drawBootstrapChart(data) {
@@ -427,7 +442,7 @@ function drawBootstrapChart(data) {
         paper_bgcolor: "#0f172a",
         plot_bgcolor: "#0f172a",
         font: {color: "#e5e7eb"}
-    })
+    }, secondaryPlotlyConfig)
 }
 
 // =========================
