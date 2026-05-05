@@ -33,7 +33,7 @@ a:hover{
   backdrop-filter: blur(10px);
   position:sticky;
   top:0;
-  z-index:10;
+  z-index:100000;
 }
 
 .brand{font-weight:800; letter-spacing:.3px}
@@ -208,7 +208,7 @@ h2{font-size:18px; color:#d7deea}
      niente margin-top, altrimenti si crea un vuoto tra bottone e menu */
   margin-top: 0;
 
-  z-index: 999;
+  z-index: 100001;
   box-shadow: 0 10px 25px rgba(0,0,0,0.4);
 }
 
@@ -1241,57 +1241,3 @@ h2{font-size:18px; color:#d7deea}
 
 }
 
-/* =========================
-   DESKTOP DROPDOWN RESTORE FIX
-   Ripristina menu Laboratorio / Lingue su PC
-   senza toccare mobile
-========================= */
-
-@media (min-width: 769px) {
-
-  .topbar,
-  .nav,
-  .dropdown {
-    overflow: visible !important;
-  }
-
-  .dropdown {
-    position: relative !important;
-    padding-bottom: 12px !important;
-    margin-bottom: -12px !important;
-  }
-
-  .dropdown-content {
-    display: none !important;
-    position: absolute !important;
-    top: calc(100% - 1px) !important;
-    left: 0 !important;
-    z-index: 999999 !important;
-  }
-
-  .dropdown:hover > .dropdown-content,
-  .dropdown:focus-within > .dropdown-content {
-    display: block !important;
-  }
-
-  .dropdown::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 100%;
-    width: 100%;
-    height: 14px;
-    z-index: 999998;
-  }
-
-  .lang-switcher .dropdown-content {
-    right: 0 !important;
-    left: auto !important;
-  }
-
-  .lang-switcher::after {
-    right: 0;
-    left: auto;
-    width: 190px;
-  }
-}
